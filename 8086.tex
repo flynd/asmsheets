@@ -1,0 +1,325 @@
+%
+% Copyright (C) 2014 Anders Olofsson
+%
+% Copying and distribution of this file, with or without modification,
+% are permitted in any medium without royalty provided the copyright
+% notice and this notice are preserved.  This file is offered as-is,
+% without any warranty.
+%
+\documentclass{sheet}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{ae,aecompl}
+\usepackage[english]{babel}
+\usepackage[a4paper, landscape, margin=.1in]{geometry}
+\usepackage{amssymb}
+
+\def\sheetheaderfont{\bfseries}
+\def\sheettablefont{\footnotesize\sffamily}
+\def\sheetheadercolor{black!10}
+\def\sheetrowcolor{black!5}
+
+\def\tabcolsep{2pt}
+\def\arraystretch{1.3}
+\defsheet{asmtable}{4}{|m{3.7em} m{4.1em}|X|m{3.1em}|}
+\defsheet{asmtable2}{4}{|m{6.8em} m{1em}|X|m{3.1em}|}
+\defsheet{table-X}{1}{|X|}
+\defsheet{table-lX}{2}{|l X|}
+\defsheet{table-lXX}{3}{|l X X|}
+\defsheet{table-llXl}{4}{|l l X l|}
+
+\pagefooter{8086 version 1.0 page \thepage}
+
+\begin{document}
+\begin{multicols}{3}
+\raggedcolumns
+
+\begin{center}
+{\Large\bfseries 8086 Quick Reference}
+\end{center}
+%
+\begin{table-lX}{Keys}
+i		& Immediate operand \\
+a		& Accumulator (AL or AX) \\
+r		& General register (AX,BX,CX,DX,SI,DI,BP,SP or 8bit parts) \\
+seg		& Segment register (CS,DS,SS,ES) \\
+sh		& Shift operand (1 or CL) \\
+d		& Destination operand (register or memory) \\
+s		& Source operand (register, memory or immediate) \\
+cc		& Condidion code \\
+value$^{\pm}_{ }$	& Value is sign extended \\
+$\smul$ $\sdiv$ $\asr$	& Operation is signed \\
+******	& Flags COZSPA are affected (*), undefined (u), cleared (0) \\
+\end{table-lX}
+%
+\begin{asmtable}{Arithmetic Instructions}
+ADC	& d, s			& d = d $+$ (s $+$ C)				& ****** \\
+ADD	& d, s			& d = d $+$ s					& ****** \\
+CBW	&			& AX = AL$^{\pm}_{ }$				& {--}{--}{--}{--}{--}{--} \\
+CMP	& d, s			& d $-$ s					& ****** \\
+CWD	&			& DX:AX = AX$^{\pm}_{ }$			& {--}{--}{--}{--}{--}{--} \\
+DEC	& d			& d = d $-$ 1					& {--}***** \\
+DIV	& d$^{ }_{8}$		& AL = AX $\udiv$ d; AH = AX $\umod$ d		& uuuuuu \\
+DIV	& d$^{ }_{16}$		& AX = DX:AX $\udiv$ d; DX = DX:AX $\umod$ d	& uuuuuu \\
+IDIV	& d$^{ }_{8}$		& AL = AX $\sdiv$ d; AH = AX $\smod$ d		& uuuuuu \\
+IDIV	& d$^{ }_{16}$		& AX = DX:AX $\sdiv$ d; DX = DX:AX $\smod$ d	& uuuuuu \\
+IMUL	& d$^{ }_{8}$		& AX = AL $\smul$ d				& **uuuu \\
+IMUL	& d$^{ }_{16}$		& DX:AX = AX $\smul$ d				& **uuuu \\
+INC	& d			& d = d $+$ 1					& {--}***** \\
+LEA	& r$^{ }_{16}$, [m]	& r = m						& {--}{--}{--}{--}{--}{--} \\
+MUL	& d$^{ }_{8}$		& AX = AL $\umul$ d				& **uuuu \\
+MUL	& d$^{ }_{16}$		& DX:AX = AX $\umul$ d				& **uuuu \\
+NEG	& d			& d = 0 $-$ d					& ****** \\
+SBB	& d, s			& d = d $-$ (s $+$ C)				& ****** \\
+SUB	& d, s			& d = d $-$ s					& ****** \\
+\end{asmtable}
+%
+\begin{asmtable}{I/O Instructions}
+HLT	&			& Wait for reset, NMI or INT			& {--}{--}{--}{--}{--}{--} \\
+IN	& a, i$^{ }_{8}$	& a = IO[i]					& {--}{--}{--}{--}{--}{--} \\
+IN	& a, DX			& a = IO[DX]					& {--}{--}{--}{--}{--}{--} \\
+\textit{NOP}	&		&						& {--}{--}{--}{--}{--}{--} \\
+OUT	& i$^{ }_{8}$, a	& IO[i] = a					& {--}{--}{--}{--}{--}{--} \\
+OUT	& DX, a			& IO[DX] = a					& {--}{--}{--}{--}{--}{--} \\
+\end{asmtable}
+%
+\begin{asmtable}{Jump and Branch Instructions}
+CALL	& rel$^{ }_{16}$	& PUSH IP; IP $+$= rel				& {--}{--}{--}{--}{--}{--} \\
+CALL	& ptr$^{ }_{32}$	& PUSH CS,IP; CS:IP = ptr			& {--}{--}{--}{--}{--}{--} \\
+CALL	& d$^{ }_{16}$		& PUSH IP; IP = d				& {--}{--}{--}{--}{--}{--} \\
+CALL	& [m$^{ }_{32}$]	& PUSH CS,IP; CS:IP = [m]			& {--}{--}{--}{--}{--}{--} \\
+INT	& i$^{ }_{8}$		& PUSH F,CS,IP; CS:IP=[0:4*i]; I=0		& {--}{--}{--}{--}{--}{--} \\
+INTO	&			& if(O) INT 4					& {--}{--}{--}{--}{--}{--} \\
+IRET	&			& POP IP,CS,F					& ****** \\
+Jcc	& rel$^{ }_{8}$		& if(cc) IP $+$= rel$^{\pm}_{ }$		& {--}{--}{--}{--}{--}{--} \\
+JCXZ	& rel$^{ }_{8}$		& if(CX $=$ 0) IP $+$= rel$^{\pm}_{ }$		& {--}{--}{--}{--}{--}{--} \\
+JMP	& rel			& IP $+$= rel$^{\pm}_{ }$			& {--}{--}{--}{--}{--}{--} \\
+JMP	& ptr$^{ }_{32}$	& CS:IP = ptr					& {--}{--}{--}{--}{--}{--} \\
+JMP	& d$^{ }_{16}$		& IP = d					& {--}{--}{--}{--}{--}{--} \\
+JMP	& [m$^{ }_{32}$]	& CS:IP = [m]					& {--}{--}{--}{--}{--}{--} \\
+LOOP	& rel$^{ }_{8}$		& if($--$CX $\ne$ 0) IP $+$= rel$^{\pm}_{ }$	& {--}{--}{--}{--}{--}{--} \\
+LOOPE	& rel$^{ }_{8}$		& if(Z \&\& $--$CX $\ne$ 0) IP $+$= rel$^{\pm}_{ }$	& {--}{--}{--}{--}{--}{--} \\
+LOOPNE	& rel$^{ }_{8}$		& if(!Z \&\& $--$CX $\ne$ 0) IP $+$= rel$^{\pm}_{ }$	& {--}{--}{--}{--}{--}{--} \\
+RET	&			& POP IP					& {--}{--}{--}{--}{--}{--} \\
+RET	& i$^{ }_{16}$		& POP IP; SP $+$= i				& {--}{--}{--}{--}{--}{--} \\
+RETF	&			& POP IP,CS					& {--}{--}{--}{--}{--}{--} \\
+RETF	& i$^{ }_{16}$		& POP IP,CS; SP $+$= i				& {--}{--}{--}{--}{--}{--} \\
+\end{asmtable}
+%
+\begin{asmtable}{Flag Instructions}
+CLC	&			& C = 0						& 0{--}{--}{--}{--}{--} \\
+CLD	&			& D = 0						& {--}{--}{--}{--}{--}{--} \\
+CLI	&			& I = 0						& {--}{--}{--}{--}{--}{--} \\
+CMC	&			& C = !C					& *{--}{--}{--}{--}{--} \\
+LAHF	&			& AH = S:Z:0:A:0:P:1:C				& {--}{--}{--}{--}{--}{--} \\
+POPF	&			& POP -:-:-:-:O:D:I:T:S:Z:-:A:-:P:-:C		& ****** \\
+PUSHF	&			& PUSH 1:1:1:1:O:D:I:T:S:Z:0:A:0:P:1:C		& {--}{--}{--}{--}{--}{--} \\
+SAHF	&			& S:Z:-:A:-:P:-:C = AH				& *{--}**** \\
+SALF	&			& AL = (C ? 0xff : 0x00)			& {--}{--}{--}{--}{--}{--} \\
+STC	&			& C = 1						& 1{--}{--}{--}{--}{--} \\
+STD	&			& D = 1						& {--}{--}{--}{--}{--}{--} \\
+STI	&			& I = 1						& {--}{--}{--}{--}{--}{--} \\
+\end{asmtable}
+%
+\begin{asmtable2}{String Instructions}
+CMPS\{BW\}	&		& [SI] $-$ [ES:DI]; Advance SI and DI	& ****** \\
+LODS\{BW\}	&		& a = [SI]; Advance SI			& {--}{--}{--}{--}{--}{--} \\
+MOVS\{BW\}	&		& [ES:DI] = [SI]; Advance SI and DI	& {--}{--}{--}{--}{--}{--} \\
+SCAS\{BW\}	&		& a - [SI]; Advance SI			& ****** \\
+STOS\{BW\}	&		& [ES:DI] = a; Advance DI		& {--}{--}{--}{--}{--}{--} \\
+\end{asmtable2}
+%
+\begin{asmtable}{Bitwise Instructions}
+AND	& d, s			& d = d \& s					& 00***u \\
+NOT	& d			& d = $\sim$d					& {--}{--}{--}{--}{--}{--} \\
+OR	& d, s			& d = d | s					& 00***u \\
+RCL	& d, sh			& C:d = C:d $\rol$ sh				& **{--}{--}{--}{--} \\
+RCR	& d, sh			& C:d = C:d $\ror$ sh				& **{--}{--}{--}{--} \\
+ROL	& d, sh			& d = d $\rol$ sh				& **{--}{--}{--}{--} \\
+ROR	& d, sh			& d = d $\ror$ sh				& **{--}{--}{--}{--} \\
+SAR	& d, sh			& d = d $\asr$ sh				& *****u \\
+SHL	& d, sh			& d = d $\lsl$ sh				& *****u \\
+SHR	& d, sh			& d = d $\lsr$ sh				& *****u \\
+TEST	& d, s			& d \& s					& 00***u \\
+XOR	& d, s			& d = d $\oplus$ s				& 00***u \\
+\end{asmtable}
+%
+\begin{asmtable}{Data Transfer Instructions}
+LDS	& r$^{ }_{16}$, [m$^{ }_{32}$]	& DS:r = [m]				& {--}{--}{--}{--}{--}{--} \\
+LES	& r$^{ }_{16}$, [m$^{ }_{32}$]	& ES:r = [m]				& {--}{--}{--}{--}{--}{--} \\
+MOV	& d, s			& d = s						& {--}{--}{--}{--}{--}{--} \\
+MOV	& d$^{ }_{16}$, seg	& d = seg					& {--}{--}{--}{--}{--}{--} \\
+MOV	& seg, d$^{ }_{16}$	& seg = d					& {--}{--}{--}{--}{--}{--} \\
+POP	& d$^{ }_{16}$		& SP $+$= 2; d = [SS:SP$-$2]			& {--}{--}{--}{--}{--}{--} \\
+POP	& seg			& SP $+$= 2; seg = [SS:SP$-$2]			& {--}{--}{--}{--}{--}{--} \\
+PUSH	& d$^{ }_{16}$		& SP $-$= 2; [SS:SP$-$2] = d			& {--}{--}{--}{--}{--}{--} \\
+PUSH	& seg			& SP $-$= 2; [SS:SP$-$2] = seg			& {--}{--}{--}{--}{--}{--} \\
+XCHG	& r, d			& r:d = d:r					& {--}{--}{--}{--}{--}{--} \\
+XLAT	&			& AL = [BX $+$ AL]				& {--}{--}{--}{--}{--}{--} \\
+\end{asmtable}
+%
+\begin{asmtable}{BCD Instructions}
+AAA	&	& if(AL$^{ }_{3:0}$>9 || A) AL=(AL$+$6)\&0x0f; AH$++$; \newline A=C=1; else AL=AL\&0x0f; A=C=0	& *uuuu* \\
+AAD	& i$^{ }_{8}$		& AL = AL $+$ AH $\umul$ i; AH = 0		& uu***u \\
+AAM	& i$^{ }_{8}$		& AL = AL $\udiv$ i; AH = AL $\umod$ i		& uu***u \\
+AAS	&	& if(AL$^{ }_{3:0}$>9 || A) AL=(AL$-$6)\&0x0f; AH$--$; \newline A=C=1; else AL=AL\&0x0f; A=C=0	& *uuuu* \\
+DAA	&	& if(AL$^{ }_{3:0}$>9 || A) C:AL$+$=6; A=1; else A=0 \newline if(AL$^{ }_{7:4}$>9 || C) AL$+$=0x60; C=1; else C=0	& *u**** \\
+DAS	&	& if(AL$^{ }_{3:0}$>9 || A) C:AL$-$=6; A=1; else A=0 \newline if(AL$^{ }_{7:4}$>9 || C) AL$-$=0x60; C=1; else C=0	& *u**** \\
+\end{asmtable}
+%
+\begin{asmtable}{Prefix Instructions}
+seg:	&			& Use seg instead of DS or SS			& {--}{--}{--}{--}{--}{--} \\
+LOCK	&			& Assert LOCK\#					& {--}{--}{--}{--}{--}{--} \\
+REP	& strcmd		& do \{ strcmd; CX{-}{-} \} while(CX $\ne$ 0)	& {--}{--}{--}{--}{--}{--} \\
+REPE	& strcmd		& do \{ strcmd; CX{-}{-} \} while(Z \&\& CX $\ne$ 0)	& ****** \\
+REPNE	& strcmd		& do \{ strcmd; CX{-}{-} \} while(!Z \&\& CX $\ne$ 0)	& ****** \\
+\end{asmtable}
+%
+\begin{table-lX}{Execution Times}
+ADC/ADD/AND/OR/SUB/SBB/XOR r,r | r,m | m,r	& 3 | 9+ea | 16+ea \\
+ADC/ADD/AND/OR/SUB/SBB/XOR r,i | m,i		& 4 | 17+ea \\
+CMP r,r | CMP r,i | CMP r,m | CMP m,i		& 3 | 4 | 9+ea | 10+ea \\
+TEST r,r | TEST r,i | TEST r,m | TEST m,i	& 3 | 5 | 9+ea | 11+ea \\
+DEC/INC r | DEC/INC m				& 3 | 15+ea \\
+NEG/NOT r | NEG/NOT m				& 3 | 16+ea \\
+shift/rotate r,1 | shift/rotate m,1		& 2 | 15+ea \\
+shift/rotate r,CL | shift/rotate m,CL		& 8+4n | 20+4n+ea \\
+CBW | CWD | LEA | LDS/LES			& 2 | 5 | 2+ea | 16+ea \\
+MOV r,i | MOV m,i				& 4 | 10+ea \\
+MOV r/seg,r/seg | MOV r/seg,m | MOV m,r/seg	& 2 | 8+ea | 9+ea \\
+MOV a,[i$^{ }_{16}$] | MOV [i$^{ }_{16}$],a | XLAT	& 10 | 10 | 11 \\
+XCHG r$^{ }_{16}$,AX | XCHG r,r | XCHG r,m	& 3 | 4 | 17+ea \\
+PUSH r | PUSHF | PUSH seg | PUSH m		& 10 | 10 | 11 | 16+ea \\
+POP r | POPF | POP seg | POP m			& 8 | 8 | 8 | 17+ea \\
+CL\{CDI\}/ST\{CDI\}/CMC | SALC | LAHF/SAHF	& 2 | 3 | 4 \\
+DAA/DAS | AAA/AAS | AAD | AAM			& 4 | 8 | 60 | 83 \\
+IN/OUT DX | IN/OUT i | HLT | WAIT		& 8 | 10 | 2 | 4 \\
+JMP rel | JMP ptr$^{ }_{32}$ | CALL rel | CALL ptr$^{ }_{32}$	& 15 | 15 | 19 | 28 \\
+JMP r | JMP m$^{ }_{16}$ | JMP m$^{ }_{32}$	& 11 | 18+ea | 24+ea \\
+CALL r | CALL m$^{ }_{16}$ | CALL m$^{ }_{32}$	& 16 | 21+ea | 37+ea \\
+Jcc | JCXZ					& 4/16 | 6/18 \\
+LOOP | LOOPE/LOOPNE				& 5/18 | 5/19 \\
+RET | RET i | RETF | RETF i | IRET		& 16 | 20 | 26 | 25 | 32 \\
+INT i | INT 3 | INTO | Ext INT			& 51 | 52 | 4/53 | 61 \\
+STOS\{BW\} | REP STOS\{BW\}			& 11 | 9+10n \\
+LODS\{BW\} | REP LODS\{BW\}			& 12 | 9+13n \\
+MOVS\{BW\} | REP MOVS\{BW\}			& 18 | 9+17n \\
+SCAS\{BW\} | REPE/REPNE SCAS\{BW\}		& 15 | 9+15n \\
+CMPS\{BW\} | REPE/REPNE CMPS\{BW\}		& 22 | 9+22n \\
+MUL r$^{ }_{8}$ | MUL r$^{ }_{16}$		& 70-77 | 118-135 \\
+IMUL r$^{ }_{8}$ | IMUL r$^{ }_{16}$		& 80-89 | 128-154 \\
+DIV r$^{ }_{8}$ | DIV r$^{ }_{16}$		& 80-90 | 144-162 \\
+IDIV r$^{ }_{8}$ | IDIV r$^{ }_{16}$		& 101-112 | 165-184 \\
+DIV/IDIV/MUL/IMUL with mem instead of reg	& +6+ea \\
+Segment override or LOCK prefix			& +2 \\
+Word operand at odd address			& +4 \\
+{}[BX], [SI], [DI]				& ea = 5 \\
+{}[i$^{ }_{16}$]				& ea = 6 \\
+{}[BX$+$SI] or [BP$+$DI]			& ea = 7 \\
+{}[BX$+$DI] or [BP$+$SI]			& ea = 8 \\
+{}[BX$+$i$^{\pm}_{ }$], [BP$+$i$^{\pm}_{ }$] [SI$+$i$^{\pm}_{ }$], [DI$+$i$^{\pm}_{ }$]	& ea = 9 \\
+{}[BX$+$SI$+$i$^{\pm}_{ }$] or [BP$+$DI$+$i$^{\pm}_{ }$]	& ea = 11 \\
+{}[BX$+$DI$+$i$^{\pm}_{ }$] or [BP$+$SI$+$i$^{\pm}_{ }$]	& ea = 12 \\
+\end{table-lX}
+%
+\begin{table-lX}{Registers}
+AX	& Accumulator Register (AL, AH) \\
+BX	& Base Register (BL, BH) \\
+CX	& Counter Register (CL, CH) \\
+DX	& Data Register (DL, DH) \\
+SI	& Source Index \\
+DI	& Destination Index \\
+BP	& Base Pointer \\
+SP	& Stack Pointer \\
+IP	& Instruction Pointer \\
+F	& Flags (O,D,I,T,S,Z,A,P,C) \\
+CS	& Code Segment \\
+DS	& Data Segment \\
+SS	& Stack Segment \\
+ES	& Extra Segment \\
+\end{table-lX}
+%
+\begin{table-llXl}{Flags}
+C	& 0x0001	& Carry Flag		& CY, NC \\
+P	& 0x0004	& Parity Flag		& PE, PO \\
+A	& 0x0010	& Auxiliary Flag	& AC, NA \\
+Z	& 0x0040	& Zero Flag		& ZR, NZ \\
+S	& 0x0080	& Sign Flag		& NG, PL \\
+T	& 0x0100	& Trap Flag		& \\
+I	& 0x0200	& Interrupt Flag	& EI, DI \\
+D	& 0x0400	& Direction Flag	& DN, UP \\
+O	& 0x0800	& Overflow Flag		& OV, NV \\
+\end{table-llXl}
+%
+\begin{table-lX}{DEBUG Commands}
+A [\emph{address}]						& Assemble instructions \\
+C \emph{range} \emph{address}					& Compare memory \\
+D [\emph{address} | \emph{range}]				& Dump memory \\
+E \emph{address} [\emph{list}]					& Enter data \\
+F \emph{range} \emph{list}					& Fill data \\
+G [=\emph{address}] [\emph{address} [\emph{address}...]]	& Execute (with optional breakpoints) \\
+H \emph{value} \emph{value}					& Add and subtract values \\
+I \emph{portaddress}						& Read byte from I/O port \\
+L [\emph{address} [\emph{drive} \emph{sector} \emph{count}]]	& Load file or sectors (sets BX:CX to size) \\
+M \emph{range} \emph{address}					& Move memory \\
+N \emph{filename} [\emph{parameters}]				& Set filename and command arguments \\
+O \emph{portaddress} \emph{value}				& Write byte to I/O port \\
+Q								& Quit DEBUG \\
+R [\emph{registername}]						& Display and modify registers(s) \\
+S \emph{range} \emph{list}					& Search memory \\
+T [=\emph{address}] [\emph{count}]				& Trace \\
+U [\emph{address} | \emph{range}]				& Unassemble instructions \\
+W [\emph{address} [\emph{drive} \emph{sector} \emph{count}]]	& Load file or sectors (size is BX:CX) \\
+\end{table-lX}
+%
+\begin{table-lXX}{Condition Codes}
+O		& Overflow			& !O \\
+NO		& No overflow			& O \\
+B, NAE, C	& Below, Carry set		& C \\
+NB, AE, NC	& Above or equal, Carry clear	& !C \\
+E, Z		& Equal, Zero			& Z \\
+NE, NZ		& Not equal, Not zero		& !Z \\
+BE, NA		& Below or equal		& C | Z \\
+NBE, A		& Above				& !C \& !Z \\
+S		& Sign				& S \\
+NS		& Not sign			& !S \\
+P, PE		& Parity, Even parity		& P \\
+NP, PO		& Not parity, Odd parity	& !P \\
+L, NGE		& Less than			& S $\ne$ O \\
+NL, GE		& Greater than or equal to	& S $=$ O \\
+LE, NG		& Less than or equal to		& S $\ne$ O | Z \\
+NLE, G		& Greater than			& S $=$ O \& !Z \\
+\end{table-lXX}
+%
+\begin{table-lX}{Interrupt Vectors}
+0x00	& Divide error (DIV/IDIV/AAM instructions) \\
+0x01	& Single step (Trap flag) \\
+0x02	& NMI signal \\
+0x03	& Breakpoint (INT 3 instruction) \\
+0x04	& Overflow (INTO instruction) \\
+0x08	& IRQ 0 (Timer 0) \\
+0x09	& IRQ 1 (Keyboard) \\
+0x0a	& IRQ 2 \\
+0x0b	& IRQ 3 \\
+0x0c	& IRQ 4 (First serial port) \\
+0x0d	& IRQ 5 \\
+0x0e	& IRQ 6 (Floppy controller) \\
+0x0f	& IRQ 7 (First parallel port) \\
+\end{table-lX}
+%
+\begin{table-X}{Notes}
+Any write to a segment disables interrupts and traps for one instruction. \\
+Source and destination operands can't both be memory at the same time. \\
+Default segment is SS when BP is used as index, otherwise DS. \\
+String instructions increase/decrease SI and DI by data size when D is 0/1. \\
+Shift/rotate right by 1 sets O flag to xor of two lowest bits. \\
+Shift/rotate left by 1 sets O flag to xor of C and highest bit. \\
+Instruction prefetch queue is 6 bytes. \\
+POP and MOV to CS is possible on 8086 but invalid opcodes on later CPUs. \\
+Shift/rotate uses all bits of CL on 8086 but only lower 5 bits on later CPUs. \\
+PUSH SP pushes decremented SP on 8086. Later CPUs push original SP. \\
+DEBUG range parameter is either "\emph{start} \emph{end}" or "\emph{start} L \emph{end}". \\
+\end{table-X}
+%
+\end{multicols}
+\end{document}

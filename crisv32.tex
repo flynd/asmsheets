@@ -1,0 +1,315 @@
+%
+% Copyright (C) 2014 Anders Olofsson
+%
+% Copying and distribution of this file, with or without modification,
+% are permitted in any medium without royalty provided the copyright
+% notice and this notice are preserved.  This file is offered as-is,
+% without any warranty.
+%
+\documentclass{sheet}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{ae,aecompl}
+\usepackage[english]{babel}
+\usepackage[a4paper, landscape, margin=.1in]{geometry}
+\usepackage{amssymb}
+\usepackage{verbatim}
+
+\def\sheetheaderfont{\bfseries}
+\def\sheettablefont{\footnotesize\sffamily}
+\def\sheetheadercolor{black!10}
+\def\sheetrowcolor{black!5}
+
+\newcolumntype{N}{>{\raggedleft\arraybackslash}m{1.4em}}
+\def\tabcolsep{2pt}
+\def\arraystretch{1.3}
+\defsheet{asmtable}{5}{|m{5.2em} m{5.7em}|X|m{2.0em} N|}
+\defsheet{table-X}{1}{|X|}
+\defsheet{table-lX}{2}{|l X|}
+\defsheet{table-lXl}{3}{|l X l|}
+\defsheet{table-lXN}{3}{|l X N|}
+\defsheet{table-llX}{3}{|l l X|}
+\defsheet{table-llXN}{4}{|l l X N|}
+
+\pagefooter{CRISv32 version 1.0 page \thepage}
+
+\begin{document}
+\begin{multicols}{3}
+\raggedcolumns
+
+\begin{center}
+{\Large\bfseries CRISv32 Quick Reference}
+\end{center}
+%
+\begin{table-lX}{Keys}
+rd, rs, rn	& General register (R0..R15) \\
+pr		& Special register (P0..P15) \\
+sr		& Support function register \\
+i$^{ }_{5}$, i$^{ }_{6}$	& Immediate operand \\
+{}[rn]		& Indirect addressing mode \\
+{}[rn+]		& Autoincrement addressing mode (cannot use ACR) \\
+i$^{ }_{8}$, i$^{ }_{16}$, i$^{ }_{32}$	& Immediate addressing mode (alias for [PC+]) \\
+s		& Source operand (rn, [rn], [rn+], i$^{ }_{8}$, i$^{ }_{16}$ or i$^{ }_{32}$) \\
+si		& Source operand ([rn], [rn+], i$^{ }_{8}$, i$^{ }_{16}$ or i$^{ }_{32}$) \\
+sm		& Source operand ([rn] or [rn+]) \\
+d		& Destination operand (rn, [rn] or [rn+]) \\
+di		& Destination operand ([rn] or [rn+]) \\
+cc		& Condition code \\
+m		& Size modifier (b, w or d for byte, word or dword) \\
+z		& Size modifier (b or w for byte or word) \\
+value$^{\pm}_{ }$	& Value is sign extended\\
+value$^{\emptyset}_{ }$	& Value is zero extended\\
+value$^{\{SU\}}_{ }$	& Signed or zero extend according to instruction name \\
+$\smul$ $\asr$	& Operation is signed \\
+{}****		& Flags NZVC are unchanged (--), affected (*) or cleared (0) \\
+\end{table-lX}
+%
+\begin{asmtable}{Bitwise Instructions}
+AND.m		& s, rd			& rd$^{ }_{m}$ = rd$^{ }_{m}$ \& s$^{ }_{m}$	& **{--}{--}	& \\
+ANDQ		& i$^{ }_{6}$, rd	& rd = rd \& i$^{\pm}_{ }$			& **{--}{--}	& \\
+ASR.m		& rs, rd		& rd$^{ }_{m}$ = rd$^{ }_{m}$ $\asr$ rs$^{ }_{5:0}$	& **{--}{--}	& \\
+ASRQ		& i$^{ }_{5}$, rd	& rd$^{ }_{m}$ = rd$^{ }_{m}$ $\asr$ i		& **{--}{--}	& \\
+BTST		& rs, rd		& N = rd$^{ }_{rs_{4:0}}$; Z = (rd$^{ }_{rs_{4:0}:0}$ $=$ 0)	& **{--}{--}	& \\
+BTSTQ		& i$^{ }_{5}$, rd	& N = rd$^{ }_{i}$; Z = (rs$^{ }_{i:0}$ = 0)	& **{--}{--}	& \\
+LSL.m		& rs, rd		& rd$^{ }_{m}$ = rd$^{ }_{m}$ $\lsl$ rs$^{ }_{5:0}$	& **{--}{--}	& \\
+LSLQ		& i$^{ }_{5}$, rd	& rd$^{ }_{m}$ = rd$^{ }_{m}$ $\lsl$ i		& **{--}{--}	& \\
+LSR.m		& rs, rd		& rd$^{ }_{m}$ = rd$^{ }_{m}$ $\lsr$ rs$^{ }_{5:0}$	& **{--}{--}	& \\
+LSRQ		& i$^{ }_{5}$, rd	& rd$^{ }_{m}$ = rd$^{ }_{m}$ $\lsr$ i		& **{--}{--}	& \\
+LZ		& rs, rd		& rd = CountLeadingZeros(rs)			& 0*{--}{--}	& \\
+\textit{NOT}	& rd			& rd = $\sim$rd					& **{--}{--}	& \\
+OR.m		& s, rd			& rd$^{ }_{m}$ = rd$^{ }_{m}$ | s$^{ }_{m}$	& **{--}{--}	& \\
+ORQ		& i$^{ }_{6}$, rd	& rd = rd | i$^{\pm}_{ }$			& **{--}{--}	& \\
+XOR		& rs, rd		& rd = rd $\oplus$ rs				& **{--}{--}	& \\
+\end{asmtable}
+%
+\begin{asmtable}{SWAP\{NWBR\} Instruction}
+SWAPN		& rd			& rd = $\sim$rd					& **{--}{--}	& \\
+SWAPW		& rd			& rd = rd$^{ }_{15:0}$:rd$^{ }_{31:16}$		& **{--}{--}	& \\
+SWAPB		& rd			& rd = rd$^{ }_{23:16}$:rd$^{ }_{31:24}$:rd$^{ }_{7:0}$:rd$^{ }_{15:8}$	& **{--}{--}	& \\
+SWAPR		& rd			& for(n=0..3) rd$^{ }_{Bn}$=ReverseBits(rd$^{ }_{Bn}$)	& **{--}{--}	& \\
+\end{asmtable}
+%
+\begin{asmtable}{Arithmetic Instructions}
+ABS		& rs, rd		& rd = (rs$^{ }_{31}$ $=$ 1 ? 0$-$rs : rs)	& **{--}{--}	& \\
+ADD.m		& s, rd			& rd$^{ }_{m}$ = rd$^{ }_{m}$ $+$ s$^{ }_{m}$	& ****	& X \\
+ADDC		& s, rd			& rd = rd $+$ si $+$ C				& ****	& \\
+ADDQ		& i$^{ }_{6}$, rd	& rd = rd $+$ i$^{\emptyset}_{ }$		& ****	& X \\
+ADD\{SU\}.z	& s, rd			& rd = rd $+$ s$^{\{SU\}}_{z}$			& ****	& X \\
+CMP.m		& s, rd			& rd$^{ }_{m}$ $-$ s$^{ }_{m}$			& ****	& X \\
+CMPQ		& i$^{ }_{6}$, rd	& rd $-$ i$^{\pm}_{ }$				& ****	& X \\
+CMP\{SU\}.z	& s, rd			& rd $-$ s$^{\{SU\}}_{z}$			& ****	& X \\
+DSTEP		& rs, rd		& rd $\lsl$= 1; if(rd $\ge$ rs) rd = rd $-$ rs	& **{--}{--}	& \\
+MCP		& pr, rd		& R:rd = rd + pr + R				& ***{--}	& \\
+MULS.m		& rs, rd		& MOF:rd = rd$^{\pm}_{m}$ $\smul$ rs$^{\pm}_{m}$	& ***{--}	& \\
+MULU.m		& rs, rd		& MOF:rd = rd$^{\emptyset}_{m}$ $\umul$ rs$^{\emptyset}_{m}$	& ***{--}	& \\
+NEG.m 		& rs, rd		& rd$^{ }_{m}$ = 0 $-$ rs$^{ }_{m}$		& ****	& X \\
+SUB.m		& s, rd			& rd$^{ }_{m}$ = rd$^{ }_{m}$ $-$ s$^{ }_{m}$	& ****	& X \\
+SUBQ		& i$^{ }_{6}$, rd	& rd = rd $-$ i$^{\emptyset}_{ }$		& ****	& X \\
+SUB\{SU\}.z	& s, rd			& rd = rd $-$ s$^{\{SU\}}_{z}$			& ****	& X \\
+TEST.m		& sm			& sm$^{ }_{m}$ $-$ 0				& **00	& \\
+\end{asmtable}
+%
+\begin{asmtable}{Data Transfer Instructions}
+\textit{CLEAR.m}	& d		& d$^{ }_{m}$ = 0				& {--}{--}{--}{--}	& \\
+MOVE.m		& s, rd			& rd$^{ }_{m}$ = s$^{ }_{m}$			& **{--}{--}	& \\
+MOVE.m		& rs, di		& di$^{ }_{m}$ = rs$^{ }_{m}$			& {--}{--}{--}{--}	& \\
+MOVE		& s, pr			& pr = s$^{ }_{sizeof(pr)}$			& {--}{--}{--}{--}	& M \\
+MOVE		& pr, d			& d$^{ }_{sizeof(pr)}$ = pr			& {--}{--}{--}{--}	& \\
+MOVE		& rs, sr		& SRS.sr = rs					& {--}{--}{--}{--}	& M \\
+MOVE		& sr, rd		& rd = SRS.sr					& {--}{--}{--}{--}	& \\
+MOVEM		& rs, di		& di[0] = R0 \ldots di[4*s] = rs		& {--}{--}{--}{--}	& \\
+MOVEM		& sm, rd		& R0 = sm[0] \ldots rd = sm[4*d]		& {--}{--}{--}{--}	& \\
+MOVEQ		& i$^{ }_{6}$, rd	& rd = i$^{\pm}_{ }$				& {--}{--}{--}{--}	& \\
+MOV\{SU\}.z	& s, rd			& rd = s$^{\{SU\}}_{z}$				& **{--}{--}	& \\
+Scc		& rd			& rd = (cc ? 1 : 0)				& {--}{--}{--}{--}	& \\
+\end{asmtable}
+%
+\begin{asmtable}{Address Calculation Instructions}
+ADDI		& rs.m, rd		& rd = rd $+$ rs $\umul$ sizeof(m)		& {--}{--}{--}{--}	& X \\
+ADDI		& rs.m, rd, ACR		& ACR = rd $+$ rs $\umul$ sizeof(m)		& {--}{--}{--}{--}	& X \\
+ADDO.m		& si, rd, ACR		& ACR = rd + si$^{\pm}_{m}$			& {--}{--}{--}{--}	& X \\
+ADDOQ		& i$^{ }_{8}$, rd, ACR	& ACR = rd + i$^{\pm}_{ }$			& {--}{--}{--}{--}	& X \\
+BOUND.m		& rs, rd		& rd = MIN(rd, rs$^{\emptyset}_{m}$)		& **{--}{--}	& \\
+BOUND.m		& i$^{ }_{m}$, rd	& rd = MIN(rd, i$^{\emptyset}_{ }$)		& **{--}{--}	& \\
+LAPC		& i$^{ }_{32}$, rd	& rd = PC + i					& {--}{--}{--}{--}	& \\
+LAPCQ		& i$^{ }_{5}$, rd	& rd = PC + i$^{\emptyset}_{4:1}$:0		& {--}{--}{--}{--}	& \\
+\end{asmtable}
+%
+\begin{asmtable}{Jump and Branch Instructions}
+\textit{BA}	& i$^{ }_{32}$		& PC $+$= i					& {--}{--}{--}{--}	& D,L \\
+BAS\{C\}	& i$^{ }_{32}$, pr	& pr = PC + (C ? 12 : 8); PC $+$= i		& {--}{--}{--}{--}	& D,L \\
+Bcc		& rel$^{ }_{9}$		& if(cc) PC $+$= rel$^{\pm}_{8:1}$:0		& {--}{--}{--}{--}	& D,L \\
+Bcc		& rel$^{ }_{16}$	& if(cc) PC $+$= rel$^{\pm}_{ }$		& {--}{--}{--}{--}	& D,L \\
+BREAK		& i$^{ }_{4}$		& BRP=PC; PC=[EBP+0x10+4$\umul$i]	& {--}{--}{--}{--}	&  \\
+\textit{BSR\{C\}}	& i$^{ }_{32}$	& SRP = PC + (C ? 12 : 8); PC$+$=i		& {--}{--}{--}{--}	& D,L \\
+JAS\{C\}	& rs, pr		& pr = PC + (C ? 8 : 4); PC = rs		& {--}{--}{--}{--}	& D,L \\
+JAS\{C\}	& i$^{ }_{32}$, pr	& pr = PC + (C ? 12 : 8); PC = i		& {--}{--}{--}{--}	& D,L \\
+\textit{JSR\{C\}}	& rs		& SRP = PC + (C ? 8 : 4); PC = rs		& {--}{--}{--}{--}	& D,L \\
+\textit{JSR\{C\}}	& i$^{ }_{32}$	& SRP = PC + (C ? 12 : 8); PC = i		& {--}{--}{--}{--}	& D,L \\
+\textit{JUMP}	& rs			& PC = rs					& {--}{--}{--}{--}	& D,L \\
+\textit{JUMP}	& i$^{ }_{32}$		& PC = i					& {--}{--}{--}{--}	& D,L \\
+JUMP		& pr			& PC = pr					& {--}{--}{--}{--}	& D,L \\
+\textit{RET}	&			& PC = SRP					& {--}{--}{--}{--}	& D,L \\
+\textit{RETE}	&			& PC = ERP					& {--}{--}{--}{--}	& D,L \\
+\textit{RETN}	&			& PC = NRP					& {--}{--}{--}{--}	& D,L \\
+\end{asmtable}
+%
+\begin{asmtable}{Flag Instructions}
+\textit{AX}	&			& X = 1						& {--}{--}{--}{--}	& \\
+CLEARF		& <flags>		& <flags> = 0					& ****	& M \\
+\textit{DI}	&			& I = 0						& {--}{--}{--}{--}	& M \\
+\textit{EI}	&			& I = 1						& {--}{--}{--}{--}	& M \\
+RFE		&			& CCS$^{ }_{29:0}$ $\lsr$= 10; P = !R		& ****	& M \\
+RFG		&			& CCS, NRP and SRS restored			& ****	& M \\
+RFN		&			& CCS$^{ }_{29:0}$ $\lsr$= 10; M = 1; P = !R	& ****	& M \\
+SETF		& <flags>		& <flags> = 1					& ****	& M \\
+SFE		&			& CCS$^{ }_{29:0}$ $\lsl$= 10			& 0000	& M \\
+\end{asmtable}
+%
+\begin{asmtable}{Special Instructions}
+FIDXD		& [rs]			& Flush data cache with index			& {--}{--}{--}{--}	& L,M \\
+FIDXI		& [rs]			& Flush instruction cache with index		& {--}{--}{--}{--}	& L,M \\
+FTAGD		& [rs]			& Flush data cache with address			& {--}{--}{--}{--}	& L,M \\
+FTAGI		& [rs]			& Flush instruction cache with address		& {--}{--}{--}{--}	& L,M \\
+HALT		&			& Stop and wait for exceptions			& {--}{--}{--}{--}	& L,M \\
+\textit{NOP}	&			& 						& {--}{--}{--}{--}	& \\
+\end{asmtable}
+%
+\begin{table-lX}{Notes}
+D	& One delay slot before jump/branch is taken \\
+L	& Cannot be used in delay slot \\
+M	& Behavior or access is restricted in user mode \\
+X	& C flag is added/subtracted if X flag is set \\
+\end{table-lX}
+%
+\begin{table-llXN}{Registers}
+R0-R8	&	& General registers (must be preserved)	& \\
+R9	&	& General register			& \\
+R10-R13	&	& Function arguments and return value(s)	& \\
+R14	& SP	& Stack pointer				& \\
+R15	& ACR	& Address calculation register		& \\
+	& PC	& Program counter			& \\
+P0	& BZ	& Zero byte constant register (8 bits)	& \\
+P1	& VR	& Version register (8 bits)		& \\
+P2	& PID	& Process ID				& M \\
+P3	& SRS	& Support register select (8 bits)	& M \\
+P4	& WZ	& Zero word constant register (16 bits)	& \\
+P5	& EXS	& Exception status			& \\
+P6	& EDA	& Exception data address		& \\
+P7	& MOF	& Multiply overflow register		& V \\
+P8	& DZ	& Zero dword constant register		& \\
+P9	& EBP	& Exception base register		& M \\
+P10	& ERP	& Exception return pointer		& \\
+P11	& SRP	& Subroutine return pointer		& \\
+P12	& NRP	& NMI return pointer			& \\
+P13	& CCS	& Condition code stack			& \\
+P14	& USP	& User mode stack pointer		& \\
+P15	& SPC	& Single step PC			& M \\
+\end{table-llXN}
+%
+\begin{table-lXl}{Condition Codes}
+CC/HS	& Carry clear / Higher or same	& !C \\
+CS/LO	& Carry set / Lower		& C \\
+NE	& Not equal			& !Z \\
+EQ	& Equal				& Z \\
+VC	& Overflow clear		& !V \\
+VS	& Overflow set			& V \\
+PL	& Plus				& !N \\
+MI	& Minus				& N \\
+LS	& Lower or same			& C | Z \\
+HI	& Higher			& !C \& !Z \\
+GE	& Signed greater or equal	& N $=$ V \\
+LT	& Signed less than		& N $\ne$ V \\
+GT	& Signed greater than		& N $=$ V \& !Z \\
+LE	& Signed less or equal		& N $\ne$ V | Z \\
+A	& Always true			& 1 \\
+SB	& Sequence broken		& P \\
+\end{table-lXl}
+%
+\begin{table-lXN}{Flags}
+C	& Carry						& \\
+V	& Overflow					& \\
+Z	& Zero						& \\
+N	& Negative					& \\
+X	& Extend					& \\
+I	& Interrupt enable				& M \\
+U	& User mode					& M \\
+P	& Sequence broken				& \\
+R	& Restore P on RFE. Carry for MCP instruction	& \\
+S	& Single step					& M \\
+S1..C1	& First stack level				& \\
+S2..C2	& Second stack level				& \\
+M	& NMI enable					& M \\
+Q	& Pending single step				& M \\
+\end{table-lXN}
+%
+\begin{table-lX}{Execution Times}
+1	& General instructions \\
++1	& Multiplication operand modified in preceding instruction \\
++1	& Memory access using register modified in preceding instruction \\
++1	& Jump destination register modified in preceding instruction \\
++2	& Source registers for MOVEM modified in two preceding instructions \\
++3	& Destination regs for MOVEM modified in three following instructions \\
++2	& Branch instruction prediction miss \\
++2	& Read from memory within two cycles of write \\
++2	& Write to memory within two cycles of write to a clean cache line \\
++1	& Each memory access across (32 byte) cache line boundary \\
++1	& First instruction after JUMP crosses a (32 byte) cache line boundary \\
+\end{table-lX}
+%
+\begin{table-llX}{Support Register Banks}
+0	& B\_GC	& General configuration and guru mode registers \\
+1	& B\_IM	& Instruction MMU registers \\
+2	& B\_DM	& Data MMU registers \\
+3	& B\_BP	& Breakpoint registers \\
+255	& B\_Z	& All support registers are always zero \\
+\end{table-llX}
+%
+\begin{table-lX}{Exception Vectors}
+0x00		& NMI \\
+0x03		& Single step \\
+0x04..0x07	& Instruction TLB refill/invalid/access/write \\
+0x08..0x0b	& Data TLB refill/invalid/access/write \\
+0x0c		& Hardware breakpoint \\
+0x10..0x1f	& Break 0..15 \\
+0x20..0xff	& Interrupts \\
+\end{table-lX}
+%
+\newsavebox\ExampleUDiv
+\begin{lrbox}{\ExampleUDiv}\begin{lstlisting}
+MOVU.W  [num], R0    ; Move the numerator to
+MOVU.W  [denom], R1  ; the low word of R0 and
+LSLQ    16, R1       ; the denominator to the
+SUBQ    1, R1        ; upper word of R1.
+DSTEP   R1, R0
+DSTEP   R1, R0
+DSTEP   R1, R0
+DSTEP   R1, R0
+DSTEP   R1, R0
+DSTEP   R1, R0
+DSTEP   R1, R0
+DSTEP   R1, R0
+DSTEP   R1, R0
+DSTEP   R1, R0
+DSTEP   R1, R0
+DSTEP   R1, R0       ; After 16 iterations the
+DSTEP   R1, R0       ; quotient is in the low
+DSTEP   R1, R0       ; word of R0 and the
+DSTEP   R1, R0       ; remainder is in the
+DSTEP   R1, R0       ; upper word of R0.
+\end{lstlisting}\end{lrbox}
+\begin{table-X}{Example: 16-bit by 16-bit Unsigned Division}
+\usebox\ExampleUDiv\\
+\end{table-X}
+%
+\begin{table-lX}{Preprocessor Macros}
+\_\_cris\_\_		& Always set to 1 \\
+\_\_CRIS\_\_		& Always set to 1 \\
+\_\_GNU\_CRIS\_\_	& Always set to 1 \\
+\_\_arch\_v32		& Always set to 1 \\
+\_\_CRIS\_arch\_version	& Always set to 32 \\
+\_\_tune\_\textit{X}	& Tuning selected by -mtune=\textit{X} \\
+\end{table-lX}
+%
+\end{multicols}
+\end{document}

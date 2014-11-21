@@ -1,0 +1,480 @@
+%
+% Copyright (C) 2014 Anders Olofsson
+%
+% Copying and distribution of this file, with or without modification,
+% are permitted in any medium without royalty provided the copyright
+% notice and this notice are preserved.  This file is offered as-is,
+% without any warranty.
+%
+\documentclass{sheet}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{ae,aecompl}
+\usepackage[english]{babel}
+\usepackage[a4paper, landscape, margin=.1in]{geometry}
+\usepackage{amssymb}
+\usepackage{verbatim}
+
+\def\sheetheaderfont{\bfseries}
+\def\sheettablefont{\footnotesize\sffamily}
+\def\sheetheadercolor{black!10}
+\def\sheetrowcolor{black!5}
+
+\newcolumntype{N}{>{\raggedleft\arraybackslash}m{1.8em}}
+\def\tabcolsep{2pt}
+\def\arraystretch{1.3}
+\defsheet{asmtable}{4}{|m{4.6em} m{6.7em}|X|N|}
+\defsheet{table-lX}{2}{|l X|}
+\defsheet{table-lXN}{3}{|l|X|N|}
+\defsheet{table-llX}{3}{|l l X|}
+
+\pagefooter{ARMv7 version 1.0 page \thepage}
+
+\begin{document}
+\begin{multicols}{3}
+\raggedcolumns
+
+\begin{center}
+{\Large\bfseries ARMv7 Quick Reference}
+\end{center}
+%
+\begin{asmtable}{Arithmetic Instructions}
+ADC\{S\}	& rx, ry, op2		& rx = ry $+$ op2 $+$ C 				& \\
+ADD\{S\}	& rx, ry, op2		& rx = ry $+$ op2 				& \\
+ADDW		& rx, ry, \#i$^{ }_{12}$	& rx = ry $+$ i$^{\emptyset}_{ }$	& T \\
+ADR		& rx, $\pm$rel$^{ }_{12}$	& rx = PC $\pm$ rel			& \\
+CMN		& rx, op2		& rx $+$ op2					& \\
+CMP		& rx, op2		& rx $-$ op2					& \\
+QADD		& rx, ry, rz		& rx = SATS(ry $+$ rz, 32)			& \\
+QDADD		& rx, ry, rz		& rx = SATS(ry $+$ SATS(2$\times$rz, 32), 32)	& \\
+QDSUB		& rx, ry, rz		& rx = SATS(ry $-$ SATS(2$\times$rz, 32), 32)	& \\
+QSUB		& rx, ry, rz		& rx = SATS(ry $-$ rz, 32)			& \\
+RSB\{S\}	& rx, ry, op2		& rx = op2 $-$ ry 				& \\
+RSC\{S\}	& rx, ry, op2		& rx = op2 $-$ (ry $+$ C) 				& A \\
+SBC\{S\}	& rx, ry, op2		& rx = ry $-$ (op2 $+$ C)				& \\
+SDIV		& rx, ry, rz		& rx = ry $\sdiv$ rz			& 7 \\
+SSAT		& rx, \#j$^{ }_{5}$, ry\{slr\}	& rx = SATS(ry $\lsl\asr$ sh, j)$^{\pm}_{ }$	& 6 \\
+SSAT16		& rx, \#j$^{ }_{4}$, ry	& rx = SATS(ry$^{\pm}_{H1}$, j)$^{\pm}_{ }$:SATS(ry$^{\pm}_{H0}$, j)$^{\pm}_{ }$	& 6 \\
+SUB\{S\}	& rx, ry, op2		& rx = ry $-$ op2 				& \\
+SUBW		& rx, ry, \#i$^{ }_{12}$	& rx = ry $-$ i$^{\emptyset}_{ }$	& T \\
+UDIV		& rx, ry, rz		& rx = ry $\udiv$ rz				& 7 \\
+USAD8		& rx, ry, rz		& rx = $\sum_{n=0}^{3}$(ABS(ry$^{\emptyset}_{Bn}$)$-$rz$^{\emptyset}_{Bn}$)	& 6 \\
+USADA8		& rx, ry, rz, rw	& rx = rw $+$ $\sum_{n=0}^{3}$(ABS(ry$^{\emptyset}_{Bn}$)$-$rz$^{\emptyset}_{Bn}$)	& 6 \\
+USAT		& rx, \#j$^{ }_{5}$, ry\{slr\}	& rx = SATU(ry $\lsl\asr$ sh, j)$^{\pm}_{ }$	& 6 \\
+USAT16		& rx, \#i$^{ }_{4}$, ry	& rx = SATU(ry$^{\pm}_{H1}$, i)$^{\pm}_{ }$:SATU(ry$^{\pm}_{H0}$, i)$^{\pm}_{ }$	& 6 \\
+\end{asmtable}
+%
+\begin{table-lXN}{Operand 2}
+\#i$^{ }_{32}$	& i$^{ }_{8}$ $\ror$ i$^{ }_{4}$:0		& A \\
+\#i$^{ }_{32}$	& 0$^{ }_{24}$:i$^{ }_{8}$, 0$^{ }_{8}$:i$^{ }_{8}$0$^{ }_{8}$:i$^{ }_{8}$, i$^{ }_{8}$:0$^{ }_{8}$i$^{ }_{8}$:0$^{ }_{8}$ or i$^{ }_{8}$:i$^{ }_{8}$i$^{ }_{8}$:i$^{ }_{8}$	& T \\
+\#i$^{ }_{32}$	& 1:i$^{ }_{7}$ $\lsl$ \{1..24\}		& T \\
+rz		& rz						& \\
+rz, LSL \#n	& rz $\lsl$ \{1..31\}				& \\
+rz, LSR \#n	& rz $\lsr$ \{1..32\}				& \\
+rz, ASR \#n	& rz $\asr$ \{1..32\}				& \\
+rz, ROR \#n	& rz $\ror$ \{1..31\}				& \\
+rz, RRX		& C:rz$^{ }_{31:1}$; C = rz$^{ }_{0}$		& \\
+rz, LSL rw	& rz $\lsl$ rw					& A \\
+rz, LSR rw	& rz $\lsr$ rw					& A \\
+rz, ASR rw	& rz $\asr$ rw					& A \\
+rz, ROR rw	& rz $\ror$ rw					& A \\
+\end{table-lXN}
+%
+\begin{asmtable}{Bitwise and Move Instructions}
+AND\{S\}	& rx, ry, op2		& rx = ry \& op2 				& \\
+\textit{ASR\{S\}}	& rx, ry, \#j$^{ }_{5}$	& rx = ry $\asr$ j			& \\
+\textit{ASR\{S\}}	& rx, ry, Rs	& rx = ry $\asr$ Rs				& \\
+BFC		& rx, \#p, \#n		& rx$^{ }_{p+n-1:p}$ = 0$^{ }_{n}$		& 6t \\
+BFI		& rx, ry, \#p, \#n	& rx$^{ }_{p+n-1:p}$ = ry$^{ }_{n-1:0}$		& 6t \\
+BIC\{S\}	& rx, ry, op2		& rx = ry \& $\sim$op2 				& \\
+CLZ		& rx, ry		& rx = CountLeadingZeros(ry)			& \\
+EOR\{S\}	& rx, ry, op2		& rx = ry $\oplus$ op2 				& \\
+\textit{LSL\{S\}}	& rx, ry, \#i$^{ }_{5}$	& rx = ry $\lsl$ i			& \\
+\textit{LSL\{S\}}	& rx, ry, Rs	& rx = ry $\lsl$ Rs				& \\
+\textit{LSR\{S\}}	& rx, ry, \#j$^{ }_{5}$	& rx = ry $\lsr$ j			& \\
+\textit{LSR\{S\}}	& rx, ry, Rs	& rx = ry $\lsr$ Rs				& \\
+MOV\{S\}	& rx, op2		& rx = op2					& \\
+MOVT		& rx, \#i$^{ }_{16}$	& rx$^{ }_{31:16}$ = i				& 6t \\
+MOVW		& rx, \#i$^{ }_{16}$	& rx = i$^{\emptyset}_{ }$			& \\
+MVN\{S\}	& rx, op2		& rx = $\sim$op2				& \\
+ORN\{S\}	& rx, ry, op2		& rx = ry | $\sim$op2				& T \\
+ORR\{S\}	& rx, ry, op2		& rx = ry | op2					& \\
+RBIT		& rx, ry		& rx = ReverseBits(ry)				& 6t \\
+REV		& rx, ry		& rx = ry$^{ }_{B0}$:ry$^{ }_{B1}$:ry$^{ }_{B2}$:ry$^{ }_{B3}$	& 6 \\
+REV16		& rx, ry		& rx = ry$^{ }_{B2}$:ry$^{ }_{B3}$:ry$^{ }_{B0}$:ry$^{ }_{B1}$	& 6 \\
+REVSH		& rx, ry		& rx = ry$^{\pm}_{B0}$:ry$^{ }_{B1}$		& 6 \\
+\textit{ROR\{S\}}	& rx, ry, \#i$^{ }_{5}$	& rx = ry $\ror$ i			& \\
+\textit{ROR\{S\}}	& rx, ry, Rs	& rx = ry $\ror$ Rs				& \\
+\textit{RRX\{S\}}	& rx, ry	& rx = C:ry$^{ }_{31:1}$; C = ry$^{ }_{0}$	& \\
+SBFX		& rx, ry, \#p, \#n	& rx = ry$^{\pm}_{p+n-1:p}$			& 6t \\
+TEQ		& rx, op2		& rx | op2					& \\
+TST		& rx, op2		& rx \& op2					& \\
+UBFX		& rx, ry, \#p, \#n	& rx = ry$^{\emptyset}_{p+n-1:p}$		& 6t \\
+\end{asmtable}
+%
+\begin{asmtable}{Branch and Jump Instructions}
+B		& rel$^{ }_{26}$	& PC = PC $+$ rel$^{\pm}_{25:2}$:0$^{ }_{1:0}$	& A \\
+B		& rel$^{ }_{25}$	& PC = PC $+$ rel$^{\pm}_{24:1}$:0		& T \\
+Bcc		& rel$^{ }_{21}$	& if(cc) PC = PC $+$ rel$^{\pm}_{20:1}$:0		& I \\
+BKPT		& \#i$^{ }_{16}$	& BreakPoint(i)					& I \\
+BL		& rel$^{ }_{26}$	& LR=PC$^{ }_{31:1}$:0; PC$+$=rel$^{\pm}_{25:2}$:0$^{ }_{1:0}$	& A \\
+BL		& rel$^{ }_{25}$	& LR=PC$^{ }_{31:1}$:1; PC$+$=rel$^{\pm}_{24:1}$:0	& T \\
+BLX		& rel$^{ }_{26}$	& LR=PC$^{ }_{31:1}$:0; Set=1; PC$+$=rel$^{\pm}_{25:1}$:0	& A \\
+BLX		& rel$^{ }_{25}$	& LR=PC$^{ }_{31:1}$:1; Set=0; PC$+$=rel$^{\pm}_{24:2}$:0$^{ }_{1:0}$	& T \\
+BLX		& rx			& LR=PC$^{ }_{31:1}$:0; Set=rx$^{ }_{0}$; PC=rx$^{ }_{31:1}$:0	& A \\
+BX		& rx			& Set = rx$^{ }_{0}$; PC = rx$^{ }_{31:1}$:0	& A \\
+%BXJ		& rx			& Set=2; PC = rx$^{ }_{31:1}$:0			& \\
+TBB		& rx, ry		& PC = PC $+$ [rx $+$ ry]$^{\emptyset}_{B0}$	& T \\
+TBH		& rx, ry, LSL \#1	& PC = PC $+$ [rx $+$ ry $\lsl$ 1]$^{\emptyset}_{H0}$	& T \\
+\end{asmtable}
+%
+\begin{asmtable}{Load and Store Instructions}
+LDMDA		& rx\{!\}, rlist		& rlist = [rx$-$4$\times$cnt$+$4]; if(!) rx$-$=4$\times$cnt	& A \\
+LDMDB		& rx\{!\}, rlist		& rlist = [rx $-$ 4$\times$cnt]; if(!) rx$-$=4$\times$cnt	& \\
+LDM\textit{IA}	& rx\{!\}, rlist		& rlist = [rx]; if(!) rx $+$= 4$\times$cnt	& \\
+LDMIB		& rx\{!\}, rlist		& rlist = [rx $+$ 4]; if(!) rx $+$= 4$\times$cnt	& A \\ 
+LDR\{T\}	& rx, [addr]			& rx = [addr]				& \\
+LDRB\{T\}	& rx, [addr]			& rx = [addr]$^{\emptyset}_{8}$		& \\
+LDRD		& rx, ry, [addr]		& ry:rx = [addr]			& \\
+LDRH\{T\}	& rx, [addr]			& rx = [addr]$^{\emptyset}_{16}$	& \\
+LDRSB\{T\}	& rx, [addr]			& rx = [addr]$^{\pm}_{8}$		& \\
+LDRSH\{T\}	& rx, [addr]			& rx = [addr]$^{\pm}_{16}$		& \\
+\textit{POP}	& rlist				& rlist = [SP]; SP $+$= 4$\times$cnt	& \\
+\textit{PUSH}	& rlist				& SP $-$= 4$\times$cnt; [SP] = rlist	& \\
+STMDA		& rx\{!\}, rlist		& [rx$-$4$\times$cnt$+$4] = rlist; if(!) rx$-$=4$\times$cnt	& A \\
+STMDB		& rx\{!\}, rlist		& [rx $-$ 4$\times$cnt] = rlist; if(!) rx$-$=4$\times$cnt	& \\
+STM\textit{IA}	& rx\{!\}, rlist		& [rx] = rlist; if(!) rx $+$= 4$\times$cnt	& \\
+STMIB		& rx\{!\}, rlist		& [rx$+$4] = rlist; if(!) rx $+$= 4$\times$cnt	& A \\ 
+STR\{T\}	& rx, [addr]			& [addr] = rx				& \\
+STRB\{T\}	& rx, [addr]			& [addr]$^{ }_{8}$ = rx$^{ }_{B0}$	& \\
+STRD		& rx, ry, [addr]		& [addr] = ry:rx			& \\
+STRH\{T\}	& rx, [addr]			& [addr]$^{ }_{16}$ = rx$^{ }_{H0}$	& \\
+%SWP		& rx, ry, [rz]			& rx = [rz]; [rz] = ry				& A,D \\
+%SWPB		& rx, ry, [rz]			& rx = [rz]$^{\emptyset}_{8}$; [rz] = ry$^{ }_{B0}$	& A,D \\
+\end{asmtable}
+%
+\begin{table-llX}{ARM LDR/STR Addressing Modes}
+non-T		& [rz\{, \#$\pm$i$^{ }_{8}$\}]\{!\}	& addr = rz $\pm$ i; if(!) rz = addr \\
+xxR\{,B\}	& [rz\{, \#$\pm$i$^{ }_{12}$\}]\{!\}	& addr = rz $\pm$ i; if(!) rz = addr \\
+any		& [rz]\{, \#$\pm$i$^{ }_{8}$\}	& addr = rz; rz $\pm$= i \\
+xxR\{,B\}\{T\}	& [rz], \#$\pm$i$^{ }_{12}$	& addr = rz; rz $\pm$= i \\
+non-T		& [rz, $\pm$rw]\{!\}		& addr = rz $\pm$ rw; if(!) rz = addr \\
+xxR\{,B\}	& [rz, $\pm$rw\{AS\}]\{!\}	& addr = rz $\pm$ AS(rw); if(!) rz = addr \\
+any		& [rz], $\pm$rw			& addr = rz; rz $\pm$= rw \\
+xxR\{,B\}\{T\}	& [rz], $\pm$rw\{AS\}		& addr = rz; rz $\pm$= AS(rw) \\
+LD non-T	& $\pm$rel$^{ }_{8}$		& addr = PC $\pm$ rel \\
+LDR\{,B\}	& $\pm$rel$^{ }_{12}$		& addr = PC $\pm$ rel \\
+\end{table-llX}
+%
+\begin{table-llX}{Thumb2 LDR/STR Addressing Modes}
+any		& [rz\{, \#i$^{ }_{8}$\}]	& addr = rz $+$ i \\
+xxR\{,B,H,SB,SH\}	& [rz, \#i$^{ }_{12}$]	& addr = rz $+$ i \\
+xxR\{,B,H,SB,SH\}	& [rz, \#$\pm$i$^{ }_{8}$]\{!\}	& addr = rz $\pm$ i; if(!) rz = addr \\
+xxR\{,B,H,SB,SH\}	& [rz], \#$\pm$i$^{ }_{8}$	& addr = rz; rz $\pm$= i \\
+xxR\{,B,H,SB,SH\}	& [rz,rw\{,LSL \#i$^{ }_{2}$\}]	& addr = rz $+$ rw $\lsl$ i \\
+LDR\{,B,H,SB,SH\}	& $\pm$rel$^{ }_{12}$	& addr = PC $\pm$ rel \\
+xxRD		& [rz\{, \#$\pm$i$^{ }_{10}$\}]\{!\}	& addr=rz$\pm$i$^{ }_{9:2}$:0$^{ }_{1:0}$; if(!) rz=addr \\
+xxRD		& [rz], \#$\pm$i$^{ }_{10}$	& addr = rz; rz $\pm$= i$^{\pm}_{9:2}$:0$^{ }_{1:0}$ \\
+LDRD		& $\pm$rel$^{ }_{10}$		& addr = PC $\pm$ rel$^{ }_{9:2}$:0$^{ }_{1:0}$	\\
+\end{table-llX}
+%
+\begin{asmtable}{Multiplication Instructions}
+MLA		& rx, ry, rz, rw	& rx = rw $+$ ry $\umul$ rz			& \\
+MLA\{S\}	& rx, ry, rz, rw	& rx = rw $+$ ry $\umul$ rz			& A \\
+MLS		& rx, ry, rz, rw	& rx = rw $-$ ry $\umul$ rz			& 6t \\
+MUL		& rx, ry, rz		& rx = ry $\umul$ rz				& \\
+MUL\{S\}	& rx, ry, rz		& rx = ry $\umul$ rz				& A \\
+SMLAxy		& rx, ry, rz, rw	& rx = rw $+$ ry$^{\pm}_{Hx}$ $\smul$ rz$^{\pm}_{Hy}$	& \\
+SMLaD		& rx, ry, rz, rw	& rx = rw $+$ ry$^{\pm}_{H0}$$\smul$rz$^{\pm}_{H0}$ $\pm$ ry$^{\pm}_{H1}$$\smul$rz$^{\pm}_{H1}$	& 6 \\
+SMLaDX		& rx, ry, rz, rw	& rx = rw $+$ ry$^{\pm}_{H0}$$\smul$rz$^{\pm}_{H1}$ $\pm$ ry$^{\pm}_{H1}$$\smul$rz$^{\pm}_{H0}$	& \\
+SMLaLD		& rx, ry, rz, rw	& ry:rx $+$= rz$^{\pm}_{H0}$$\smul$rw$^{\pm}_{H0}$ $\pm$ rz$^{\pm}_{H1}$$\smul$rw$^{\pm}_{H1}$	& 6 \\
+SMLaLDX		& rx, ry, rz, rw	& ry:rx $+$= rz$^{\pm}_{H0}$$\smul$rw$^{\pm}_{H1}$ $\pm$ rz$^{\pm}_{H1}$$\smul$rw$^{\pm}_{H0}$	& \\
+SMLAL		& rx, ry, rz, rw	& ry:rx $+$= rz $\smul$ rw			& \\
+SMLAL\{S\}	& rx, ry, rz, rw	& ry:rx $+$= rz $\smul$ rw			& A \\
+SMLALxy		& rx, ry, rz, rw	& ry:rx $+$= rz$^{\pm}_{Hx}$ $\smul$ rw$^{\pm}_{Hy}$	& \\
+SMLAWy		& rx, ry, rz, rw	& rx = rw $+$ ry $\smul$ rz$^{\pm}_{Hy}$	& \\
+SMMLa		& rx, ry, rz, rw	& rx = rw $\pm$ (ry $\smul$ rz)$^{ }_{63:32}$	& 6 \\
+SMMLaR		& rx, ry, rz, rw	& rx = rw $\pm$ (ry$\smul$rz $+$ 0x80000000)$^{ }_{63:32}$	& \\
+SMMUL		& rx, ry, rz		& rx = (ry $\smul$ rz)$^{ }_{63:32}$		& 6 \\
+SMMULR		& rx, ry, rz		& rx = (ry $\smul$ rz $+$ 0x80000000)$^{ }_{63:32}$	& \\
+SMUaD		& rx, ry, rz		& rx = ry$^{\pm}_{H0}$ $\smul$ rz$^{\pm}_{H0}$ $\pm$ ry$^{\pm}_{H1}$ $\smul$ rz$^{\pm}_{H1}$	& 6 \\
+SMUaDX		& rx, ry, rz		& rx = ry$^{\pm}_{H0}$ $\smul$ rz$^{\pm}_{H1}$ $\pm$ ry$^{\pm}_{H1}$ $\smul$ rz$^{\pm}_{H0}$	& \\
+SMULxy		& rx, ry, rz		& rx = ry$^{\pm}_{Hx}$ $\smul$ rz$^{\pm}_{Hy}$	& \\
+SMULL		& rx, ry, rz, rw	& ry:rx = rz $\smul$ rw			& \\
+SMULL\{S\}	& rx, ry, rz, rw	& ry:rx = rz $\smul$ rw			& A \\
+SMULWy		& rx, ry, rz		& rx = (ry $\smul$ rz$^{\pm}_{Hy}$)$^{ }_{47:16}$	& \\
+UMAAL		& rx, ry, rz, rw	& ry:rx = ry $+$ rx $+$ rz $\umul$ rw		& \\
+UMLAL		& rx, ry, rz, rw	& ry:rx $+$= rz $\umul$ rw			& \\
+UMULL		& rx, ry, rz, rw	& ry:rx = rz $\umul$ rw			& \\
+\end{asmtable}
+%
+\begin{asmtable}{Parallel Instructions}
+pADD16		& rx, ry, rz		& for(n=0..1) rx$^{ }_{Hn}$ = p(ry$^{ }_{Hn}$ $+$ rz$^{ }_{Hn}$)	& 6 \\
+pADD8		& rx, ry, rz		& for(n=0..3) rx$^{ }_{Bn}$ = p(ry$^{ }_{Bn}$ $+$ rz$^{ }_{Bn}$)	& 6 \\
+pASX		& rx, ry, rz		& rx = p(ry$^{ }_{H1}$ $+$ rz$^{ }_{H0}$):p(ry$^{ }_{H0}$ $-$ rz$^{ }_{H1}$)	& 6 \\
+pSAX		& rx, ry, rz		& rx = p(ry$^{ }_{H1}$ $-$ rz$^{ }_{H0}$):p(ry$^{ }_{H0}$ $+$ rz$^{ }_{H1}$)	& 6 \\
+pSUB16		& rx, ry, rz		& for(n=0..1) rx$^{ }_{Hn}$ = p(ry$^{ }_{Hn}$ $-$ rz$^{ }_{Hn}$)	& 6 \\
+pSUB8		& rx, ry, rz		& for(n=0..3) rx$^{ }_{Bn}$ = p(ry$^{ }_{Bn}$ $-$ rz$^{ }_{Bn}$)	& 6 \\
+SEL		& rx, ry, rz		& for(n=0..3) rx$^{ }_{Bn}$ = (GEn ? ry : rz)$^{ }_{Bn}$	& 6 \\
+\end{asmtable}
+%
+\begin{table-lX}{Parallel Instruction Prefixes}
+Q	& Signed operation, Results are saturated \\
+S	& Signed operation, Results are truncated \\
+SH	& Signed operation, Results are right shifted by one \\
+U	& Unsigned operation, Results are truncated \\
+UH	& Unsigned operation, Results are right shifted by one \\
+UQ	& Unsigned operation, Results are saturated \\
+\end{table-lX}
+%
+\begin{asmtable}{Packing and Unpacking Instructions}
+PKHBT		& rx, ry, rz\{sl\}	& rx = (rz $\lsl$ sh)$^{ }_{H1}$:ry$^{ }_{H0}$	& 6 \\
+PKHTB		& rx, ry, rz\{sr\}	& rx = ry$^{ }_{H1}$:(rz $\asr$ sh)$^{ }_{H0}$	& 6 \\
+SXTAB		& rx, ry, rz\{rb\}	& rx = ry $+$ (rz $\ror$ sh)$^{\pm}_{B0}$	& 6 \\
+SXTAB16		& rx, ry, rz\{rb\}	& for(n=0..1) rx$^{ }_{Hn}$=ry$^{ }_{Hn}$$+$(rz$\ror$sh)$^{\pm}_{B2n}$	& 6 \\
+SXTAH		& rx, ry, rz\{rb\}	& rx = ry $+$ (rz $\ror$ sh)$^{\pm}_{H0}$	& 6 \\
+SXTB		& rx, ry\{rb\}		& rx = (ry $\ror$ sh)$^{\pm}_{B0}$		& 6 \\
+SXTB16		& rx, ry\{rb\}		& for(n=0..1) rx$^{ }_{Hn}$ = (ry $\ror$ sh)$^{\pm}_{B2n}$	& 6 \\
+SXTH		& rx, ry\{rb\}		& rx = (ry $\ror$ sh)$^{\pm}_{H0}$		& 6 \\
+UXTAB		& rx, ry, rz\{rb\}	& rx = ry $+$ (rz $\ror$ sh)$^{\emptyset}_{B0}$	& 6 \\
+UXTAB16		& rx, ry, rz\{rb\}	& for(n=0..1) rx$^{ }_{Hn}$=ry$^{ }_{Hn}$$+$(rz$\ror$sh)$^{\emptyset}_{B2n}$	& 6 \\
+UXTAH		& rx, ry, rz\{rb\}	& rx = ry $+$ (rz $\ror$ sh)$^{\emptyset}_{H0}$	& 6 \\
+UXTB		& rx, ry\{rb\}		& rx = (ry $\ror$ sh)$^{\emptyset}_{B0}$	& 6 \\
+UXTB16		& rx, ry\{rb\}		& for(n=0..1) rx$^{ }_{Hn}$ = (ry $\ror$ sh)$^{\emptyset}_{B2n}$	& 6 \\
+UXTH		& rx, ry\{rb\}		& rx = (ry $\ror$ sh)$^{\emptyset}_{H0}$	& 6 \\
+\end{asmtable}
+%
+\begin{asmtable}{Exclusive Load and Store Instructions}
+CLREX		&			& ClearExclusiveLocal()				& I,6k \\
+LDREX		& rx, [ry]		& rx = [ry]; SetExclusiveMonitor		& 6k \\
+LDREX		& rx, [ry, \#i$^{ }_{10}$]	& rx = [ry$+$i$^{\emptyset}_{9:2}$:0$^{ }_{1:0}$]; SetExclusiveMonitor	& T,6k \\
+LDREXB		& rx, [ry]		& rx = [ry]$^{\emptyset}_{8}$; SetExclusiveMonitor	& 6k \\
+LDREXD		& rx, ry, [rz]		& ry:rx = [rz]; SetExclusiveMonitor		& 6k \\
+LDREXH		& rx, [ry]		& rx = [ry]$^{\emptyset}_{16}$; SetExclusiveMonitor	& 6k \\
+STREX		& rx,ry,[rz]		& if(Pass) [rz] = ry; rx = Pass ? 1 : 0		& 6k \\
+STREX		& rx,ry,[rz,\#i$^{ }_{10}$]	& if(Pass) [rz$+$i$^{\emptyset}_{9:2}$:0$^{ }_{1:0}$]=ry; rx=Pass?1:0	& T,6k \\
+STREXB		& rx,ry,[rz]		& if(Pass) [rz]$^{ }_{8}$ = ry$^{ }_{B0}$; rx = Pass?1:0	& 6k \\
+STREXD		& rx,ry,rz,[rw]		& if(Pass) [rw] = rz:ry; rx = Pass?1:0		& 6k \\
+STREXH		& rx,ry,[rz]		& if(Pass) [rz]$^{ }_{16}$ = ry$^{ }_{H0}$; rx = Pass?1:0	& 6k \\
+\end{asmtable}
+%
+\begin{asmtable}{System Instructions}
+CPSI\{D,E\}	& \{aif\}\{, \#mode\}	& \{a\}\{i\}\{f\} = (E ? 1: 0); MODE = mode	& 6 \\
+CPS		& \#mode		& MODE = mode					& 6 \\
+ERET		&			& PC = LR; CPSR = SPSR				& 7 \\
+HVC		& \#i$^{ }_{16}$	& CallHypervisor(i)				& 7 \\
+MRS		& rx, xPSR		& rx = \{CPSR,SPSR\}				& \\
+MRS		& rx, Rbanked		& rx = Rbanked					& 7 \\
+MSR		& xPSR, rx		& \{CPSR,SPSR\} = rx				& \\
+MSR		& Rbanked, rx		& Rbanked = rx					& 7 \\
+MSR		& xPSR\_\{cxsf\}, i	& \{CPSR,SPSR\}$^{ }_{f,s,x,c}$ = i$^{ }_{f,s,x,c}$	& A \\
+MSR		& xPSR\_\{cxsf\}, rx	& \{CPSR,SPSR\}$^{ }_{f,s,x,c}$ = rx$^{ }_{f,s,x,c}$	& \\
+RFEdi		& rx\{!\}		& LDMdi rx\{!\}, \{PC, CPSR\}			& \\
+SMC		& \#i$^{ }_{4}$		& CallSecureMonitor()				& 6k \\
+SRSdi		& SP\{!\}, \#mode	& STMdi SP\_mode\{!\}, \{LR, SPSR\}		& 6 \\
+\end{asmtable}
+%
+\begin{asmtable}{Special Instructions}
+DBG		& \#i$^{ }_{4}$		& DebugHint(i)					& 7 \\
+DMB		& option		& DataMemoryBarrier(option)			& I,7 \\
+DSB		& option		& DataSynchronizationBarrier(option)		& I,7 \\
+ISB		& SY			& InstructionSynchronizationBarrier(SY)		& I,7 \\
+NOP		&			&						& 6k \\
+PLD\{W\}	& [addr]		& PreloadData(addr)				& \\
+%PLD\{W\}	& [rx, \#i$^{ }_{12}$]	& PreloadData(rx $+$ i)				& \\
+%PLD\{W\}	& [rx, \#$-$i$^{ }_{8}$]	& PreloadData(rx $-$ i)			& \\
+%PLD\{W\}	& [rx, \#$-$i$^{ }_{12}$]	& PreloadData(rx $-$ i)			& A \\
+%PLD		& $\pm$rel$^{ }_{12}$	& PreloadData(PC $\pm$ rel)			& \\
+%PLD\{W\}	& [rx, ry\{, LSL \#i$^{ }_{2}$\}]	& PreloadData(rx $+$ ry $\lsl$ i)	& \\
+%PLD\{W\}	& [rx, $\pm$ry\{AS\}]	& PreloadData(rx $\pm$ AS(ry))			& A \\
+PLI		& [addr]		& PreloadInstr(addr)				& 7 \\
+%PLI		& [rx, \#i$^{ }_{12}$]	& PreloadInstr(rx $+$ i)			& 7 \\
+%PLI		& [rx, \#$-$i$^{ }_{8}$]	& PreloadInstr(rx $-$ i)		& 7 \\
+%PLI		& [rx, \#$-$i$^{ }_{12}$]	& PreloadInstr(rx $-$ i)		& A,7 \\
+%PLI		& $\pm$rel$^{ }_{12}$	& PreloadInstr(PC $\pm$ rel)			& 7\\
+%PLI		& [rx, ry\{, LSL \#i$^{ }_{2}$\}]	& PreloadInstr(rx $+$ ry $\lsl$ i)	& 7 \\
+%PLI		& [rx, $\pm$ry\{AS\}]	& PreloadInstr(rx $\pm$ AS(ry))			& A,7 \\
+SETEND		& \{BE/LE\}		& EndianState = \{BE/LE\}			& I,6 \\
+SEV		&			& SendEvent()					& 6k \\
+SVC		& \#i$^{ }_{24}$	& CallSupervisor()				& A \\
+UDF		& \#i$^{ }_{16}$	& UndefinedException()				& \\
+WFE		&			& WaitForEvent()				& 6k \\
+WFI		&			& WaitForInterrupt()				& 6k \\
+YIELD		&			& HintYield()					& 6k \\
+\end{asmtable}
+%
+\begin{table-lX}{Keys}
+\{S\}			& Optional suffix, if present update flags \\
+\{t\}			& Conditional for additional instructions (T or E) \\
+\{T\}			& LDR/STR instruction uses user privileges. \\
+a			& A or S to add or subtract operand. \\
+x, y			& Selects bottom (B) or top (T) half of register(s) \\
+cc			& Condition code (can suffix most ARM instructions) \\
+di			& DA, DB, IA or IB for decrease/increase before/after. \\
+i, j			& Immediate operand, range 0..max / 1..max+1 \\
+rx, ry, rz, rw		& General register \\
+Rbanked			& Banked register \\
+rlist			& Comma separated list of registers within \{ \}. \\
+op2			& Immediate or shifted register \\
+xPSR			& APSR, CPSR or SPSR \\
+SAT\{S,U\}(x,b)		& Saturated signed/unsigned b bit value \\
+B\{0,1,2,3\}		& Selected byte (bits 7:0, 15:8, 23:16 or 31:24) \\
+H\{0,1\}		& Selected half word (bits 15:0 or 31:16) \\
+\{rb\}			& Optional rotate (ROR 8, ROR 16 or ROR 24) \\
+\{slr\}			& Optional shift (LSL \#\{1..31\} or ASR \#\{1..32\}) \\
+\{sl\}			& Optional left shift (LSL \#\{1..31\}) \\
+\{sr\}			& Optional right shift (ASR \#\{1..32\}) \\
+\{AS\}			& ARM shift or rotate (LSL/ROR \#\{1..31\}, LSR/ASR \#\{1..32\} or RRX) \\
+value$^{\pm}_{ }$, value$^{\emptyset}_{ }$	& Value is sign/zero extended\\
+$\smul$ $\sdiv$ $\asr$	& Operation is signed \\
+\end{table-lX}
+%
+\begin{table-lX}{Notes}
+6 & Introduced in ARMv6 \\
+6k & Introduced in ARMv6k \\
+6t & Introduced in ARMv6T2 \\
+7 & Introduced in ARMv7 \\
+A & Only available in ARM mode \\
+%D & Deprecated instruction \\
+H & Thumb1 instruction can use high registers \\
+I & Can't be conditional \\
+S & Thumb16 instruction updates status flags unless in IT block \\
+T & Only available in Thumb mode \\
+\end{table-lX}
+%
+\begin{table-llX}{General Registers}
+R0-R3	&	& Arguments and return values (useable by Thumb16) \\
+R4-R7	&	& General purpose (must be preserved, useable by Thumb16) \\
+R8-R11	&	& General purpose registers (must be preserved) \\
+R12	& IP	& Intra-procedure-call scratch register \\
+R13	& SP	& Stack pointer \\
+R14	& LR	& Return address \\
+R15	& PC	& Program counter \\
+\end{table-llX}
+%
+\begin{table-llX}{Condition Codes}
+EQ	& Equal					& Z \\
+NE	& Not equal				& !Z \\
+CS/HS	& Carry set, Unsigned higher or same	& C \\
+CC/LO	& Carry clear, Unsigned lower		& !C \\
+MI	& Minus, Negative			& N \\
+PL	& Plus, Positive or zero		& !N \\
+VS	& Overflow				& V \\
+VC	& No overflow				& !V \\
+HI	& Unsigned higher			& C \& !Z \\
+LS	& Unsigned lower or same		& !C | Z \\
+GE	& Signed greater than or equal		& N $=$ V \\
+LT	& Signed less than			& N $\ne$ V \\
+GT	& Signed greater than			& !Z \& N $=$ V \\
+LE	& Signed less than or equal		& Z | N $\ne$ V \\
+AL	& Always (default)			& 1 \\
+\end{table-llX}
+%
+\begin{table-lX}{DMB and DSB Options}
+SY	& Full system, Read and write \\
+(SY)ST	& Full system, Write only \\
+ISH	& Inner shareable, Read and write \\
+ISHST	& Inner shareable, Write only \\
+NSH	& Non-shareable, Read and write \\
+NSHST	& Non-shareable, Write only \\
+OSH	& Outer shareable, Read and write \\
+OSHST	& Outer sharable, Write only \\
+\end{table-lX}
+%
+\begin{asmtable}{Thumb16 Bitwise and Move Instructions}
+AND		& rx, ry		& rx = rx \& ry					& S \\
+ASR		& rx, ry, \#j$^{ }_{5}$	& rx = ry $\asr$ j				& S \\
+ASR		& rx, ry		& rx = rx $\asr$ ry				& S \\
+BIC		& rx, ry		& rx = rx \& $\sim$ry				& S \\
+EOR		& rx, ry		& rx = rx $\oplus$ ry				& S \\
+LSL		& rx, ry, \#i$^{ }_{5}$	& rx = ry $\lsl$ i				& S \\
+LSL		& rx, ry		& rx = rx $\lsl$ ry				& S \\
+LSR		& rx, ry, \#j$^{ }_{5}$	& rx = ry $\lsr$ j				& S \\
+LSR		& rx, ry		& rx = rx $\lsr$ ry				& S \\
+MOV		& rx, \#i$^{ }_{8}$	& rx = i$^{\emptyset}_{ }$			& S \\
+MOV		& rx, ry		& rx = ry					& H \\
+MOVS		& rx, ry		& rx = ry					& \\
+MVN		& rx, ry		& rx = $\sim$ry					& S \\
+ORR		& rx, ry		& rx = rx | ry					& S \\
+REV		& rx, ry		& rx = ry$^{ }_{7:0}$:ry$^{ }_{15:8}$:ry$^{ }_{23:16}$:ry$^{ }_{31:24}$	& 6 \\
+REV16		& rx, ry		& rx = ry$^{ }_{23:16}$:ry$^{ }_{31:24}$:ry$^{ }_{7:0}$:ry$^{ }_{15:8}$	& 6 \\
+REVSH		& rx, ry		& rx = ry$^{\pm}_{7:0}$:ry$^{ }_{15:8}$		& 6 \\
+ROR		& rx, ry		& rx = rx $\ror$ ry				& S \\
+SXTB		& rx, ry		& rx = ry$^{\pm}_{7:0}$				& \\
+SXTH		& rx, ry		& rx = ry$^{\pm}_{15:0}$			& \\
+TST		& rx, ry		& rx \& ry					& \\
+UXTB		& rx, ry		& rx = ry$^{\emptyset}_{7:0}$			& \\
+UXTH		& rx, ry		& rx = ry$^{\emptyset}_{15:0}$			& \\
+\end{asmtable}
+%
+\begin{asmtable}{Thumb16 Branch and Special Instructions}
+B		& rel$^{ }_{12}$	& PC = PC $+$ rel$^{\pm}_{11:1}$:0		& \\
+Bcc		& rel$^{ }_{9}$		& if(cc) PC = PC $+$ rel$^{\pm}_{8:1}$:0	& I \\
+BKPT		& \#i$^{ }_{8}$		& BreakPoint(i)					& I \\
+BL		& rel$^{ }_{23}$	& LR=PC$^{ }_{31:1}$:1; PC$+$=rel$^{\pm}_{22:1}$:0	& \\
+BLX		& rel$^{ }_{23}$	& LR=PC$^{ }_{31:1}$:1; Set=0; PC$+$=rel$^{\pm}_{22:2}$:0$^{ }_{1:0}$	& \\
+BLX		& rx			& LR=PC$^{ }_{31:1}$:1; Set=rx$^{ }_{0}$; PC=rx$^{ }_{31:1}$:0	& \\
+BX		& rx			& Set=rx$^{ }_{0}$; PC = rx$^{ }_{31:1}$:0	& \\
+CBNZ		& rx, rel$^{ }_{7}$	& if(rx $\ne$ 0) PC $+$= rel$^{\emptyset}_{6:1}$:0	& I,6t \\
+CBZ		& rx, rel$^{ }_{7}$	& if(rx $=$ 0) PC $+$= rel$^{\emptyset}_{6:1}$:0	& I,6t \\
+CPSI\{D,E\}	& \{aif\}		& \{a\}\{i\}\{f\} = (E ? 1 : 0)			& 6 \\
+IT\{t\{t\{t\}\}\}	& cc		& if(cc) NextInstruction			& I,6t \\
+NOP		&			&						& 6k \\
+SETEND		& \{BE/LE\}		& EndianState = \{BE/LE\}			& I,6 \\
+SEV		&			& SendEvent()					& 7 \\
+SVC		& \#i$^{ }_{8}$		& CallSupervisor()				& \\
+UDF		& \#i$^{ }_{8}$		& UndefinedException()				& \\
+WFE		&			& WaitForEvent()				& 7 \\
+WFI		&			& WaitForInterrupt()				& 7 \\
+YIELD		&			& HintYield()					& 7 \\
+\end{asmtable}
+%
+\begin{asmtable}{Thumb16 Arithmetic Instructions}
+ADC		& rx, ry		& rx = rx $+$ ry $+$ C				& S \\
+ADD		& rx, ry, \#i$^{ }_{3}$	& rx = ry $+$ i$^{\emptyset}_{ }$		& S \\
+ADD		& rx, \#i$^{ }_{8}$	& rx = rx $+$ i$^{\emptyset}_{ }$		& S \\
+ADD		& rx, ry, rz		& rx = ry $+$ rz				& S \\
+ADD		& rx, ry		& rx = rx $+$ ry				& H \\
+ADD		& rx, SP, \#i$^{ }_{8}$	& rx = SP $+$ i$^{\emptyset}_{ }$		& \\
+ADD		& SP, \#i$^{ }_{9}$	& SP = SP $+$ i$^{\emptyset}_{8:2}$:0$^{ }_{1:0}$	& \\
+ADR		& rx, rel$^{ }_{10}$	& rx = PC $+$ rel$^{\emptyset}_{9:2}$:0$^{ }_{1:0}$	& \\
+CMN		& rx, ry		& rx $+$ ry					& \\
+CMP		& rx, \#i$^{ }_{8}$	& rx $-$ i$^{\emptyset}_{ }$			& \\
+CMP		& rx, ry		& rx $-$ ry					& H \\
+MUL		& rx, ry		& rx = rx $\umul$ ry				& S \\
+RSB		& rx, ry, \#0		& rx = 0 $-$ ry					& S \\
+SBC		& rx, ry		& rx = rx $-$ (ry $+$ C)			& S \\
+SUB		& rx, ry, \#i$^{ }_{3}$	& rx = ry $-$ i$^{\emptyset}_{ }$		& S \\
+SUB		& rx, \#i$^{ }_{8}$	& rx = rx $-$ i$^{\emptyset}_{ }$		& S \\
+SUB		& rx, ry, rz		& rx = ry $-$ rz				& S \\
+SUB		& SP, \#i$^{ }_{9}$	& SP = SP $-$ i$^{\emptyset}_{8:2}$:0$^{ }_{1:0}$	& \\
+\end{asmtable}
+%
+\begin{asmtable}{Thumb16 Load and Store Instructions}
+LDM\textit{IA}	& rx\{!\}, rlist	& rlist = [rx]; if(!) rx $+$= 4$\times$cnt	& \\
+LDMIA		& SP!, rlist		& rlist = [SP]; SP $+$= 4$\times$cnt		& \\
+LDR		& rx, [ry\{, \#i$^{ }_{7}$\}]	& rx = [ry $+$ i$^{\emptyset}_{6:2}$:0$^{ }_{1:0}$]	& \\
+LDR		& rx, [SP\{, \#i$^{ }_{10}$\}]	& rx = [SP $+$ i$^{\emptyset}_{9:2}$:0$^{ }_{1:0}$]	& \\
+LDR		& rx, rel$^{ }_{10}$	& rx = [PC $+$ rel$^{\emptyset}_{9:2}$:0$^{ }_{1:0}$]	& \\
+LDR		& rx, [ry, rz]		& rx = [ry $+$ rz]				& \\
+LDRB		& rx, [ry\{, \#i$^{ }_{5}$\}]	& rx = [ry $+$ i$^{\emptyset}_{ }$]$^{\emptyset}_{8}$	& \\
+LDRB		& rx, [ry, rz]		& rx = [ry $+$ rz]$^{\emptyset}_{8}$		& \\
+LDRH		& rx, [ry\{, \#i$^{ }_{6}$\}]	& rx = [ry $+$ i$^{\emptyset}_{5:1}$:0]$^{\emptyset}_{16}$	& \\
+LDRH		& rx, [ry, rz]		& rx = [ry $+$ rz]$^{\emptyset}_{16}$		& \\
+LDRSB		& rx, [ry, rz]		& rx = [ry $+$ rz]$^{\pm}_{8}$			& \\
+LDRSH		& rx, [ry, rz]		& rx = [ry $+$ rz]$^{\pm}_{16}$			& \\
+\textit{POP}	& rlist			& rlist = [SP]; SP $+$= 4$\times$cnt		& \\
+\textit{PUSH}	& rlist			& SP $-$= 4$\times$cnt; [SP] = rlist		& \\
+STM\textit{IA}	& rx!, rlist		& [rx] = rlist; rx $+$= 4$\times$cnt		& \\
+STMDB		& SP!, rlist		& SP $-$= 4$\times$cnt; [SP] = rlist		& \\
+STR		& rx, [ry\{, \#i$^{ }_{7}$\}]	& [ry $+$ i$^{\emptyset}_{6:2}$:0$^{ }_{1:0}$] = rx	& \\
+STR		& rx, [SP\{, \#i$^{ }_{10}$\}]	& [SP $+$ i$^{\emptyset}_{9:2}$:0$^{ }_{1:0}$] = rx	& \\
+STR		& rx, [ry, rz]		& [ry $+$ rz] = rx				& \\
+STRB		& rx, [ry\{, \#i$^{ }_{5}$\}]	& [ry $+$ i$^{\emptyset}_{ }$]$^{ }_{8}$ = rx$^{ }_{7:0}$	& \\
+STRB		& rx, [ry, rz]		& [ry $+$ rz]$^{ }_{8}$ = rx$^{ }_{7:0}$	& \\
+STRH		& rx, [ry\{, \#i$^{ }_{6}$\}]	& [ry $+$ i$^{\emptyset}_{5:1}$:0]$^{ }_{16}$ = rx$^{ }_{15:0}$	& \\
+STRH		& rx, [ry, rz]		& [ry $+$ rz]$^{ }_{16}$ = rx$^{ }_{15:0}$	& \\
+\end{asmtable}
+%
+\end{multicols}
+\end{document}
