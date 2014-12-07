@@ -161,7 +161,7 @@ XLAT	&			& AL = [BX $+$ AL]				& {--}{--}{--}{--}{--}{--} \\
 \begin{asmtable}{BCD Instructions}
 AAA	&	& if(AL$^{ }_{3:0}$>9 || A) AL=(AL$+$6)\&0x0f; AH$++$; \newline A=C=1; else AL=AL\&0x0f; A=C=0	& *uuuu* \\
 AAD	& i$^{ }_{8}$		& AL = AL $+$ AH $\umul$ i; AH = 0		& uu***u \\
-AAM	& i$^{ }_{8}$		& AL = AL $\udiv$ i; AH = AL $\umod$ i		& uu***u \\
+AAM	& i$^{ }_{8}$		& AH = AL $\udiv$ i; AL = AL $\umod$ i		& uu***u \\
 AAS	&	& if(AL$^{ }_{3:0}$>9 || A) AL=(AL$-$6)\&0x0f; AH$--$; \newline A=C=1; else AL=AL\&0x0f; A=C=0	& *uuuu* \\
 DAA	&	& if(AL$^{ }_{3:0}$>9 || A) C:AL$+$=6; A=1; else A=0 \newline if(AL$^{ }_{7:4}$>9 || C) AL$+$=0x60; C=1; else C=0	& *u**** \\
 DAS	&	& if(AL$^{ }_{3:0}$>9 || A) C:AL$-$=6; A=1; else A=0 \newline if(AL$^{ }_{7:4}$>9 || C) AL$-$=0x60; C=1; else C=0	& *u**** \\
