@@ -34,7 +34,7 @@ Floating point instructions for 8087 are not included.
 
 Note: I was unable to find the execution time for SETALC instruction
       anywhere so the value listed is derived from testing on an actual
-      AMD 8086 CPU.
+      CPU (Fujitsu MBL8086-2).
 
 
 ARM v7
