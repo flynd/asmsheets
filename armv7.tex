@@ -338,7 +338,7 @@ A & Only available in ARM mode \\
 %D & Deprecated instruction \\
 H & Thumb1 instruction can use high registers \\
 I & Can't be conditional \\
-S & Thumb16 instruction updates status flags unless in IT block \\
+S & Thumb16 instruction must have S suffix unless in IT block \\
 T & Only available in Thumb mode \\
 \end{table-lX}
 %
@@ -382,24 +382,24 @@ OSHST	& Outer sharable, Write only \\
 \end{table-lX}
 %
 \begin{asmtable}{Thumb16 Bitwise and Move Instructions}
-AND		& rx, ry		& rx = rx \& ry					& S \\
-ASR		& rx, ry, \#j$^{ }_{5}$	& rx = ry $\asr$ j				& S \\
-ASR		& rx, ry		& rx = rx $\asr$ ry				& S \\
-BIC		& rx, ry		& rx = rx \& $\sim$ry				& S \\
-EOR		& rx, ry		& rx = rx $\oplus$ ry				& S \\
-LSL		& rx, ry, \#i$^{ }_{5}$	& rx = ry $\lsl$ i				& S \\
-LSL		& rx, ry		& rx = rx $\lsl$ ry				& S \\
-LSR		& rx, ry, \#j$^{ }_{5}$	& rx = ry $\lsr$ j				& S \\
-LSR		& rx, ry		& rx = rx $\lsr$ ry				& S \\
-MOV		& rx, \#i$^{ }_{8}$	& rx = i$^{\emptyset}_{ }$			& S \\
+AND\{S\}	& rx, ry		& rx = rx \& ry					& S \\
+ASR\{S\}	& rx, ry, \#j$^{ }_{5}$	& rx = ry $\asr$ j				& S \\
+ASR\{S\}	& rx, ry		& rx = rx $\asr$ ry				& S \\
+BIC\{S\}	& rx, ry		& rx = rx \& $\sim$ry				& S \\
+EOR\{S\}	& rx, ry		& rx = rx $\oplus$ ry				& S \\
+LSL\{S\}	& rx, ry, \#i$^{ }_{5}$	& rx = ry $\lsl$ i				& S \\
+LSL\{S\}	& rx, ry		& rx = rx $\lsl$ ry				& S \\
+LSR\{S\}	& rx, ry, \#j$^{ }_{5}$	& rx = ry $\lsr$ j				& S \\
+LSR\{S\}	& rx, ry		& rx = rx $\lsr$ ry				& S \\
 MOV		& rx, ry		& rx = ry					& H \\
 MOVS		& rx, ry		& rx = ry					& \\
-MVN		& rx, ry		& rx = $\sim$ry					& S \\
-ORR		& rx, ry		& rx = rx | ry					& S \\
+MOV\{S\}	& rx, \#i$^{ }_{8}$	& rx = i$^{\emptyset}_{ }$			& S \\
+MVN\{S\}	& rx, ry		& rx = $\sim$ry					& S \\
+ORR\{S\}	& rx, ry		& rx = rx | ry					& S \\
 REV		& rx, ry		& rx = ry$^{ }_{7:0}$:ry$^{ }_{15:8}$:ry$^{ }_{23:16}$:ry$^{ }_{31:24}$	& 6 \\
 REV16		& rx, ry		& rx = ry$^{ }_{23:16}$:ry$^{ }_{31:24}$:ry$^{ }_{7:0}$:ry$^{ }_{15:8}$	& 6 \\
 REVSH		& rx, ry		& rx = ry$^{\pm}_{7:0}$:ry$^{ }_{15:8}$		& 6 \\
-ROR		& rx, ry		& rx = rx $\ror$ ry				& S \\
+ROR\{S\}	& rx, ry		& rx = rx $\ror$ ry				& S \\
 SXTB		& rx, ry		& rx = ry$^{\pm}_{7:0}$				& \\
 SXTH		& rx, ry		& rx = ry$^{\pm}_{15:0}$			& \\
 TST		& rx, ry		& rx \& ry					& \\
@@ -430,10 +430,10 @@ YIELD		&			& HintYield()					& 7 \\
 \end{asmtable}
 %
 \begin{asmtable}{Thumb16 Arithmetic Instructions}
-ADC		& rx, ry		& rx = rx $+$ ry $+$ C				& S \\
-ADD		& rx, ry, \#i$^{ }_{3}$	& rx = ry $+$ i$^{\emptyset}_{ }$		& S \\
-ADD		& rx, \#i$^{ }_{8}$	& rx = rx $+$ i$^{\emptyset}_{ }$		& S \\
-ADD		& rx, ry, rz		& rx = ry $+$ rz				& S \\
+ADC\{S\}	& rx, ry		& rx = rx $+$ ry $+$ C				& S \\
+ADD\{S\}	& rx, ry, \#i$^{ }_{3}$	& rx = ry $+$ i$^{\emptyset}_{ }$		& S \\
+ADD\{S\}	& rx, \#i$^{ }_{8}$	& rx = rx $+$ i$^{\emptyset}_{ }$		& S \\
+ADD\{S\}	& rx, ry, rz		& rx = ry $+$ rz				& S \\
 ADD		& rx, ry		& rx = rx $+$ ry				& H \\
 ADD		& rx, SP, \#i$^{ }_{8}$	& rx = SP $+$ i$^{\emptyset}_{ }$		& \\
 ADD		& SP, \#i$^{ }_{9}$	& SP = SP $+$ i$^{\emptyset}_{8:2}$:0$^{ }_{1:0}$	& \\
@@ -441,12 +441,12 @@ ADR		& rx, rel$^{ }_{10}$	& rx = PC $+$ rel$^{\emptyset}_{9:2}$:0$^{ }_{1:0}$	& 
 CMN		& rx, ry		& rx $+$ ry					& \\
 CMP		& rx, \#i$^{ }_{8}$	& rx $-$ i$^{\emptyset}_{ }$			& \\
 CMP		& rx, ry		& rx $-$ ry					& H \\
-MUL		& rx, ry		& rx = rx $\umul$ ry				& S \\
-RSB		& rx, ry, \#0		& rx = 0 $-$ ry					& S \\
-SBC		& rx, ry		& rx = rx $-$ (ry $+$ C)			& S \\
-SUB		& rx, ry, \#i$^{ }_{3}$	& rx = ry $-$ i$^{\emptyset}_{ }$		& S \\
-SUB		& rx, \#i$^{ }_{8}$	& rx = rx $-$ i$^{\emptyset}_{ }$		& S \\
-SUB		& rx, ry, rz		& rx = ry $-$ rz				& S \\
+MUL\{S\}	& rx, ry		& rx = rx $\umul$ ry				& S \\
+RSB\{S\}	& rx, ry, \#0		& rx = 0 $-$ ry					& S \\
+SBC\{S\}	& rx, ry		& rx = rx $-$ (ry $+$ C)			& S \\
+SUB\{S\}	& rx, ry, \#i$^{ }_{3}$	& rx = ry $-$ i$^{\emptyset}_{ }$		& S \\
+SUB\{S\}	& rx, \#i$^{ }_{8}$	& rx = rx $-$ i$^{\emptyset}_{ }$		& S \\
+SUB\{S\}	& rx, ry, rz		& rx = ry $-$ rz				& S \\
 SUB		& SP, \#i$^{ }_{9}$	& SP = SP $-$ i$^{\emptyset}_{8:2}$:0$^{ }_{1:0}$	& \\
 \end{asmtable}
 %
