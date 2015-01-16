@@ -1,5 +1,5 @@
 %
-% Copyright (C) 2014 Anders Olofsson
+% Copyright (C) 2014-2015 Anders Olofsson
 %
 % Copying and distribution of this file, with or without modification,
 % are permitted in any medium without royalty provided the copyright
@@ -107,7 +107,7 @@ REVSH		& rx, ry		& rx = ry$^{\pm}_{B0}$:ry$^{ }_{B1}$		& 6 \\
 \textit{ROR\{S\}}	& rx, ry, Rs	& rx = ry $\ror$ Rs				& \\
 \textit{RRX\{S\}}	& rx, ry	& rx = C:ry$^{ }_{31:1}$; C = ry$^{ }_{0}$	& \\
 SBFX		& rx, ry, \#p, \#n	& rx = ry$^{\pm}_{p+n-1:p}$			& 6t \\
-TEQ		& rx, op2		& rx | op2					& \\
+TEQ		& rx, op2		& rx $\oplus$ op2				& \\
 TST		& rx, op2		& rx \& op2					& \\
 UBFX		& rx, ry, \#p, \#n	& rx = ry$^{\emptyset}_{p+n-1:p}$		& 6t \\
 \end{asmtable}
