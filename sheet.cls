@@ -92,5 +92,9 @@
 % Note: < and > doesn't render properly in math mode with current fonts
 \def\slt{\bar{\text{<}}}
 \def\ult{\text{<}}
+\def\sle{\bar{\le}}
+\def\ule{\le}
+\def\sgt{\bar{\text{>}}}
+\def\ugt{\text{>}}
 \def\sge{\bar{\ge}}
 \def\uge{\ge}

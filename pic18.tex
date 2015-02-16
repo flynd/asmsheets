@@ -1,0 +1,180 @@
+%
+% Copyright (C) 2015 Anders Olofsson
+%
+% Copying and distribution of this file, with or without modification,
+% are permitted in any medium without royalty provided the copyright
+% notice and this notice are preserved.  This file is offered as-is,
+% without any warranty.
+%
+\documentclass{sheet}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{ae,aecompl}
+\usepackage[english]{babel}
+\usepackage[a4paper, landscape, margin=.1in]{geometry}
+\usepackage{amssymb}
+\usepackage{verbatim}
+
+\def\sheetheaderfont{\bfseries}
+\def\sheettablefont{\footnotesize\sffamily}
+\def\sheetheadercolor{black!10}
+\def\sheetrowcolor{black!5}
+
+\newcolumntype{N}{>{\raggedleft\arraybackslash}m{0.7em}}
+\def\tabcolsep{2pt}
+\def\arraystretch{1.3}
+\defsheet{asmtable}{5}{|m{4.6em} m{2.6em}|X|m{2.3em} N|}
+\defsheet{table-lX}{2}{|l X|}
+
+\pagefooter{PIC18 version 1.0 page \thepage}
+
+\begin{document}
+\begin{multicols}{3}
+\raggedcolumns
+
+\begin{center}
+{\Large\bfseries PIC18 Quick Reference}
+\end{center}
+%
+\begin{table-lX}{Keys}
+f, g		& Register \\
+d		& Destination select (W or F) \\
+a		& RAM access select (ACCESS or BANKED) \\
+s		& Fast call/return (FAST or omitted) \\
+i, j		& Immediate operand \\
+n		& 0, 1 or 2 for FSR0, FSR1 or FSR2 \\
+cc		& Status flag (N, OV, Z or C) \\
+\{*\}		& Use TBLPTR (*), TBLPTR$++$ (*+),\newline TBLPTR$--$ (*-) or $++$TBLPTR (+*) \\
+{}[a,f]		& [a $=$ BANKED ? BSR:f : (f $\uge$ 0x60 ? 15:f : 0:f)] \\
+value$^{\pm}_{ }$	& Value is sign extended\\
+\end{table-lX}
+%
+\begin{table-lX}{Special Function Registers}
+TOS\{UHL\}	& Top-of-stack (bits 20:16, 15:8, 7:0) \\
+STKPTR		& Stack Pointer (STKFUL,STKUNF,-,SP\{43210\}) \\
+PCLAT\{UH\}	& Holding Register for Program Counter (bits 20:16, 15:8) \\
+PCL		& Program Counter (bits 7:0) \\
+TBLPTR\{UHL\}	& Program Memory Table Pointer (bits 20:16, 15:8, 7:0) \\
+TABLAT		& Table Latch \\
+PROD\{HL\}	& Product Result (bits 15:8, 7:0) \\
+INTCON		& Interrupt Control (GIE/GIEH, PEIE/GIEL, \ldots) \\
+INDFn		& [FSRn] \\
+POSTINCn	& [FSRn]; FSRn $++$ \\
+POSTDECn	& [FSRn]; FSRn $--$ \\
+PREINCn		& FSRn $++$; [FSRn] \\
+PLUSWn		& [FSRn $+$ WREG] \\
+FSRn\{HL\}	& Indirect Data Memory Address Pointer n (bits 11:8, 7:0) \\
+WREG		& Working Register \\
+BSR		& Bank Select (4 bits) \\
+STATUS		& Status (-,-,-,N,OV,Z,DC,C) \\
+OSCCON		& OSC Ctrl (IDLEN,IRCF\{210\},OSTS,HFIOFS,SCS\{10\}) \\
+OSCCON2		& Oscillator Control 2 (-,-,-,-,-,PRI\_SD,HIFOFL,LFIOFS) \\
+RCON		& Reset Control (IPEN,SBOREN,-,RI,TO,PD,POR,BOR) \\
+EEADR		& Data EEPROM Address \\
+EEDATA		& Data EEPROM Data \\
+EECON2		& EEPROM Control 2 (0x55, 0xAA) \\
+EECON1		& EE Ctrl (EEPGD,CFGS,-,FREE,WRERR,WREN,WR,RD) \\
+TRIS\{ABC\ldots\}	& I/O Port \{ABC\ldots\} Direction (0=Output, 1=Input) \\
+LAT\{ABC\ldots\}	& I/O Port \{ABC\ldots\} Output Latch \\
+PORT\{ABC\ldots\}	& I/O Port \{ABC\ldots\} Read Pins \\
+ANSEL\{H\}	& I/O Port Analog Control \\
+IOC\{ABC\ldots\}	& I/O Port \{ABC\ldots\} Interrupt-On-Change Enable \\
+WPU\{ABC\ldots\}	& I/O Port \{ABC\ldots\} Weak Pull-Ups Enable \\
+\end{table-lX}
+%
+\begin{asmtable}{Bitwise Instructions}
+ANDLW		& i$^{ }_{8}$		& WREG = WREG \& i				& N,Z	& \\
+ANDWF		& f, d, a		& d = WREG \& [a,f]				& N,Z	& \\
+BCF		& f, i$^{ }_{3}$, a	& [a,f]$^{ }_{i}$ = 0				& -	& \\
+BSF		& f, i$^{ }_{3}$, a	& [a,f]$^{ }_{i}$ = 1				& -	& \\
+BTG		& f, i$^{ }_{3}$, a	& [a,f]$^{ }_{i}$ = ![a,f]$^{ }_{i}$		& -	& \\
+COMF		& f, d, a		& d = $\sim$[a,f]				& N,Z	& \\
+IORLW		& i$^{ }_{8}$		& WREG = WREG | i				& N,Z	& \\
+IORWF		& f, d, a		& d = WREG | [a,f]				& N,Z	& \\
+RLCF		& f, d, a		& C:d = C:[a,f] $\rol$ 1			& N,Z,C	& \\
+RLNCF		& f, d, a		& d = [a,f] $\rol$ 1				& N,Z	& \\
+RRCF		& f, d, a		& C:d = C:[a,f] $\ror$ 1			& N,Z,C	& \\
+RRNCF		& f, d, a		& d = [a,f] $\ror$ 1				& N,Z	& \\
+XORLW		& i$^{ }_{8}$		& WREG = WREG $\oplus$ i			& N,Z	& \\
+XORWF		& f, d, a		& d = WREG $\oplus$ [a,f]			& N,Z	& \\
+\end{asmtable}
+%
+\begin{asmtable}{Jump and Branch Instructions}
+Bcc		& rel$^{ }_{8}$		& if(cc) PC $+$= rel$^{\pm}_{7:1}$:0		& -	& 2 \\
+BNcc		& rel$^{ }_{8}$		& if(!cc) PC $+$= rel$^{\pm}_{7:1}$:0		& -	& 2 \\
+BRA		& rel$^{ }_{11}$	& PC $+$= rel$^{\pm}_{10:1}$:0			& -	& 2 \\
+CALL		& ptr, s		& Push(PC); PC = ptr$^{ }_{20:1}$:0 \newline if(s $=$ FAST) Save(WREG,STATUS,BSR)	& -	& D \\
+GOTO		& ptr			& PC = ptr$^{ }_{20:1}$:0			& -	& D \\
+RCALL		& rel$^{ }_{11}$	& Push(PC); PC $+$= rel$^{\pm}_{10:1}$:0	& -	& 2 \\
+RETFIE		& s			& PC = Pop; GIE\{HL\} = 1 \newline if(s $=$ FAST) Restore(WREG,STATUS,BSR)	& All	& 2 \\
+RETLW		& i$^{ }_{8}$		& WREG = i; PC = Pop				& -	& 2 \\
+RETURN		& s			& PC = Pop \newline if(s $=$ FAST) Restore(WREG,STATUS,BSR)	& All	& 2 \\
+\end{asmtable}
+%
+\begin{asmtable}{Skip Instructions}
+BTFSC		& f, i$^{ }_{3}$, a	& if([a,f]$^{ }_{i}$ $=$ 0) PC $+$= 2		& -	& 2 \\
+BTFSS		& f, i$^{ }_{3}$, a	& if([a,f]$^{ }_{i}$ $=$ 1) PC $+$= 2		& -	& 2 \\
+CPFSEQ		& f, a			& if([a,f] $=$ WREG) PC $+$= 2			& -	& 2 \\
+CPFSGT		& f, a			& if([a,f] $\ugt$ WREG) PC $+$= 2		& -	& 2 \\
+CPFSLT		& f, a			& if([a,f] $\ult$ WREG) PC $+$= 2		& -	& 2 \\
+DECFSZ		& f, d, a		& d = [a,f] $-$ 1; if(d $=$ 0) PC $+$= 2	& -	& 2 \\
+DCFSNZ		& f, d, a		& d = [a,f] $-$ 1; if(d $\ne$ 0) PC $+$= 2	& -	& 2 \\
+INCFSZ		& f, d, a		& d = [a,f] $+$ 1; if(d $=$ 0) PC $+$= 2	& -	& 2 \\
+INFSNZ		& f, d, a		& d = [a,f] $+$ 1; if(d $\ne$ 0) PC $+$= 2	& -	& 2 \\
+TSTFSZ		& f, a			& if([a,f] $=$ 0) PC $+$= 2			& -	& 2 \\
+\end{asmtable}
+%
+\begin{table-lX}{Notes}
+D		& Instruction is two words and takes two cycles. \\
+2		& Instruction takes two cycles (only one if conditional and false). \\
+\end{table-lX}
+%
+\begin{asmtable}{Arithmetic Instructions}
+ADDLW		& i$^{ }_{8}$		& WREG = WREG $+$ i				& All	& \\
+ADDWF		& f, d, a		& d = WREG $+$ [a,f]				& All	& \\
+ADDWFC		& f, d, a		& d = WREG $+$ [a,f] $+$ C			& All	& \\
+DAW		&			& if(WREG$^{ }_{3:0}$ $\ugt$ 9 || DC) WREG $+$= 6 \newline if(WREG$^{ }_{7:4}$ $\ugt$ 9 || C) WREG$^{ }_{7:4}$ $+$= 6	& C	& \\
+DECF		& f, d, a		& d = [a,f] $-$ 1				& All	& \\
+INCF		& f, d, a		& d = [a,f] $+$ 1				& All	& \\
+MULLW		& i$^{ }_{8}$		& PRODH:PRODL = WREG $\umul$ i			& -	& \\
+MULWF		& f, a			& PRODH:PRODL = WREG $\umul$ [a,f]		& -	& \\
+NEGF		& f, a			& [a,f] = $\sim$[a,f] $+$ 1			& All	& \\
+SUBFWB		& f, d, a		& d = WREG $+$ $\sim$[a,f] $+$ 1 $+$ C		& All	& \\
+SUBLW		& i$^{ }_{8}$		& WREG = i $+$ $\sim$WREG $+$ 1			& All	& \\
+SUBWF		& f, d, a		& d = [a,f] $+$ $\sim$WREG $+$ 1		& All	& \\
+SUBWFB		& f, d, a		& d = [a,f] $+$ $\sim$WREG $+$ 1 $+$ C		& All	& \\
+\end{asmtable}
+%
+\begin{asmtable}{Data Transfer and Special Instructions}
+CLRF		& f, a			& [a,f] = 0x00					& Z	& \\
+CLRWDT		&			& WDT = 0; TO = 1; PD = 1			& -	& \\
+LFSR		& n, i$^{ }_{12}$	& FSRn = i					& -	& D \\
+MOVF		& f, d, a		& d = [a,f]					& N,Z	& \\
+MOVFF		& f, g			& [g] = [f]					& -	& D \\
+MOVLB		& i$^{ }_{4}$		& BSR = i					& -	& \\
+MOVLW		& i$^{ }_{8}$		& WREG = i					& -	& \\
+MOVWF		& f, a			& [a,f] = WREG					& -	& \\
+NOP		&			&						& -	& \\
+POP		&			& Pop						& -	& \\
+PUSH		&			& Push(PC)					& -	& \\
+RESET		&			& Reset						& -	& \\
+SETF		& f, a			& [a,f] = 0xFF					& -	& \\
+SLEEP		&			& WDT = 0; TO = 1; PD = 0; Sleep		& -	& \\
+SWAPF		& f, d, a		& d = [a,f]$^{ }_{3:0}$:[a,f]$^{ }_{7:4}$	& -	& \\
+TBLRD\{*\}	&			& TABLAT = FlashProgMemory[TBLPTR]		& -	& 2 \\
+TBLWT\{*\}	&			& HoldingRegister[TBLPTR] = TABLAT		& -	& 2 \\
+\end{asmtable}
+%
+\begin{asmtable}{Extended Instruction Set}
+ADDFSR		& n, i$^{ }_{6}$	& FSRn = FSRn $+$ i				& -	& \\
+ADDULNK		& i$^{ }_{6}$		& FSR2 = FSR2 $+$ i; PC = Pop			& -	& 2 \\
+CALLW		&			& Push(PC); PC=PCLATU:PCLATH:WREG		& -	& 2 \\
+MOVSF		& i$^{ }_{7}$, f	& [f] = [FSR2 $+$ i]				& -	& D \\
+MOVSS		& i$^{ }_{7}$, j$^{ }_{7}$	& [FSR2 $+$ j] = [FSR2 $+$ i]		& -	& D \\
+PUSHL		& i$^{ }_{8}$		& [FSR2] = i; FSR2 = FSR2 $-$ 1			& -	& \\
+SUBFSR		& n, i$^{ }_{6}$	& FSRn = FSRn $-$ i				& -	& \\
+SUBULNK		& i$^{ }_{6}$		& FSR2 = FSR2 $-$ i; PC = Pop			& -	& 2 \\
+\end{asmtable}
+%
+\end{multicols}
+\end{document}
