@@ -26,7 +26,7 @@
 \defsheet{asmtable}{5}{|m{4.6em} m{2.6em}|X|m{2.3em} N|}
 \defsheet{table-lX}{2}{|l X|}
 
-\pagefooter{PIC18 version 1 page \thepage}
+\pagefooter{PIC18 version 2 page \thepage}
 
 \begin{document}
 \begin{multicols}{3}
@@ -37,8 +37,8 @@
 \end{center}
 %
 \begin{table-lX}{Keys}
-f, g		& Register \\
-d		& Destination select (W or F) \\
+f, g		& Register address (bits 7:0) \\
+d		& Destination select (W for WREG or F for [a,f]) \\
 a		& RAM access select (ACCESS or BANKED) \\
 s		& Fast call/return (FAST or omitted) \\
 i, j		& Immediate operand \\
@@ -47,6 +47,7 @@ cc		& Status flag (N, OV, Z or C) \\
 \{*\}		& Use TBLPTR (*), TBLPTR$++$ (*+),\newline TBLPTR$--$ (*-) or $++$TBLPTR (+*) \\
 {}[a,f]		& [a $=$ BANKED ? BSR:f : (f $\uge$ 0x60 ? 15:f : 0:f)] \\
 value$^{\pm}_{ }$	& Value is sign extended\\
+value$^{\emptyset}_{ }$	& Value is zero extended \\
 \end{table-lX}
 %
 \begin{table-lX}{Special Function Registers}
@@ -59,10 +60,10 @@ TABLAT		& Table Latch \\
 PROD\{HL\}	& Product Result (bits 15:8, 7:0) \\
 INTCON		& Interrupt Control (GIE/GIEH, PEIE/GIEL, \ldots) \\
 INDFn		& [FSRn] \\
-POSTINCn	& [FSRn]; FSRn $++$ \\
-POSTDECn	& [FSRn]; FSRn $--$ \\
-PREINCn		& FSRn $++$; [FSRn] \\
-PLUSWn		& [FSRn $+$ WREG] \\
+POSTINCn	& [FSRn]; FSRn$++$ \\
+POSTDECn	& [FSRn]; FSRn$--$ \\
+PREINCn		& FSRn$++$; [FSRn] \\
+PLUSWn		& [FSRn $+$ WREG$^{\emptyset}_{ }$] \\
 FSRn\{HL\}	& Indirect Data Memory Address Pointer n (bits 11:8, 7:0) \\
 WREG		& Working Register \\
 BSR		& Bank Select (4 bits) \\
@@ -169,8 +170,8 @@ TBLWT\{*\}	&			& HoldingRegister[TBLPTR] = TABLAT		& -	& 2 \\
 ADDFSR		& n, i$^{ }_{6}$	& FSRn = FSRn $+$ i				& -	& \\
 ADDULNK		& i$^{ }_{6}$		& FSR2 = FSR2 $+$ i; PC = Pop			& -	& 2 \\
 CALLW		&			& Push(PC); PC=PCLATU:PCLATH:WREG		& -	& 2 \\
-MOVSF		& i$^{ }_{7}$, f	& [f] = [FSR2 $+$ i]				& -	& D \\
-MOVSS		& i$^{ }_{7}$, j$^{ }_{7}$	& [FSR2 $+$ j] = [FSR2 $+$ i]		& -	& D \\
+MOVSF		& i$^{ }_{7}$, f	& [f] = [FSR2 $+$ i$^{\emptyset}_{ }$]		& -	& D \\
+MOVSS		& i$^{ }_{7}$, j$^{ }_{7}$	& [FSR2 $+$ j$^{\emptyset}_{ }$] = [FSR2 $+$ i]	& -	& D \\
 PUSHL		& i$^{ }_{8}$		& [FSR2] = i; FSR2 = FSR2 $-$ 1			& -	& \\
 SUBFSR		& n, i$^{ }_{6}$	& FSRn = FSRn $-$ i				& -	& \\
 SUBULNK		& i$^{ }_{6}$		& FSR2 = FSR2 $-$ i; PC = Pop			& -	& 2 \\
