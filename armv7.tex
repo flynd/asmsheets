@@ -28,7 +28,7 @@
 \defsheet{table-lXN}{3}{|l|X|N|}
 \defsheet{table-llX}{3}{|l l X|}
 
-\pagefooter{ARMv7 version 3 page \thepage}
+\pagefooter{ARMv7 version 4 page \thepage}
 
 \begin{document}
 \begin{multicols}{3}
@@ -45,23 +45,23 @@ ADDW		& rx, ry, \#i$^{ }_{12}$	& rx = ry $+$ i$^{\emptyset}_{ }$	& T \\
 ADR		& rx, $\pm$rel$^{ }_{12}$	& rx = PC $\pm$ rel			& \\
 CMN		& rx, op2		& rx $+$ op2					& \\
 CMP		& rx, op2		& rx $-$ op2					& \\
-QADD		& rx, ry, rz		& rx = SATS(ry $+$ rz, 32)			& \\
-QDADD		& rx, ry, rz		& rx = SATS(ry $+$ SATS(2$\times$rz, 32), 32)	& \\
-QDSUB		& rx, ry, rz		& rx = SATS(ry $-$ SATS(2$\times$rz, 32), 32)	& \\
-QSUB		& rx, ry, rz		& rx = SATS(ry $-$ rz, 32)			& \\
+QADD		& rx, ry, rz		& rx = SATS(ry $+$ rz, 32)			& D \\
+QDADD		& rx, ry, rz		& rx = SATS(ry $+$ SATS(2$\times$rz, 32), 32)	& D \\
+QDSUB		& rx, ry, rz		& rx = SATS(ry $-$ SATS(2$\times$rz, 32), 32)	& D \\
+QSUB		& rx, ry, rz		& rx = SATS(ry $-$ rz, 32)			& D \\
 RSB\{S\}	& rx, ry, op2		& rx = op2 $-$ ry 				& \\
 RSC\{S\}	& rx, ry, op2		& rx = op2 $-$ (ry $+$ C) 				& A \\
 SBC\{S\}	& rx, ry, op2		& rx = ry $-$ (op2 $+$ C)				& \\
 SDIV		& rx, ry, rz		& rx = ry $\sdiv$ rz			& 7 \\
 SSAT		& rx, \#j$^{ }_{5}$, ry\{slr\}	& rx = SATS(ry $\lsl\asr$ sh, j)$^{\pm}_{ }$	& 6 \\
-SSAT16		& rx, \#j$^{ }_{4}$, ry	& rx = SATS(ry$^{\pm}_{H1}$, j)$^{\pm}_{ }$:SATS(ry$^{\pm}_{H0}$, j)$^{\pm}_{ }$	& 6 \\
+SSAT16		& rx, \#j$^{ }_{4}$, ry	& rx = SATS(ry$^{\pm}_{H1}$, j)$^{\pm}_{ }$:SATS(ry$^{\pm}_{H0}$, j)$^{\pm}_{ }$	& 6,D \\
 SUB\{S\}	& rx, ry, op2		& rx = ry $-$ op2 				& \\
 SUBW		& rx, ry, \#i$^{ }_{12}$	& rx = ry $-$ i$^{\emptyset}_{ }$	& T \\
 UDIV		& rx, ry, rz		& rx = ry $\udiv$ rz				& 7 \\
-USAD8		& rx, ry, rz		& rx = $\sum_{n=0}^{3}$(ABS(ry$^{\emptyset}_{Bn}$)$-$rz$^{\emptyset}_{Bn}$)	& 6 \\
-USADA8		& rx, ry, rz, rw	& rx = rw $+$ $\sum_{n=0}^{3}$(ABS(ry$^{\emptyset}_{Bn}$)$-$rz$^{\emptyset}_{Bn}$)	& 6 \\
+USAD8		& rx, ry, rz		& rx = $\sum_{n=0}^{3}$(ABS(ry$^{\emptyset}_{Bn}$)$-$rz$^{\emptyset}_{Bn}$)	& 6,D \\
+USADA8		& rx, ry, rz, rw	& rx = rw $+$ $\sum_{n=0}^{3}$(ABS(ry$^{\emptyset}_{Bn}$)$-$rz$^{\emptyset}_{Bn}$)	& 6,D \\
 USAT		& rx, \#j$^{ }_{5}$, ry\{slr\}	& rx = SATU(ry $\lsl\asr$ sh, j)$^{\pm}_{ }$	& 6 \\
-USAT16		& rx, \#i$^{ }_{4}$, ry	& rx = SATU(ry$^{\pm}_{H1}$, i)$^{\pm}_{ }$:SATU(ry$^{\pm}_{H0}$, i)$^{\pm}_{ }$	& 6 \\
+USAT16		& rx, \#i$^{ }_{4}$, ry	& rx = SATU(ry$^{\pm}_{H1}$, i)$^{\pm}_{ }$:SATU(ry$^{\pm}_{H0}$, i)$^{\pm}_{ }$	& 6,D \\
 \end{asmtable}
 %
 \begin{table-lXN}{Operand 2}
@@ -149,8 +149,6 @@ STR\{T\}	& rx, [addr]			& [addr] = rx				& \\
 STRB\{T\}	& rx, [addr]			& [addr]$^{ }_{8}$ = rx$^{ }_{B0}$	& \\
 STRD		& rx, ry, [addr]		& [addr] = ry:rx			& \\
 STRH\{T\}	& rx, [addr]			& [addr]$^{ }_{16}$ = rx$^{ }_{H0}$	& \\
-%SWP		& rx, ry, [rz]			& rx = [rz]; [rz] = ry				& A,D \\
-%SWPB		& rx, ry, [rz]			& rx = [rz]$^{\emptyset}_{8}$; [rz] = ry$^{ }_{B0}$	& A,D \\
 \end{asmtable}
 %
 \begin{table-llX}{ARM LDR/STR Addressing Modes}
@@ -184,38 +182,38 @@ MLA\{S\}	& rx, ry, rz, rw	& rx = rw $+$ ry $\umul$ rz			& A \\
 MLS		& rx, ry, rz, rw	& rx = rw $-$ ry $\umul$ rz			& 6t \\
 MUL		& rx, ry, rz		& rx = ry $\umul$ rz				& \\
 MUL\{S\}	& rx, ry, rz		& rx = ry $\umul$ rz				& A \\
-SMLAxy		& rx, ry, rz, rw	& rx = rw $+$ ry$^{\pm}_{Hx}$ $\smul$ rz$^{\pm}_{Hy}$	& \\
-SMLaD		& rx, ry, rz, rw	& rx = rw $+$ ry$^{\pm}_{H0}$$\smul$rz$^{\pm}_{H0}$ $\pm$ ry$^{\pm}_{H1}$$\smul$rz$^{\pm}_{H1}$	& 6 \\
-SMLaDX		& rx, ry, rz, rw	& rx = rw $+$ ry$^{\pm}_{H0}$$\smul$rz$^{\pm}_{H1}$ $\pm$ ry$^{\pm}_{H1}$$\smul$rz$^{\pm}_{H0}$	& \\
-SMLaLD		& rx, ry, rz, rw	& ry:rx $+$= rz$^{\pm}_{H0}$$\smul$rw$^{\pm}_{H0}$ $\pm$ rz$^{\pm}_{H1}$$\smul$rw$^{\pm}_{H1}$	& 6 \\
-SMLaLDX		& rx, ry, rz, rw	& ry:rx $+$= rz$^{\pm}_{H0}$$\smul$rw$^{\pm}_{H1}$ $\pm$ rz$^{\pm}_{H1}$$\smul$rw$^{\pm}_{H0}$	& \\
+SMLAxy		& rx, ry, rz, rw	& rx = rw $+$ ry$^{\pm}_{Hx}$ $\smul$ rz$^{\pm}_{Hy}$	& D \\
+SMLaD		& rx, ry, rz, rw	& rx = rw $+$ ry$^{\pm}_{H0}$$\smul$rz$^{\pm}_{H0}$ $\pm$ ry$^{\pm}_{H1}$$\smul$rz$^{\pm}_{H1}$	& 6,D \\
+SMLaDX		& rx, ry, rz, rw	& rx = rw $+$ ry$^{\pm}_{H0}$$\smul$rz$^{\pm}_{H1}$ $\pm$ ry$^{\pm}_{H1}$$\smul$rz$^{\pm}_{H0}$	& D \\
+SMLaLD		& rx, ry, rz, rw	& ry:rx $+$= rz$^{\pm}_{H0}$$\smul$rw$^{\pm}_{H0}$ $\pm$ rz$^{\pm}_{H1}$$\smul$rw$^{\pm}_{H1}$	& 6,D \\
+SMLaLDX		& rx, ry, rz, rw	& ry:rx $+$= rz$^{\pm}_{H0}$$\smul$rw$^{\pm}_{H1}$ $\pm$ rz$^{\pm}_{H1}$$\smul$rw$^{\pm}_{H0}$	& D \\
 SMLAL		& rx, ry, rz, rw	& ry:rx $+$= rz $\smul$ rw			& \\
 SMLAL\{S\}	& rx, ry, rz, rw	& ry:rx $+$= rz $\smul$ rw			& A \\
-SMLALxy		& rx, ry, rz, rw	& ry:rx $+$= rz$^{\pm}_{Hx}$ $\smul$ rw$^{\pm}_{Hy}$	& \\
-SMLAWy		& rx, ry, rz, rw	& rx = rw $+$ ry $\smul$ rz$^{\pm}_{Hy}$	& \\
-SMMLa		& rx, ry, rz, rw	& rx = rw $\pm$ (ry $\smul$ rz)$^{ }_{63:32}$	& 6 \\
-SMMLaR		& rx, ry, rz, rw	& rx = rw $\pm$ (ry$\smul$rz $+$ 0x80000000)$^{ }_{63:32}$	& \\
-SMMUL		& rx, ry, rz		& rx = (ry $\smul$ rz)$^{ }_{63:32}$		& 6 \\
-SMMULR		& rx, ry, rz		& rx = (ry $\smul$ rz $+$ 0x80000000)$^{ }_{63:32}$	& \\
-SMUaD		& rx, ry, rz		& rx = ry$^{\pm}_{H0}$ $\smul$ rz$^{\pm}_{H0}$ $\pm$ ry$^{\pm}_{H1}$ $\smul$ rz$^{\pm}_{H1}$	& 6 \\
-SMUaDX		& rx, ry, rz		& rx = ry$^{\pm}_{H0}$ $\smul$ rz$^{\pm}_{H1}$ $\pm$ ry$^{\pm}_{H1}$ $\smul$ rz$^{\pm}_{H0}$	& \\
-SMULxy		& rx, ry, rz		& rx = ry$^{\pm}_{Hx}$ $\smul$ rz$^{\pm}_{Hy}$	& \\
+SMLALxy		& rx, ry, rz, rw	& ry:rx $+$= rz$^{\pm}_{Hx}$ $\smul$ rw$^{\pm}_{Hy}$	& D \\
+SMLAWy		& rx, ry, rz, rw	& rx = rw $+$ ry $\smul$ rz$^{\pm}_{Hy}$	& D \\
+SMMLa		& rx, ry, rz, rw	& rx = rw $\pm$ (ry $\smul$ rz)$^{ }_{63:32}$	& 6,D \\
+SMMLaR		& rx, ry, rz, rw	& rx = rw $\pm$ (ry$\smul$rz $+$ 0x80000000)$^{ }_{63:32}$	& D \\
+SMMUL		& rx, ry, rz		& rx = (ry $\smul$ rz)$^{ }_{63:32}$		& 6,D \\
+SMMULR		& rx, ry, rz		& rx = (ry $\smul$ rz $+$ 0x80000000)$^{ }_{63:32}$	& D \\
+SMUaD		& rx, ry, rz		& rx = ry$^{\pm}_{H0}$ $\smul$ rz$^{\pm}_{H0}$ $\pm$ ry$^{\pm}_{H1}$ $\smul$ rz$^{\pm}_{H1}$	& 6,D \\
+SMUaDX		& rx, ry, rz		& rx = ry$^{\pm}_{H0}$ $\smul$ rz$^{\pm}_{H1}$ $\pm$ ry$^{\pm}_{H1}$ $\smul$ rz$^{\pm}_{H0}$	& D \\
+SMULxy		& rx, ry, rz		& rx = ry$^{\pm}_{Hx}$ $\smul$ rz$^{\pm}_{Hy}$	& D \\
 SMULL		& rx, ry, rz, rw	& ry:rx = rz $\smul$ rw			& \\
 SMULL\{S\}	& rx, ry, rz, rw	& ry:rx = rz $\smul$ rw			& A \\
-SMULWy		& rx, ry, rz		& rx = (ry $\smul$ rz$^{\pm}_{Hy}$)$^{ }_{47:16}$	& \\
-UMAAL		& rx, ry, rz, rw	& ry:rx = ry $+$ rx $+$ rz $\umul$ rw		& \\
+SMULWy		& rx, ry, rz		& rx = (ry $\smul$ rz$^{\pm}_{Hy}$)$^{ }_{47:16}$	& D \\
+UMAAL		& rx, ry, rz, rw	& ry:rx = ry $+$ rx $+$ rz $\umul$ rw		& D \\
 UMLAL		& rx, ry, rz, rw	& ry:rx $+$= rz $\umul$ rw			& \\
 UMULL		& rx, ry, rz, rw	& ry:rx = rz $\umul$ rw			& \\
 \end{asmtable}
 %
 \begin{asmtable}{Parallel Instructions}
-pADD16		& rx, ry, rz		& for(n=0..1) rx$^{ }_{Hn}$ = p(ry$^{ }_{Hn}$ $+$ rz$^{ }_{Hn}$)	& 6 \\
-pADD8		& rx, ry, rz		& for(n=0..3) rx$^{ }_{Bn}$ = p(ry$^{ }_{Bn}$ $+$ rz$^{ }_{Bn}$)	& 6 \\
-pASX		& rx, ry, rz		& rx = p(ry$^{ }_{H1}$ $+$ rz$^{ }_{H0}$):p(ry$^{ }_{H0}$ $-$ rz$^{ }_{H1}$)	& 6 \\
-pSAX		& rx, ry, rz		& rx = p(ry$^{ }_{H1}$ $-$ rz$^{ }_{H0}$):p(ry$^{ }_{H0}$ $+$ rz$^{ }_{H1}$)	& 6 \\
-pSUB16		& rx, ry, rz		& for(n=0..1) rx$^{ }_{Hn}$ = p(ry$^{ }_{Hn}$ $-$ rz$^{ }_{Hn}$)	& 6 \\
-pSUB8		& rx, ry, rz		& for(n=0..3) rx$^{ }_{Bn}$ = p(ry$^{ }_{Bn}$ $-$ rz$^{ }_{Bn}$)	& 6 \\
-SEL		& rx, ry, rz		& for(n=0..3) rx$^{ }_{Bn}$ = (GEn ? ry : rz)$^{ }_{Bn}$	& 6 \\
+pADD16		& rx, ry, rz		& for(n=0..1) rx$^{ }_{Hn}$ = p(ry$^{ }_{Hn}$ $+$ rz$^{ }_{Hn}$)	& 6,D \\
+pADD8		& rx, ry, rz		& for(n=0..3) rx$^{ }_{Bn}$ = p(ry$^{ }_{Bn}$ $+$ rz$^{ }_{Bn}$)	& 6,D \\
+pASX		& rx, ry, rz		& rx = p(ry$^{ }_{H1}$ $+$ rz$^{ }_{H0}$):p(ry$^{ }_{H0}$ $-$ rz$^{ }_{H1}$)	& 6,D \\
+pSAX		& rx, ry, rz		& rx = p(ry$^{ }_{H1}$ $-$ rz$^{ }_{H0}$):p(ry$^{ }_{H0}$ $+$ rz$^{ }_{H1}$)	& 6,D \\
+pSUB16		& rx, ry, rz		& for(n=0..1) rx$^{ }_{Hn}$ = p(ry$^{ }_{Hn}$ $-$ rz$^{ }_{Hn}$)	& 6,D \\
+pSUB8		& rx, ry, rz		& for(n=0..3) rx$^{ }_{Bn}$ = p(ry$^{ }_{Bn}$ $-$ rz$^{ }_{Bn}$)	& 6,D \\
+SEL		& rx, ry, rz		& for(n=0..3) rx$^{ }_{Bn}$ = (GEn ? ry : rz)$^{ }_{Bn}$	& 6,D \\
 \end{asmtable}
 %
 \begin{table-lX}{Parallel Instruction Prefixes}
@@ -228,19 +226,19 @@ UQ	& Unsigned operation, Results are saturated \\
 \end{table-lX}
 %
 \begin{asmtable}{Packing and Unpacking Instructions}
-PKHBT		& rx, ry, rz\{sl\}	& rx = (rz $\lsl$ sh)$^{ }_{H1}$:ry$^{ }_{H0}$	& 6 \\
-PKHTB		& rx, ry, rz\{sr\}	& rx = ry$^{ }_{H1}$:(rz $\asr$ sh)$^{ }_{H0}$	& 6 \\
-SXTAB		& rx, ry, rz\{rb\}	& rx = ry $+$ (rz $\ror$ sh)$^{\pm}_{B0}$	& 6 \\
-SXTAB16		& rx, ry, rz\{rb\}	& for(n=0..1) rx$^{ }_{Hn}$=ry$^{ }_{Hn}$$+$(rz$\ror$sh)$^{\pm}_{B2n}$	& 6 \\
-SXTAH		& rx, ry, rz\{rb\}	& rx = ry $+$ (rz $\ror$ sh)$^{\pm}_{H0}$	& 6 \\
+PKHBT		& rx, ry, rz\{sl\}	& rx = (rz $\lsl$ sh)$^{ }_{H1}$:ry$^{ }_{H0}$	& 6,D \\
+PKHTB		& rx, ry, rz\{sr\}	& rx = ry$^{ }_{H1}$:(rz $\asr$ sh)$^{ }_{H0}$	& 6,D \\
+SXTAB		& rx, ry, rz\{rb\}	& rx = ry $+$ (rz $\ror$ sh)$^{\pm}_{B0}$	& 6,D \\
+SXTAB16		& rx, ry, rz\{rb\}	& for(n=0..1) rx$^{ }_{Hn}$=ry$^{ }_{Hn}$$+$(rz$\ror$sh)$^{\pm}_{B2n}$	& 6,D \\
+SXTAH		& rx, ry, rz\{rb\}	& rx = ry $+$ (rz $\ror$ sh)$^{\pm}_{H0}$	& 6,D \\
 SXTB		& rx, ry\{rb\}		& rx = (ry $\ror$ sh)$^{\pm}_{B0}$		& 6 \\
-SXTB16		& rx, ry\{rb\}		& for(n=0..1) rx$^{ }_{Hn}$ = (ry $\ror$ sh)$^{\pm}_{B2n}$	& 6 \\
+SXTB16		& rx, ry\{rb\}		& for(n=0..1) rx$^{ }_{Hn}$ = (ry $\ror$ sh)$^{\pm}_{B2n}$	& 6,D \\
 SXTH		& rx, ry\{rb\}		& rx = (ry $\ror$ sh)$^{\pm}_{H0}$		& 6 \\
-UXTAB		& rx, ry, rz\{rb\}	& rx = ry $+$ (rz $\ror$ sh)$^{\emptyset}_{B0}$	& 6 \\
-UXTAB16		& rx, ry, rz\{rb\}	& for(n=0..1) rx$^{ }_{Hn}$=ry$^{ }_{Hn}$$+$(rz$\ror$sh)$^{\emptyset}_{B2n}$	& 6 \\
-UXTAH		& rx, ry, rz\{rb\}	& rx = ry $+$ (rz $\ror$ sh)$^{\emptyset}_{H0}$	& 6 \\
+UXTAB		& rx, ry, rz\{rb\}	& rx = ry $+$ (rz $\ror$ sh)$^{\emptyset}_{B0}$	& 6,D \\
+UXTAB16		& rx, ry, rz\{rb\}	& for(n=0..1) rx$^{ }_{Hn}$=ry$^{ }_{Hn}$$+$(rz$\ror$sh)$^{\emptyset}_{B2n}$	& 6,D \\
+UXTAH		& rx, ry, rz\{rb\}	& rx = ry $+$ (rz $\ror$ sh)$^{\emptyset}_{H0}$	& 6,D \\
 UXTB		& rx, ry\{rb\}		& rx = (ry $\ror$ sh)$^{\emptyset}_{B0}$	& 6 \\
-UXTB16		& rx, ry\{rb\}		& for(n=0..1) rx$^{ }_{Hn}$ = (ry $\ror$ sh)$^{\emptyset}_{B2n}$	& 6 \\
+UXTB16		& rx, ry\{rb\}		& for(n=0..1) rx$^{ }_{Hn}$ = (ry $\ror$ sh)$^{\emptyset}_{B2n}$	& 6,D \\
 UXTH		& rx, ry\{rb\}		& rx = (ry $\ror$ sh)$^{\emptyset}_{H0}$	& 6 \\
 \end{asmtable}
 %
@@ -335,7 +333,7 @@ $\smul$ $\sdiv$ $\asr$	& Operation is signed \\
 6t & Introduced in ARMv6T2 \\
 7 & Introduced in ARMv7 \\
 A & Only available in ARM mode \\
-%D & Deprecated instruction \\
+D & Not available on ARMv7-M without DSP extension \\
 H & Thumb1 instruction can use high registers \\
 I & Can't be conditional \\
 S & Thumb16 instruction must have S suffix unless in IT block \\

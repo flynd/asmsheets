@@ -73,6 +73,7 @@ Sources
 [1] Various internet sources, notably HelpPC for 8086 execution times.
 [2] "Intel 64 and IA-32 architectures software developer's manual"
 [3] "ARM Architecture Reference Manual, ARMv7-A and ARMv7-R edition"
+    (DDI 0406C.c)
 [4] "AXIS ETRAX 100LX Programmer's Manual"
 [5] "ETRAX FS Designer's Reference"
 [6] Additional information about CRIS architectures (with permission)
@@ -80,3 +81,4 @@ Sources
 [7] "MIPS32 Architecture For Programmers" (MD00086 and MD00076)
 [8] "MIPS32 Instruction Set Quick Reference" (MD00565)
 [9] "PIC18F/LF1XK50 Data Sheet" (DS41350E)
+[10] "ARMv7-M Architecture Reference Manual" (DDI 0403E.b)
