@@ -1,0 +1,189 @@
+%
+% Copyright (C) 2015 Anders Olofsson
+%
+% Copying and distribution of this file, with or without modification,
+% are permitted in any medium without royalty provided the copyright
+% notice and this notice are preserved.  This file is offered as-is,
+% without any warranty.
+%
+\documentclass{sheet}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{ae,aecompl}
+\usepackage[english]{babel}
+\usepackage[a4paper, landscape, margin=.1in]{geometry}
+\usepackage{amssymb}
+\usepackage{verbatim}
+
+\def\sheetheaderfont{\bfseries}
+\def\sheettablefont{\footnotesize\sffamily}
+\def\sheetheadercolor{black!10}
+\def\sheetrowcolor{black!5}
+
+\newcolumntype{N}{>{\raggedleft\arraybackslash}m{1.3em}}
+\def\tabcolsep{2pt}
+\def\arraystretch{1.3}
+\defsheet{asmtable}{5}{|m{4.8em} m{3.8em}|X|m{2.3em} N|}
+\defsheet{table-X}{1}{|X|}
+\defsheet{table-lX}{2}{|l X|}
+
+\pagefooter{PIC16 version 1 page \thepage}
+
+\begin{document}
+\begin{multicols}{3}
+\raggedcolumns
+
+\begin{center}
+{\Large\bfseries PIC16 Quick Reference}
+\end{center}
+%
+\begin{table-lX}{Keys}
+f		& Register address (bits 6:0) \\
+d		& Destination select (W for WREG or F for [f]) \\
+i		& Immediate operand \\
+{}[f]		& [RP1:RP0:f] for standard or [BSR:f] for enhanced \\
+FSRn		& FSR0 or FSR1 \\
+value$^{\pm}_{ }$	& Value is sign extended \\
+value$^{\emptyset}_{ }$	& Value is zero extended \\
+$\asr$		& Operation is signed \\
+\end{table-lX}
+%
+\begin{table-lX}{Core Function Registers (Standard)}
+STATUS		& Status (IRP,RP1,RP0,TO,PD,Z,DC,C) \\
+FSR		& Indirect Data Memory Address Pointer \\
+INDF		& [IRP:FSR] \\
+TMR0		& Timer 0 value \\
+PCL		& Program Counter (bits 7:0) \\
+PCLATH		& Holding Register for Program Counter (bits 12:8) \\
+INTCON		& Interrupt Control (GIE, PEIE, \ldots) \\
+OPTION\_REG	& Option bits (RAPU,INTEDG,T0CS,T0SE,PSA,PS2:0) \\
+PORT\{ABC\ldots\}	& I/O Port \{ABC\ldots\} Read Pins \\
+TRIS\{ABC\ldots\}	& I/O Port \{ABC\ldots\} Direction (0=Output, 1=Input) \\
+ANSEL		& I/O Port Analog Control \\
+EEDATA		& Data EEPROM Data \\
+EEADR		& Data EEPROM Address \\
+EECON2		& EEPROM Control 2 (0x55, 0xAA) \\
+EECON1		& EE Ctrl (-,-,-,EEIF,WRERR,WREN,WR,RD) \\
+\end{table-lX}
+%
+\begin{table-lX}{Core Function Registers (Enhanced)}
+INFn		& [FSRn] \\
+PCL		& Program Counter (bits 7:0) \\
+STATUS		& Status (-,-,-,TO,PD,Z,DC,C) \\
+FSRnL		& Indirect Data Memory Address Pointer n (bits 7:0) \\
+FSRnH		& Indirect Data Memory Address Pointer n (bits 15:8) \\
+BSR		& Bank Select Register \\
+WREG		& Working Register \\
+PCLATH		& Holding Register for Program Counter (bits 14:8) \\
+INTCON		& Interrupt Control (GIE, PEIE, \ldots) \\
+\end{table-lX}
+%
+\begin{table-lX}{Data Addresses (Enhanced)}
+0x0*\{08\}0 - 0x0*\{08\}C	& Core Registers \\
+0x0*\{08\}C - 0x0*\{19\}F	& Special Function Registers (Banked) \\
+0x0*\{2A\}0 - 0x0*\{6E\}F	& General Purpose RAM (Banked) \\
+0x0*\{7F\}0 - 0x0*\{7F\}F	& Common RAM \\
+0x2000 - 0x29AF	& Linear Data Memory (31 x 80 bytes) \\
+0x8000 - 0xFFFF	& Program Flash Memory (low 8 bits) \\
+\end{table-lX}
+%
+\begin{asmtable}{Arithmetic Instructions}
+ADDLW		& i$^{ }_{8}$		& WREG = WREG $+$ i				& All	& \\
+ADDWF		& f, d			& d = WREG $+$ [f]				& All	& \\
+ADDWFC		& f, d			& d = WREG $+$ [f] $+$ C			& All	& E \\
+DECF		& f, d			& d = [f] $-$ 1					& Z	& \\
+INCF		& f, d			& d = [f] $+$ 1					& Z	& \\
+SUBLW		& i$^{ }_{8}$		& WREG = $\sim$WREG $+$ i $+$ 1			& All	& \\
+SUBWF		& f, d			& d = $\sim$WREG $+$ [f] $+$ 1			& All	& \\
+SUBWFB		& f, d			& d = $\sim$WREG $+$ [f] $+$ C $+$ 1		& All	& E \\
+\end{asmtable}
+%
+\begin{asmtable}{Bitwise Instructions}
+ANDLW		& i$^{ }_{8}$		& WREG = WREG \& i				& Z	& \\
+ANDWF		& f, d			& d = WREG \& [f]				& Z	& \\
+ASRF		& f, d			& d = [f] $\asr$ 1				& Z,C	& E \\
+BCF		& f, i$^{ }_{3}$	& [f]$^{ }_{i}$ = 0				& -	& \\
+BSF		& f, i$^{ }_{3}$	& [f]$^{ }_{i}$ = 1				& -	& \\
+COMF		& f, d			& d = $\sim$[f]					& Z	& \\
+IORLW		& i$^{ }_{8}$		& WREG = WREG | i				& Z	& \\
+IORWF		& f, d			& d = WREG | [f]				& Z	& \\
+LSLF		& f, d			& d = [f] $\lsl$ 1				& Z,C	& E \\
+LSRF		& f, d			& d = [f] $\lsr$ 1				& Z,C	& E \\
+RLF		& f, d			& C:d = C:[f] $\rol$ 1				& C	& \\
+RRF		& f, d			& C:d = C:[f] $\ror$ 1				& C	& \\
+XORLW		& i$^{ }_{8}$		& WREG = WREG $\oplus$ i			& Z	& \\
+XORWF		& f, d			& d = WREG $\oplus$ [f]				& Z	& \\
+\end{asmtable}
+%
+\begin{asmtable}{Jump, Branch and Skip Instructions}
+BRA		& rel$^{ }_{9}$		& PC = PC $+$ rel$^{\pm}_{ }$			& -	& 2,E \\
+BRW		&			& PC = PC $+$ WREG$^{\emptyset}_{ }$		& -	& 2,E \\
+BTFSC		& f, i$^{ }_{3}$	& if([f]$^{ }_{i}$ $=$ 0) PC $+$= 1		& -	& 2 \\
+BTFSS		& f, i$^{ }_{3}$	& if([f]$^{ }_{i}$ $=$ 1) PC $+$= 1		& -	& 2 \\
+CALL		& ptr$^{ }_{11}$	& Push(PC); PC = PCLATH$^{ }_{6:3}$:ptr		& -	& 2 \\
+CALLW		&			& Push(PC); PC = PCLATH:WREG			& -	& 2,E \\
+DECFSZ		& f, d			& d = [f] $-$ 1; if(d $=$ 0) PC $+$= 1		& -	& 2 \\
+GOTO		& ptr$^{ }_{11}$	& PC = PCLATH$^{ }_{6:3}$:ptr			& -	& 2 \\
+INCFSZ		& f, d			& d = [f] $+$ 1; if(d $=$ 0) PC $+$= 1		& -	& 2 \\
+MOVLP		& i$^{ }_{7}$		& PCLATH = i					& -	& E \\
+RETFIE		&			& PC = Pop; GIE = 1				& -	& 2 \\
+RETLW		& i$^{ }_{8}$		& PC = Pop; WREG = i				& -	& 2 \\
+RETURN		&			& PC = Pop					& -	& 2 \\
+\end{asmtable}
+%
+\begin{asmtable}{Data Transfer Instructions}
+ADDFSR		& FSRn, i${ }_{6}$	& FSRn = FSRn $+$ i$^{\pm}_{ }$			& -	& E \\
+CLRF		& f			& [f] = 0					& Z	& \\
+CLRW		&			& WREG = 0					& Z	& \\
+MOVF		& f, d			& d = [f]					& Z	& \\
+MOVIW		& $++$FSRn		& FSRn = FSRn $+$ 1; WREG = [FSRn]		& -	& E \\
+MOVIW		& $--$FSRn		& FSRn = FSRn $-$ 1; WREG = [FSRn]		& -	& E \\
+MOVIW		& FSRn$++$		& WREG = [FSRn]; FSRn = FSRn $+$ 1		& -	& E \\
+MOVIW		& FSRn$--$		& WREG = [FSRn]; FSRn = FSRn $-$ 1		& -	& E \\
+MOVIW		& i$^{ }_{6}$[FSRn]	& WREG = [FSRn $+$ i$^{\pm}_{ }$]		& -	& E \\
+MOVLB		& i$^{ }_{5}$		& BSR = i					& -	& E \\
+MOVLW		& i$^{ }_{8}$		& WREG = i					& -	& \\
+MOVWF		& f			& [f] = WREG					& -	& \\
+MOVWI		& $++$FSRn		& FSRn = FSRn $+$ 1; [FSRn] = WREG		& -	& E \\
+MOVWI		& $--$FSRn		& FSRn = FSRn $-$ 1; [FSRn] = WREG		& -	& E \\
+MOVWI		& FSRn$++$		& [FSRn] = WREG; FSRn = FSRn $+$ 1		& -	& E \\
+MOVWI		& FSRn$--$		& [FSRn] = WREG; FSRn = FSRn $-$ 1		& -	& E \\
+MOVWI		& i$^{ }_{6}$[FSRn]	& [FSRn $+$ i$^{\pm}_{ }$] = WREG		& -	& E \\
+SWAPF		& f, d			& d = [f]$^{ }_{3:0}$:[f]$^{ }_{7:4}$		& -	& \\
+\end{asmtable}
+%
+\begin{asmtable}{System Instructions}
+CLRWDT		&			& WDT = 0; TO = 1; PD = 1			& -	& \\
+NOP		&			&						& -	& \\
+OPTION		&			& OPTION = WREG					& -	& D \\
+RESET		&			& SystemReset					& -	& E \\
+SLEEP		&			& WDT = 0; TO = 1; PD = 0; Sleep		& -	& \\
+TRIS\{ABC\}	&			& TRIS\{ABC\} = WREG				& -	& D \\
+\end{asmtable}
+%
+\newsavebox\ExampleISR
+\begin{lrbox}{\ExampleISR}\begin{lstlisting}
+MOVWF   W_TEMP          ; Save W
+SWAPF   STATUS, W       ; Save STATUS
+MOVWF   STATUS_TEMP
+.
+.
+.
+SWAPF   STATUS_TEMP, W ; Restore STATUS
+MOVWF   STATUS
+SWAPF   W_TEMP, F      ; Restore W
+SWAPF   W_TEMP, W
+RETFIE
+\end{lstlisting}\end{lrbox}
+\begin{table-X}{Example: Context Saving During Interrupts}
+\usebox\ExampleISR\\
+\end{table-X}
+%
+\begin{table-lX}{Notes}
+2	& Instruction takes two cycles (only one if conditional and false). \\
+D	& Instruction is deprecated. \\
+E	& Only available with Enhanced Instruction Set \\
+\end{table-lX}
+%
+\end{multicols}
+\end{document}
