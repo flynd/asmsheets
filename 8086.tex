@@ -1,5 +1,5 @@
 %
-% Copyright (C) 2014 Anders Olofsson
+% Copyright (C) 2014-2015 Anders Olofsson
 %
 % Copying and distribution of this file, with or without modification,
 % are permitted in any medium without royalty provided the copyright
@@ -28,7 +28,7 @@
 \defsheet{table-lXX}{3}{|l X X|}
 \defsheet{table-llXl}{4}{|l l X l|}
 
-\pagefooter{8086 version 4 page \thepage}
+\pagefooter{8086 version 5 page \thepage}
 
 \begin{document}
 \begin{multicols}{3}
@@ -88,7 +88,7 @@ CALL	& rel$^{ }_{16}$	& PUSH IP; IP $+$= rel				& {--}{--}{--}{--}{--}{--} \\
 CALL	& ptr$^{ }_{32}$	& PUSH CS,IP; CS:IP = ptr			& {--}{--}{--}{--}{--}{--} \\
 CALL	& d$^{ }_{16}$		& PUSH IP; IP = d				& {--}{--}{--}{--}{--}{--} \\
 CALL	& [m$^{ }_{32}$]	& PUSH CS,IP; CS:IP = [m]			& {--}{--}{--}{--}{--}{--} \\
-INT	& i$^{ }_{8}$		& PUSH F,CS,IP; CS:IP=[0:4*i]; I=0		& {--}{--}{--}{--}{--}{--} \\
+INT	& i$^{ }_{8}$		& PUSH F,CS,IP; CS:IP=[0:4$\umul$i]; I=0	& {--}{--}{--}{--}{--}{--} \\
 INTO	&			& if(O) INT 4					& {--}{--}{--}{--}{--}{--} \\
 IRET	&			& POP IP,CS,F					& ****** \\
 Jcc	& rel$^{ }_{8}$		& if(cc) IP $+$= rel$^{\pm}_{ }$		& {--}{--}{--}{--}{--}{--} \\
@@ -115,7 +115,7 @@ LAHF	&			& AH = S:Z:0:A:0:P:1:C				& {--}{--}{--}{--}{--}{--} \\
 POPF	&			& POP -:-:-:-:O:D:I:T:S:Z:-:A:-:P:-:C		& ****** \\
 PUSHF	&			& PUSH 1:1:1:1:O:D:I:T:S:Z:0:A:0:P:1:C		& {--}{--}{--}{--}{--}{--} \\
 SAHF	&			& S:Z:-:A:-:P:-:C = AH				& *{--}**** \\
-SALF	&			& AL = (C ? 0xff : 0x00)			& {--}{--}{--}{--}{--}{--} \\
+SALC	&			& AL = (C ? 0xff : 0x00)			& {--}{--}{--}{--}{--}{--} \\
 STC	&			& C = 1						& 1{--}{--}{--}{--}{--} \\
 STD	&			& D = 1						& {--}{--}{--}{--}{--}{--} \\
 STI	&			& I = 1						& {--}{--}{--}{--}{--}{--} \\
@@ -125,7 +125,7 @@ STI	&			& I = 1						& {--}{--}{--}{--}{--}{--} \\
 CMPS\{BW\}	&		& [SI] $-$ [ES:DI]; Advance SI and DI	& ****** \\
 LODS\{BW\}	&		& a = [SI]; Advance SI			& {--}{--}{--}{--}{--}{--} \\
 MOVS\{BW\}	&		& [ES:DI] = [SI]; Advance SI and DI	& {--}{--}{--}{--}{--}{--} \\
-SCAS\{BW\}	&		& a - [SI]; Advance SI			& ****** \\
+SCAS\{BW\}	&		& a $-$ [SI]; Advance SI			& ****** \\
 STOS\{BW\}	&		& [ES:DI] = a; Advance DI		& {--}{--}{--}{--}{--}{--} \\
 \end{asmtable2}
 %
@@ -152,8 +152,8 @@ MOV	& d$^{ }_{16}$, seg	& d = seg					& {--}{--}{--}{--}{--}{--} \\
 MOV	& seg, d$^{ }_{16}$	& seg = d					& {--}{--}{--}{--}{--}{--} \\
 POP	& d$^{ }_{16}$		& SP $+$= 2; d = [SS:SP$-$2]			& {--}{--}{--}{--}{--}{--} \\
 POP	& seg			& SP $+$= 2; seg = [SS:SP$-$2]			& {--}{--}{--}{--}{--}{--} \\
-PUSH	& d$^{ }_{16}$		& SP $-$= 2; [SS:SP$-$2] = d			& {--}{--}{--}{--}{--}{--} \\
-PUSH	& seg			& SP $-$= 2; [SS:SP$-$2] = seg			& {--}{--}{--}{--}{--}{--} \\
+PUSH	& d$^{ }_{16}$		& SP $-$= 2; [SS:SP] = d			& {--}{--}{--}{--}{--}{--} \\
+PUSH	& seg			& SP $-$= 2; [SS:SP] = seg			& {--}{--}{--}{--}{--}{--} \\
 XCHG	& r, d			& r:d = d:r					& {--}{--}{--}{--}{--}{--} \\
 XLAT	&			& AL = [BX $+$ AL]				& {--}{--}{--}{--}{--}{--} \\
 \end{asmtable}
@@ -170,9 +170,9 @@ DAS	&	& if(AL$^{ }_{3:0}$>9 || A) C:AL$-$=6; A=1; else A=0 \newline if(AL$^{ }_{
 \begin{asmtable}{Prefix Instructions}
 seg:	&			& Use seg instead of DS or SS			& {--}{--}{--}{--}{--}{--} \\
 LOCK	&			& Assert LOCK\#					& {--}{--}{--}{--}{--}{--} \\
-REP	& strcmd		& do \{ strcmd; CX{-}{-} \} while(CX $\ne$ 0)	& {--}{--}{--}{--}{--}{--} \\
-REPE	& strcmd		& do \{ strcmd; CX{-}{-} \} while(Z \&\& CX $\ne$ 0)	& ****** \\
-REPNE	& strcmd		& do \{ strcmd; CX{-}{-} \} while(!Z \&\& CX $\ne$ 0)	& ****** \\
+REP	& strcmd		& do \{ strcmd; CX$--$ \} while(CX $\ne$ 0)	& {--}{--}{--}{--}{--}{--} \\
+REPE	& strcmd		& do \{ strcmd; CX$--$ \} while(Z \&\& CX $\ne$ 0)	& ****** \\
+REPNE	& strcmd		& do \{ strcmd; CX$--$ \} while(!Z \&\& CX $\ne$ 0)	& ****** \\
 \end{asmtable}
 %
 \begin{table-lX}{Execution Times}
