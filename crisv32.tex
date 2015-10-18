@@ -31,7 +31,7 @@
 \defsheet{table-llX}{3}{|l l X|}
 \defsheet{table-llXN}{4}{|l l X N|}
 
-\pagefooter{CRISv32 version 1 page \thepage}
+\pagefooter{CRISv32 version 2 page \thepage}
 
 \begin{document}
 \begin{multicols}{3}
@@ -117,8 +117,8 @@ MOVE		& s, pr			& pr = s$^{ }_{sizeof(pr)}$			& {--}{--}{--}{--}	& M \\
 MOVE		& pr, d			& d$^{ }_{sizeof(pr)}$ = pr			& {--}{--}{--}{--}	& \\
 MOVE		& rs, sr		& SRS.sr = rs					& {--}{--}{--}{--}	& M \\
 MOVE		& sr, rd		& rd = SRS.sr					& {--}{--}{--}{--}	& \\
-MOVEM		& rs, di		& di[0] = R0 \ldots di[4*s] = rs		& {--}{--}{--}{--}	& \\
-MOVEM		& sm, rd		& R0 = sm[0] \ldots rd = sm[4*d]		& {--}{--}{--}{--}	& \\
+MOVEM		& rs, di		& di[0] = R0 \ldots di[4$\umul$s] = rs		& {--}{--}{--}{--}	& \\
+MOVEM		& sm, rd		& R0 = sm[0] \ldots rd = sm[4$\umul$d]		& {--}{--}{--}{--}	& \\
 MOVEQ		& i$^{ }_{6}$, rd	& rd = i$^{\pm}_{ }$				& {--}{--}{--}{--}	& \\
 MOV\{SU\}.z	& s, rd			& rd = s$^{\{SU\}}_{z}$				& **{--}{--}	& \\
 Scc		& rd			& rd = (cc ? 1 : 0)				& {--}{--}{--}{--}	& \\
