@@ -40,7 +40,8 @@ Note: I was unable to find the execution time for SETALC instruction
 ARM v7
 ------
 Instruction sets of ARM, Thumb and Thumb2 including version information
-for ARM versions 6, 6T, 6k and 7.
+for ARM versions 6, 6T, 6k and 7. Also includes extra pages with system
+registers both for ARMv7-A/R and ARMv7-M.
 Floating point and coprocessor instructions are not included
 
 
