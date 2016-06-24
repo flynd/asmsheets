@@ -1,5 +1,5 @@
 %
-% Copyright (C) 2014-2015 Anders Olofsson
+% Copyright (C) 2014-2016 Anders Olofsson
 %
 % Copying and distribution of this file, with or without modification,
 % are permitted in any medium without royalty provided the copyright
@@ -30,7 +30,7 @@
 \defsheet{table-llX}{3}{|l l X|}
 \defsheet{table-llXr}{4}{|l l X r|}
 
-\pagefooter{ARMv7 version 5 page \thepage}
+\pagefooter{ARMv7 version 6 page \thepage}
 
 \begin{document}
 \begin{multicols}{3}
@@ -702,7 +702,7 @@ TTBR1		& c2,0,c0,1	& Translation Table Base 1			& 6,B \\
 TTBCR		& c2,0,c0,2	& Translation Table Base Control		& 6,B \\
 TTBR0		& c2,0		& Translation Table Base 0 (LPAE only)		& 7,B \\
 TTBR1		& c2,1		& Translation Table Base 1 (LPAE only)		& 7,B \\
-DACR		& c3,0,c0,0	& Domain Access Contorl Register		& B \\
+DACR		& c3,0,c0,0	& Domain Access Control Register		& B \\
 \end{table-llXr}
 %
 \begin{table-llXr}{CP15 TLB Maintenance Operation Regs (Write Only, ARM-A Only)}
