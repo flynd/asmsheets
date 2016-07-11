@@ -1,5 +1,5 @@
 Instruction Set Quick Reference Sheets
-Copyright (C) 2014-2015 Anders Olofsson
+Copyright (C) 2014-2016 Anders Olofsson
 
 Copying and distribution of this file, with or without modification,
 are permitted in any medium without royalty provided the copyright
@@ -60,7 +60,8 @@ performing division.
 
 MIPS32 R2
 ---------
-Instruction sets of MIPS32 release 2 and MIPS16e.
+Instruction sets of MIPS32 release 2, including MIPS16e and DSP module
+rev 2 instructions.
 Floating point and coprocessor 2 instructions are not included.
 
 
@@ -88,3 +89,4 @@ Sources
 [8] "MIPS32 Instruction Set Quick Reference" (MD00565)
 [9] Multiple data sheets for Microchip PICs.
 [10] "ARMv7-M Architecture Reference Manual" (DDI 0403E.b)
+[11] "MIPS DSP Module for the MIPS32 Architecture" (MD00374)

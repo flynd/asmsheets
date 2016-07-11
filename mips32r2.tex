@@ -1,5 +1,5 @@
 %
-% Copyright (C) 2014 Anders Olofsson
+% Copyright (C) 2014-2016 Anders Olofsson
 %
 % Copying and distribution of this file, with or without modification,
 % are permitted in any medium without royalty provided the copyright
@@ -22,10 +22,12 @@
 \def\tabcolsep{2pt}
 \def\arraystretch{1.3}
 \defsheet{asmtable}{4}{|m{4.2em} m{5.0em}|X|m{0.7em}|}
+\defsheet{asmtabledsp}{4}{|m{8.4em} m{3.7em}|X|m{0.7em}|}
+\defsheet{asmtabledsp2}{4}{|m{10.2em} m{3.7em}|X|m{0.7em}|}
 \defsheet{table-lX}{2}{|l X|}
 \defsheet{table-llX}{3}{|l l X|}
 
-\pagefooter{MIPS32r2 version 1 page \thepage}
+\pagefooter{MIPS32r2 version 2 page \thepage}
 
 \begin{document}
 \begin{multicols}{3}
@@ -37,6 +39,7 @@
 %
 \begin{table-lX}{Keys}
 rx, ry, rz			& General registers \\
+AC0				& Accumulator register 0 (HI:LO) \\
 i, p, s, rel, ptr, off		& Immediate operand \\
 ISA				& ISA mode (0=MIPS32, 1=MIPS16e) \\
 value$^{\pm}_{ }$		& Value is sign extended \\
@@ -49,15 +52,15 @@ ADD	& rx, ry, rz			& rx = ry $+$ rz				& O \\
 ADDI	& rx, ry, i$^{ }_{16}$		& rx = ry $+$ i$^{\pm}_{ }$			& O \\
 ADDIU	& rx, ry, i$^{ }_{16}$		& rx = ry $+$ i$^{\pm}_{ }$			& \\
 ADDU	& rx, ry, rz			& rx = ry $+$ rz				& \\
-DIV	& rx, ry			& HI = rx $\sdiv$ ry; LO = rx $\smod$ ry	& \\
-DIVU	& rx, ry			& HI = rx $\udiv$ ry; LO = rx $\umod$ ry	& \\
-MADD	& rx, ry			& HI:LO = HI:LO $+$ rx $\smul$ ry		& \\
-MADDU	& rx, ry			& HI:LO = HI:LO $+$ rx $\umul$ ry		& \\
-MSUB	& rx, ry			& HI:LO = HI:LO $-$ rx $\smul$ ry		& \\
-MSUBU	& rx, ry			& HI:LO = HI:LO $-$ rx $\umul$ ry		& \\
+DIV	& rx, ry			& AC0$^{ }_{63:32}$ = rx $\sdiv$ ry; AC0$^{ }_{31:0}$ = rx $\smod$ ry	& \\
+DIVU	& rx, ry			& AC0$^{ }_{63:32}$ = rx $\udiv$ ry; AC0$^{ }_{31:0}$ = rx $\umod$ ry	& \\
+MADD	& rx, ry			& AC0 = AC0 $+$ rx $\smul$ ry			& \\
+MADDU	& rx, ry			& AC0 = AC0 $+$ rx $\umul$ ry			& \\
+MSUB	& rx, ry			& AC0 = AC0 $-$ rx $\smul$ ry			& \\
+MSUBU	& rx, ry			& AC0 = AC0 $-$ rx $\umul$ ry			& \\
 MUL	& rx, ry, rz			& rx = ry $\smul$ rz				& \\
-MULT	& rx, ry			& HI:LO = rx $\smul$ ry				& \\
-MULTU	& rx, ry			& HI:LO = rx $\umul$ ry				& \\
+MULT	& rx, ry			& AC0 = rx $\smul$ ry				& \\
+MULTU	& rx, ry			& AC0 = rx $\umul$ ry				& \\
 \textit{NEGU}	& rx, ry		& rx = 0 $-$ ry					& \\
 SUB	& rx, ry, rz			& rx = ry $-$ rz				& O \\
 SUBU	& rx, ry, rz			& rx = ry $-$ rz				& \\
@@ -134,13 +137,13 @@ JR.HB	& rx				& ISA=rx$^{ }_{0}$; PC=rx$^{ }_{31:1}$:0; ClrHazards	& D \\
 \textit{LA}	& rx, rel		& rx = rel					& \\
 \textit{LI}	& rx, i$^{ }_{32}$	& rx = i					& \\
 LUI	& rx, i$^{ }_{16}$		& rx = i $\lsl$ 16				& \\
-MFHI	& rx				& rx = HI					& \\
-MFLO	& rx				& rx = LO					& \\
+MFHI	& rx				& rx = AC0$^{ }_{63:32}$			& \\
+MFLO	& rx				& rx = AC0$^{ }_{31:0}$				& \\
 \textit{MOVE}	& rx, ry		& rx = ry					& \\
 MOVN	& rx, ry, rz			& if (rz $\ne$ 0) rx = ry			& \\
 MOVZ	& rx, ry, rz			& if (rz $=$ 0) rx = ry				& \\
-MTHI	& rx				& HI = rx					& \\
-MTLO	& rx				& LO = rx					& \\
+MTHI	& rx				& AC0$^{ }_{63:32}$ = rx			& \\
+MTLO	& rx				& AC0$^{ }_{31:0}$ = rx				& \\
 RDHWR	& rx, ry			& rx = HardwareRegister(ry)			& 2 \\
 SEB	& rx, ry			& rx = ry$^{\pm}_{7:0}$				& 2 \\
 SEH	& rx, ry			& rx = ry$^{\pm}_{15:0}$			& 2 \\
@@ -179,11 +182,9 @@ TNEI	& rx, i$^{ }_{16}$		& if (rx $\ne$ i$^{\pm}_{ }$) Exception(Trap)	& \\
 \end{asmtable}
 %
 \begin{asmtable}{Privileged Instructions}
-\textit{DI}	&			& STATUS$^{ }_{IE}$ = 0				& 2 \\
-DI	& rx				& rx = STATUS; STATUS$^{ }_{IE}$ = 0		& 2 \\
+DI	& \{rx\}			& rx = STATUS; STATUS$^{ }_{IE}$ = 0		& 2 \\
 DERET	&				& DebugExceptionReturn				& \\
-\textit{EI}	&			& STATUS$^{ }_{IE}$ = 1				& 2 \\
-EI	& rx				& rx = STATUS; STATUS$^{ }_{IE}$ = 1		& 2 \\
+EI	& \{rx\}			& rx = STATUS; STATUS$^{ }_{IE}$ = 1		& 2 \\
 ERET	&				& ExceptionReturn				& \\
 MFC0	& rx, ry, i$^{ }_{3}$		& rx = Coprocessor0Register[ry, i]		& \\
 MTC0	& rx, ry, i$^{ }_{3}$		& Coprocessor0Register[ry, i] = rx		& \\
@@ -217,11 +218,12 @@ WRPGPR	& rx, ry			& PreviousShadowSet(rx) = ry			& 2 \\
 \end{table-lX}
 %
 \begin{table-lX}{Notes}
-2	& Only available on MIPS32 Release 2 \\
-D	& Delay slot of one instruction before jump is executed \\
+2	& Only available on MIPS32 Release 2. \\
+D	& Delay slot of one instruction before jump is executed. \\
 O	& Exception without modifying the destination register on signed overflow. \\
+Q	& Only available with DSP Rev2. \\
 R	& If extended, can also include A*..A3 and any of S2..S8 in reglist. \\
-S	& The shift count may be 1..8. Extendedable to 0..31. \\
+S	& The shift count may be 1..8. Extendable to 0..31. \\
 X	& Immediate can be extended by up to 11 bits (max 16 bits total). \newline The extended immediate is unsigned for CMPI and LI, otherwise signed. \\
 \end{table-lX}
 %
@@ -259,8 +261,8 @@ SW	& RA, i$^{ }_{10}$(SP)	& [SP $+$ i$^{\emptyset}_{9:2}$:0$^{ }_{1:0}$] = RA	& 
 \begin{asmtable}{MIPS16e Data Transfer Instructions}
 \textit{LA} & rx, rel		& rx = rel						& \\
 LI	& rx, i$^{ }_{8}$	& rx = i$^{\emptyset}_{ }$				& X \\
-MFHI	& rx			& rx = HI						& \\
-MFLO	& rx			& rx = LO						& \\
+MFHI	& rx			& rx = AC0$^{ }_{63:32}$				& \\
+MFLO	& rx			& rx = AC0$^{ }_{31:0}$					& \\
 MOVE	& rx, r32		& rx = r32						& \\
 MOVE	& r32, ry		& r32 = rx						& \\
 RESTORE	& reglist, i$^{ }_{7}$	& SP $+$= i$^{ }_{6:2}$:0$^{ }_{1:0}$; reglist = [SP]	& R \\
@@ -300,10 +302,10 @@ ADDIU	& rx, PC, i$^{ }_{10}$	& rx = PC $+$ i$^{\emptyset}_{9:2}$:0$^{ }_{1:0}$	&
 ADDIU	& SP, i$^{ }_{11}$	& SP = SP $+$ i$^{\pm}_{10:3}$:0$^{ }_{2:0}$		& X \\
 ADDIU	& rx, SP, i$^{ }_{10}$	& rx = SP $+$ i$^{\emptyset}_{9:2}$:0$^{ }_{1:0}$	& \\
 ADDU	& rx, ry, rz		& rx = ry $+$ rz					& \\
-DIV	& rx, ry		& LO = rx $\sdiv$ ry; HI = rx $\smod$ ry		& \\
-DIVU	& rx, ry		& LO = rx $\div$ ry; HI = rx $\umod$ ry			& \\
-MULT	& rx, ry		& HI:LO = rx $\smul$ ry					& \\
-MULTU	& rx, ry		& HI:LO = rx $\umul$ ry					& \\
+DIV	& rx, ry		& AC0$^{ }_{31:0}$ = rx $\sdiv$ ry; AC0$^{ }_{63:32}$ = rx $\smod$ ry	& \\
+DIVU	& rx, ry		& AC0$^{ }_{31:0}$ = rx $\div$ ry; AC0$^{ }_{63:32}$ = rx $\umod$ ry	& \\
+MULT	& rx, ry		& AC0 = rx $\smul$ ry					& \\
+MULTU	& rx, ry		& AC0 = rx $\umul$ ry					& \\
 NEG	& rx, ry		& rx = 0 $-$ ry						& \\
 SUBU	& rx, ry, rz		& rx = ry $-$ rz					& \\
 \end{asmtable}
@@ -322,6 +324,142 @@ SRL	& rx, ry, i$^{ }_{3}$	& rx = ry $\lsr$ i					& S \\
 SRLV	& rx, ry		& rx = rx $\lsr$ ry$^{ }_{4:0}$				& \\
 XOR	& rx, ry		& rx = rx $\oplus$ ry					& \\
 \end{asmtable}
+%
+\begin{table-lX}{Keys for DSP Instructions}
+ac		& Accumulator register (AC0, AC1, AC2, or AC3). \\
+cc		& Condition code (EQ, LE, or LT). \\
+a		& A or S to add or subtract operand. \\
+\_R		& Result is rounded (one is added to MSB shifted out). \\
+\_S		& Result from each operation is saturated. (Signed for Q instructions, Unsigned for U instructions). \\
+\_SA		& Also saturate the final result (64bit for W instructions, 32bit for (P)H instructions). \\
+c, ccond, pos, scount	& Flags from DSP Control Register. \\
+\end{table-lX}
+%
+\begin{asmtabledsp}{DSP Bitwise Instructions}
+APPEND			& rx, ry, i$^{ }_{5}$	& rx = rx$^{ }_{31-i:0}$:ry$^{ }_{i-1:0}$	& Q \\
+BALIGN			& rx, ry, i$^{ }_{2}$	& rx = rx$^{ }_{31-8i:0}$:ry$^{ }_{31:32-8i}$	& Q \\
+BITREV			& rx, ry		& rx = ReverseBits(ry$^{ }_{15:0}$)		& \\
+EXTP			& rx, ac, i$^{ }_{5}$	& rx = ac$^{\emptyset}_{pos:pos-i}$		& \\
+EXTPDP			& rx, ac, i$^{ }_{5}$	& rx = ac$^{\emptyset}_{pos:pos-i}$; pos $-$= (i$+$1)	& \\
+EXTPDPV			& rx, ac, rz		& rx = ac$^{\emptyset}_{pos:pos-rz^{ }_{4:0}}$; pos $-$= (rz$^{ }_{4:0}$$+$1)	& \\
+EXTPV			& rx, ac, rz		& rx = ac$^{\emptyset}_{pos:pos-rz^{ }_{4:0}}$	& \\
+EXTR\{\_R\{S\}\}.W	& rx, ac, i$^{ }_{5}$	& rx = ac $\asr$ i				& \\
+EXTR\_S.H		& rx, ac, i$^{ }_{5}$	& rx = ac $\asr$ i				& \\
+EXTRV\{\_R\{S\}\}.W	& rx, ac, rz		& rx = ac $\asr$ rz$^{ }_{4:0}$			& \\
+EXTRV\_S.H		& rx, ac, rz		& rx = ac $\asr$ rz$^{ }_{4:0}$			& \\
+INSV			& rx, ry		& rx$^{ }_{pos+scount-1:pos}$ = ry$^{ }_{scount-1:0}$	& \\
+MTHLIP			& rx, ac		& ac = ac$^{ }_{31:0}$:rx; pos $+$= 32		& \\
+PREPEND			& rx, ry, i$^{ }_{5}$	& rx = ry$^{ }_{i-1:0}$:rx$^{ }_{31:i}$		& Q \\
+SHLL\{\_S\}.PH		& rx, ry, i$^{ }_{5}$	& for(n=0..1) rx$^{ }_{Hn}$ = ry$^{ }_{Hn}$ $\lsl$ i	& \\
+SHLL.QB			& rx, ry, i$^{ }_{5}$	& for(n=0..3) rx$^{ }_{Bn}$ = ry$^{ }_{Bn}$ $\lsl$ i	& \\
+SHLL\_S.W		& rx, ry, i$^{ }_{5}$	& rx = ry $\lsl$ i				& \\
+SHLLV\{\_S\}.PH		& rx, ry, rz		& for(n=0..1) rx$^{ }_{Hn}$ = ry$^{ }_{Hn}$ $\lsl$ rz$^{ }_{3:0}$	& \\
+SHLLV.QB		& rx, ry, rz		& for(n=0..3) rx$^{ }_{Bn}$ = ry$^{ }_{Bn}$ $\lsl$ rz$^{ }_{2:0}$	& \\
+SHLLV\_S.W		& rx, ry, rz		& rx = ry $\lsl$ rz$^{ }_{4:0}$		& \\
+SHRA\{\_R\}.PH		& rx, ry, i$^{ }_{4}$	& for(n=0..1) rx$^{ }_{Hn}$ = ry$^{ }_{Hn}$ $\asr$ i	& \\
+SHRA\{\_R\}.QB		& rx, ry, i$^{ }_{3}$	& for(n=0..3) rx$^{ }_{Bn}$ = ry$^{ }_{Bn}$ $\asr$ i	& Q \\
+SHRA\_R.W		& rx, ry, i$^{ }_{5}$	& rx = ry $\asr$ i				& \\
+SHRAV\{\_R\}.PH		& rx, ry, rz		& for(n=0..1) rx$^{ }_{Hn}$ = ry$^{ }_{Hn}$ $\asr$ rz$^{ }_{3:0}$	& \\
+SHRAV\{\_R\}.QB		& rx, ry, rz		& for(n=0..3) rx$^{ }_{Bn}$ = ry$^{ }_{Bn}$ $\asr$ rz$^{ }_{2:0}$	& Q \\
+SHRAV\_R.W		& rx, ry, rz		& rx = ry $\asr$ rz$^{ }_{4:0}$			& \\
+SHRL.PH			& rx, ry, i$^{ }_{4}$	& for(n=0..1) rx$^{ }_{Hn}$ = ry$^{ }_{Hn}$ $\lsr$ i	& Q \\
+SHRL.QB			& rx, ry, i$^{ }_{3}$	& for(n=0..3) rx$^{ }_{Bn}$ = ry$^{ }_{Bn}$ $\lsr$ i	& \\
+SHRLV.PH		& rx, ry, rz		& for(n=0..1) rx$^{ }_{Hn}$ = ry$^{ }_{Hn}$ $\lsr$ rz$^{ }_{3:0}$	& Q \\
+SHRLV.QB		& rx, ry, rz		& for(n=0..3) rx$^{ }_{Bn}$ = ry$^{ }_{Bn}$ $\lsr$ rz$^{ }_{2:0}$	& \\
+SHILO			& ac, i$^{ }_{6}$	& ac = (i $\slt$ 0) ? (ac $\lsl$ -i) : (ac $\lsr$ i)	& \\
+SHILOV			& ac, ry		& ac=(ry$^{ }_{5:0}$$\slt$0)?(ac$\lsl$-ry$^{ }_{5:0}$):(ac$\lsr$ry$^{ }_{5:0}$)	& \\
+\end{asmtabledsp}
+%
+\begin{asmtabledsp2}{DSP Multiplication Instructions}
+DPa.W.PH		& ac, ry, rz	& ac = ac $\pm$ (ry$^{ }_{H1}$$\smul$rz$^{ }_{H1}$ $+$ ry$^{ }_{H0}$$\smul$rz$^{ }_{H0}$)	& Q \\
+DPaQ\_S.W.PH		& ac, ry, rz	& ac = ac $\pm$ (ry$^{ }_{H1}$$\smul$rz$^{ }_{H1}$ $+$ ry$^{ }_{H0}$$\smul$rz$^{ }_{H0}$)	& \\
+DPaQ\_SA.L.W		& ac, ry, rz	& ac = ac $\pm$ ry $\smul$ rz				& \\
+DPaQX\_S\{A\}.W.PH	& ac, ry, rz	& ac = ac $\pm$ (ry$^{ }_{H1}$$\smul$rz$^{ }_{H0}$ $+$ ry$^{ }_{H0}$$\smul$rz$^{ }_{H1}$)	& Q \\
+DPaU.H.QBL		& ac, ry, rz	& ac = ac $\pm$ (ry$^{ }_{B3}$$\umul$rz$^{ }_{B3}$ $+$ ry$^{ }_{B2}$$\umul$rz$^{ }_{B2}$)	& \\
+DPaU.H.QBR		& ac, ry, rz	& ac = ac $\pm$ (ry$^{ }_{B1}$$\umul$rz$^{ }_{B1}$ $+$ ry$^{ }_{B0}$$\umul$rz$^{ }_{B0}$)	& \\
+DPaX.W.PH		& ac, ry, rz	& ac = ac $\pm$ (ry$^{ }_{H1}$$\smul$rz$^{ }_{H0}$ $+$ ry$^{ }_{H0}$$\smul$rz$^{ }_{H1}$)	& Q \\
+M\{ADD|SUB\}		& ac, ry, rz	& ac = ac $\pm$ ry $\smul$ rz				& \\
+M\{ADD|SUB\}U		& ac, ry, rz	& ac = ac $\pm$ ry $\umul$ rz				& \\
+MAQ\_S\{A\}.W.PHL	& ac, ry, rz	& ac = ac $+$ ry$^{ }_{H1}$ $\smul$ rz$^{ }_{H1}$	& \\
+MAQ\_S\{A\}.W.PHR	& ac, ry, rz	& ac = ac $+$ ry$^{ }_{H0}$ $\smul$ rz$^{ }_{H0}$	& \\
+MUL\{\_S\}.PH		& rx, ry, rz	& for(n=0..1) rx$^{ }_{Hn}$ = ry$^{ }_{Hn}$$\smul$rz$^{ }_{Hn}$	& Q \\
+MULEQ\_S.W.PHL		& rx, ry, rz	& rx = ry$^{ }_{H1}$ $\smul$ rz$^{ }_{H1}$		& \\
+MULEQ\_S.W.PHR		& rx, ry, rz	& rx = ry$^{ }_{H0}$ $\smul$ rz$^{ }_{H0}$		& \\
+MULEU\_S.PH.QBL		& rx, ry, rz	& for(n=0..1) rx$^{ }_{Hn}$ = ry$^{ }_{B(2+n)}$ $\smul$ rz$^{ }_{Hn}$	& \\
+MULEU\_S.PH.QBR		& rx, ry, rz	& for(n=0..1) rx$^{ }_{Hn}$ = ry$^{ }_{Bn}$ $\smul$ rz$^{ }_{Hn}$	& \\
+MULQ\_\{R\}S.PH		& rx, ry, rz	& for(n=0..1) rx$^{ }_{Hn}$ = (ry$^{ }_{Hn}$$\smul$rz$^{ }_{Hn}$)$^{ }_{30:15}$	& Q \\
+MULQ\_\{R\}S.W		& rx, ry, rz	& rx = (ry $\smul$ rz)$^{ }_{62:31}$			& Q \\
+MULSA.W.PH		& ac, ry, rz	& ac = ac $+$ ry$^{ }_{H1}$$\smul$rz$^{ }_{H1}$ $-$ ry$^{ }_{H0}$$\smul$rz$^{ }_{H0}$	& Q \\
+MULSAQ\_S.W.PH		& ac, ry, rz	& ac = ac $+$ ry$^{ }_{H1}$$\smul$rz$^{ }_{H1}$ $-$ ry$^{ }_{H0}$$\smul$rz$^{ }_{H0}$	& \\
+MULT			& ac, ry, rz	& ac = ry $\smul$ rz					& \\
+MULTU			& ac, ry, rz	& ac = ry $\umul$ rz					& \\
+\end{asmtabledsp2}
+%
+\begin{asmtabledsp2}{DSP Pack Instructions}
+PACKRL.PH		& rx, ry, rz	& rx = ry$^{ }_{H0}$:rz$^{ }_{H1}$			& \\
+PRECEQ.W.PHL		& rx, ry	& rx = ry$^{ }_{H1}$:0$^{ }_{16}$			& \\
+PRECEQ.W.PHR		& rx, ry	& rx = ry$^{ }_{H0}$:0$^{ }_{16}$			& \\
+PRECEQU.PH.QBL		& rx, ry	& rx = 0:ry$^{ }_{B3}$:0$^{ }_{8}$:ry$^{ }_{B2}$:0$^{ }_{7}$	& \\
+PRECEQU.PH.QBLA		& rx, ry	& rx = 0:ry$^{ }_{B3}$:0$^{ }_{8}$:ry$^{ }_{B1}$:0$^{ }_{7}$	& \\
+PRECEQU.PH.QBR		& rx, ry	& rx = 0:ry$^{ }_{B1}$:0$^{ }_{8}$:ry$^{ }_{B0}$:0$^{ }_{7}$	& \\
+PRECEQU.PH.QBRA		& rx, ry	& rx = 0:ry$^{ }_{B2}$:0$^{ }_{8}$:ry$^{ }_{B0}$:0$^{ }_{7}$	& \\
+PRECEU.PH.QBL		& rx, ry	& rx = 0$^{ }_{8}$:ry$^{ }_{B3}$:0$^{ }_{8}$:ry$^{ }_{B2}$	& \\
+PRECEU.PH.QBLA		& rx, ry	& rx = 0$^{ }_{8}$:ry$^{ }_{B3}$:0$^{ }_{8}$:ry$^{ }_{B1}$	& \\
+PRECEU.PH.QBR		& rx, ry	& rx = 0$^{ }_{8}$:ry$^{ }_{B1}$:0$^{ }_{8}$:ry$^{ }_{B0}$	& \\
+PRECEU.PH.QBRA		& rx, ry	& rx = 0$^{ }_{8}$:ry$^{ }_{B2}$:0$^{ }_{8}$:ry$^{ }_{B0}$	& \\
+PRECR.QB.PH		& rx, ry, rz	& rx = ry$^{ }_{B2}$:ry$^{ }_{B0}$:rz$^{ }_{B2}$:rz$^{ }_{B0}$	& Q \\
+PRECR\_SRA\{\_R\}.PH.W	& rx, ry, i$^{ }_{5}$	& for(n=0..1) rx$^{ }_{Hn}$ = ry$^{ }_{Hn}$ $\asr$ i	& Q \\
+PRECRQ\{\_RS\}.PH.W	& rx, ry, rz	& rx = ry$^{ }_{H1}$:rz$^{ }_{H1}$			& \\
+PRECRQ.QB.PH		& rx, ry, rz	& rx = ry$^{ }_{B3}$:ry$^{ }_{B1}$:rz$^{ }_{B3}$:rz$^{ }_{B1}$	& \\
+PRECRQU\_S.QB.PH	& rx, ry, rz	& for(n=0..3) rx$^{ }_{Bn}$ = (ry:rz)$^{ }_{Hn}$ $\asr$ 7	& \\
+REPL.PH			& rx, i$^{ }_{10}$	& for(n=0..1) rx$^{ }_{Hn}$ = i$^{\pm}_{ }$	& \\
+REPL.QB			& rx, i$^{ }_{8}$	& for(n=0..3) rx$^{ }_{Bn}$ = i			& \\
+REPLV.PH		& rx, ry	& for(n=0..1) rx$^{ }_{Hn}$ = ry$^{ }_{H0}$		& \\
+REPLV.QB		& rx, ry	& for(n=0..3) rx$^{ }_{Bn}$ = ry$^{ }_{B0}$		& \\
+\end{asmtabledsp2}
+%
+\begin{asmtabledsp}{DSP Arithmetic Instructions}
+ABSQ\_S.PH		& rx, ry	& for(n=0..1) rx$^{ }_{Hn}$ = ABS(ry$^{ }_{Hn}$)	& \\
+ABSQ\_S.QB		& rx, ry	& for(n=0..3) rx$^{ }_{Bn}$ = ABS(ry$^{ }_{Bn}$)	& Q \\
+ABSQ\_S.W		& rx, ry	& rx = ABS(ry)						& \\
+ADDQ\{\_S\}.PH		& rx, ry, rz	& for(n=0..1) rx$^{ }_{Hn}$ = ry$^{ }_{Hn}$ $+$ rz$^{ }_{Hn}$	& \\
+ADDQ\_S.W		& rx, ry, rz	& rx = ry $+$ rz					& \\
+ADDQH\{\_R\}.PH		& rx, ry, rz	& for(n=0..1) rx$^{ }_{Hn}$ = (ry$^{ }_{Hn}$ $+$ rz$^{ }_{Hn}$) $\lsr$ 1 & Q \\
+ADDQH\{\_R\}.W		& rx, ry, rz	& rx = (ry $+$ rz) $\lsr$ 1 				& Q \\
+ADDSC			& rx, ry, rz	& c:rx = ry $+$ rz					& \\
+ADDU\{\_S\}.PH		& rx, ry, rz	& for(n=0..1) rx$^{ }_{Hn}$ = ry$^{ }_{Hn}$ $+$ rz$^{ }_{Hn}$	& Q \\
+ADDU\{\_S\}.QB		& rx, ry, rz	& for(n=0..3) rx$^{ }_{Bn}$ = ry$^{ }_{Bn}$ $+$ rz$^{ }_{Bn}$	& \\
+ADDUH\{\_R\}.QB		& rx, ry, rz	& for(n=0..3) rx$^{ }_{Bn}$ = (ry$^{ }_{Bn}$ $+$ rz$^{ }_{Bn}$) $\lsr$ 1 & Q \\
+ADDWC			& rx, ry, rz	& rx = ry $+$ rz $+$ c					& \\
+CMP.cc.PH		& rx, ry	& for(n=0..1) ccond$^{ }_{n}$ = rx$^{ }_{Hn}$ $\bar{\circ}$ ry$^{ }_{Hn}$	& \\
+CMPGU.cc.QB		& rx, ry, rz	& rx=0; for(n=0..3) rx$^{ }_{n}$ = ry$^{ }_{Bn}$ $\circ$ rz$^{ }_{Bn}$	& \\
+CMPGDU.cc.QB		& rx, ry, rz	& rx=0; f(n=0..3) rx$^{ }_{n}$=ccond$^{ }_{n}$=ry$^{ }_{Bn}$$\circ$rz$^{ }_{Bn}$	& Q \\
+CMPU.cc.PH		& rx, ry	& for(n=0..1) ccond$^{ }_{n}$ = rx$^{ }_{Hn}$ $\circ$ ry$^{ }_{Hn}$	& \\
+MODSUB			& rx, ry, rz	& rx = (ry $=$ 0) ? rz$^{\emptyset}_{23:8}$ : ry - rz$^{\emptyset}_{7:0}$	& \\
+RADDU.W.QB		& rx, ry	& rx = ry$^{\emptyset}_{B3}$ $+$ ry$^{\emptyset}_{B2}$ $+$ ry$^{\emptyset}_{B1}$ $+$ ry$^{\emptyset}_{B0}$	& \\
+SUBQ\{\_S\}.PH		& rx, ry, rz	& for(n=0..1) rx$^{ }_{Hn}$ = ry$^{ }_{Hn}$ $-$ rz$^{ }_{Hn}$	& \\
+SUBQ\_S.W		& rx, ry, rz	& rx = ry $-$ rz					& \\
+SUBQH\{\_R\}.PH		& rx, ry, rz	& for(n=0..1) rx$^{ }_{Hn}$ = (ry$^{ }_{Hn}$ $-$ rz$^{ }_{Hn}$) $\lsr$ 1 & Q \\
+SUBQH\{\_R\}.W		& rx, ry, rz	& rx = (ry $-$ rz) $\lsr$ 1 				& Q \\
+SUBU\{\_S\}.PH		& rx, ry, rz	& for(n=0..1) rx$^{ }_{Hn}$ = ry$^{ }_{Hn}$ $-$ rz$^{ }_{Hn}$	& Q \\
+SUBU\{\_S\}.QB		& rx, ry, rz	& for(n=0..3) rx$^{ }_{Bn}$ = ry$^{ }_{Bn}$ $-$ rz$^{ }_{Bn}$	& \\
+SUBUH\{\_R\}.QB		& rx, ry, rz	& for(n=0..3) rx$^{ }_{Bn}$ = (ry$^{ }_{Bn}$ $-$ rz$^{ }_{Bn}$) $\lsr$ 1 & Q \\
+\end{asmtabledsp}
+%
+\begin{asmtabledsp}{DSP Data Transfer and Control Instructions}
+BPOSGE32		& rel$^{ }_{18}$	& if (pos $\uge$ 32) PC $+$= rel$^{\pm}_{16:2}$:0$^{ }_{1:0}$	& \\
+LBUX			& rx, ry(rz)	& rx = [ry $+$ rz]$^{\emptyset}_{8}$			& \\
+LHX			& rx, ry(rz)	& rx = [ry $+$ rz]$^{\pm}_{16}$				& \\
+LWX			& rx, ry(rz)	& rx = [ry $+$ rz]					& \\
+MFHI			& rx, ac	& rx = ac$^{ }_{63:32}$					& \\
+MFLO			& rx, ac	& rx = ac$^{ }_{31:0}$					& \\
+MTHI			& rx, ac	& ac$^{ }_{63:32}$ = rx					& \\
+MTLO			& rx, ac	& ac$^{ }_{31:0}$ = rx					& \\
+PICK.PH			& rx, ry, rz	& for(n=0..1) rx$^{ }_{Hn}$ = (ccond$^{ }_{n}$ ? ry : rz)$^{ }_{Hn}$	& \\
+PICK.QB			& rx, ry, rz	& for(n=0..3) rx$^{ }_{Bn}$ = (ccond$^{ }_{n}$ ? ry : rz)$^{ }_{Bn}$	& \\
+RDDSP			& rx\{, i$^{ }_{10}$\}	& rx = DSPC \& mask				& \\
+WRDSP			& rx\{, i$^{ }_{10}$\}	& DSPC \& mask = rx				& \\
+\end{asmtabledsp}
 %
 \end{multicols}
 \end{document}
