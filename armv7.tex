@@ -30,7 +30,7 @@
 \defsheet{table-llX}{3}{|l l X|}
 \defsheet{table-llXr}{4}{|l l X r|}
 
-\pagefooter{ARMv7 version 6 page \thepage}
+\pagefooter{ARMv7 version 7 page \thepage}
 
 \begin{document}
 \begin{multicols}{3}
@@ -400,8 +400,8 @@ ROR\{S\}	& rx, ry		& rx = rx $\ror$ ry				& S \\
 SXTB		& rx, ry		& rx = ry$^{\pm}_{7:0}$				& \\
 SXTH		& rx, ry		& rx = ry$^{\pm}_{15:0}$			& \\
 TST		& rx, ry		& rx \& ry					& \\
-UXTB		& rx, ry		& rx = ry$^{\emptyset}_{7:0}$			& \\
-UXTH		& rx, ry		& rx = ry$^{\emptyset}_{15:0}$			& \\
+UXTB		& rx, ry		& rx = ry$^{\emptyset}_{7:0}$			& 6 \\
+UXTH		& rx, ry		& rx = ry$^{\emptyset}_{15:0}$			& 6 \\
 \end{asmtable}
 %
 \begin{asmtable}{Thumb16 Branch and Special Instructions}
