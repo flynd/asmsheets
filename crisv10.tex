@@ -1,5 +1,5 @@
 %
-% Copyright (C) 2014 Anders Olofsson
+% Copyright (C) 2014-2017 Anders Olofsson
 %
 % Copying and distribution of this file, with or without modification,
 % are permitted in any medium without royalty provided the copyright
@@ -31,7 +31,7 @@
 \defsheet{table-lXlN}{4}{|l X l N|}
 \defsheet{table-Xlllll}{6}{|X l l l l l|}
 
-\pagefooter{CRISv10 version 2 page \thepage}
+\pagefooter{CRISv10 version 3 page \thepage}
 
 \begin{document}
 \begin{multicols}{3}
@@ -55,7 +55,7 @@ m		& Size modifier (b, w, or d for byte, word, or dword) \\
 z		& Size modifier (b or w for byte or word) \\
 value$^{\pm}_{ }$	& Value is sign extended\\
 value$^{\emptyset}_{ }$	& Value is zero extended\\
-value$^{\{SU\}}_{ }$	& Sign or zero extended according to instruction name \\
+value$^{?}_{ }$	& Sign or zero extended according to instruction name \\
 $\smul$ $\asr$	& Operation is signed \\
 {}****		& Flags NZVC are unchanged (--), affected (*) or cleared (0) \\
 \end{table-lX}
@@ -94,13 +94,13 @@ ADD.m		& se, rn, rd		& rd$^{ }_{m}$ = rn$^{ }_{m}$ $+$ se$^{ }_{m}$	& ****	& X \
 ADDC		& si, rd		& rd = rd $+$ si $+$ C				& ****	& V \\
 ADDI		& rs.m, rd		& rd = rd $+$ rs $\umul$ sizeof(m)		& {--}{--}{--}{--}	& P,X \\
 ADDQ		& i$^{ }_{6}$, rd	& rd = rd $+$ i$^{\emptyset}_{ }$		& ****	& X \\
-ADD\{SU\}.z	& s, rd			& rd = rd $+$ s$^{\{SU\}}_{z}$			& ****	& X \\
-ADD\{SU\}.z	& se, rn, rd		& rd = rn $+$ se$^{\{SU\}}_{z}$			& ****	& X \\
+ADD\{SU\}.z	& s, rd			& rd = rd $+$ s$^{?}_{z}$			& ****	& X \\
+ADD\{SU\}.z	& se, rn, rd		& rd = rn $+$ se$^{?}_{z}$			& ****	& X \\
 BOUND.m		& s, rd			& rd = MIN(rd, s$^{\emptyset}_{m}$)		& **00	& P,X \\
 BOUND.m		& se, rn, rd		& rd = MIN(rn, se$^{\emptyset}_{m}$)		& **00	& P,X \\
 CMP.m		& s, rd			& rd$^{ }_{m}$ $-$ s$^{ }_{m}$			& ****	& X \\
 CMPQ		& i$^{ }_{6}$, rd	& rd $-$ i$^{\pm}_{ }$				& ****	& X \\
-CMP\{SU\}.z	& s, rd			& rd $-$ s$^{\{SU\}}_{z}$			& ****	& X \\
+CMP\{SU\}.z	& s, rd			& rd $-$ s$^{?}_{z}$			& ****	& X \\
 DSTEP		& rs, rd		& rd $\lsl$= 1; if(rd $\ge$ rs) rd = rd $-$ rs	& **00	& P,X \\
 MSTEP		& rs, rd		& rd $\lsl$= 1; if(N) rd = rd $+$ rs		& **00	& P,X \\
 MULS.m		& rs, rd		& MOF:rd = rd$^{\pm}_{m}$ $\smul$ rs$^{\pm}_{m}$	& ***0	& P,V \\
@@ -109,8 +109,8 @@ NEG.m 		& rs, rd		& rd$^{ }_{m}$ = 0 $-$ rs$^{ }_{m}$		& ****	& P,X \\
 SUB.m		& s, rd			& rd$^{ }_{m}$ = rd$^{ }_{m}$ $-$ s$^{ }_{m}$	& ****	& X \\
 SUB.m		& se, rn, rd		& rd$^{ }_{m}$ = rn$^{ }_{m}$ $-$ se$^{ }_{m}$	& ****	& X \\
 SUBQ		& i$^{ }_{6}$, rd	& rd = rd $-$ i$^{\emptyset}_{ }$		& ****	& X \\
-SUB\{SU\}.z	& s, rd			& rd = rd $-$ s$^{\{SU\}}_{z}$			& ****	& X \\
-SUB\{SU\}.z	& se, rn, rd		& rd = rn $-$ se$^{\{SU\}}_{z}$			& ****	& X \\
+SUB\{SU\}.z	& s, rd			& rd = rd $-$ s$^{?}_{z}$			& ****	& X \\
+SUB\{SU\}.z	& se, rn, rd		& rd = rn $-$ se$^{?}_{z}$			& ****	& X \\
 TEST.m		& s			& s$^{ }_{m}$ $-$ 0				& **00	& X \\
 \end{asmtable}
 %
@@ -123,7 +123,7 @@ MOVE		& pr, d			& d$^{ }_{sizeof(pr)}$ = pr			& {--}{--}{--}{--}	& D,I \\
 MOVEM		& si, rd		& rd = si[0] \ldots R0 = si[4$\umul$d]		& {--}{--}{--}{--}	& \\
 MOVEM		& rs, di		& di[0] = rs \ldots di[4$\umul$s] = R0		& {--}{--}{--}{--}	& \\
 MOVEQ		& i$^{ }_{6}$, rd	& rd = i$^{\pm}_{ }$				& **00	& \\
-MOV\{SU\}.z	& s, rd			& rd = s$^{\{SU\}}_{z}$				& **00	& \\
+MOV\{SU\}.z	& s, rd			& rd = s$^{?}_{z}$				& **00	& \\
 \textit{POP}	& rd			& rd = [SP$+$]					& **00	& \\
 \textit{POP}	& pr			& pr = [SP$+$]					& {--}{--}{--}{--}	& I \\
 \textit{PUSH}	& rs			& [SP = SP $-$ 4] = rs				& {--}{--}{--}{--}	& \\
