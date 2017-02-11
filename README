@@ -1,5 +1,5 @@
 Instruction Set Quick Reference Sheets
-Copyright (C) 2014-2016 Anders Olofsson
+Copyright (C) 2014-2017 Anders Olofsson
 
 Copying and distribution of this file, with or without modification,
 are permitted in any medium without royalty provided the copyright
@@ -43,6 +43,14 @@ Instruction sets of ARM, Thumb and Thumb2 including version information
 for ARM versions 6, 6T, 6k and 7. Also includes extra pages with system
 registers both for ARMv7-A/R and ARMv7-M.
 Floating point and coprocessor instructions are not included
+
+
+ARM v8 A64
+----------
+A64 instruction set of ARM. Also includes an extra page with system
+registers for ARMv8-A. Debug features and compatibility with AArch32
+has been omitted.
+Floating point and SIMD instructions are not included
 
 
 CRIS v10
@@ -90,3 +98,5 @@ Sources
 [9] Multiple data sheets for Microchip PICs.
 [10] "ARMv7-M Architecture Reference Manual" (DDI 0403E.b)
 [11] "MIPS DSP Module for the MIPS32 Architecture" (MD00374)
+[12] "ARM Architecture Reference Manual, ARMv8 for ARMv8-A architecture
+     profile" (DDI 0487A.k)
