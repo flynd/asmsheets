@@ -1,5 +1,5 @@
 %
-% Copyright (C) 2014-2016 Anders Olofsson
+% Copyright (C) 2014-2017 Anders Olofsson
 %
 % Copying and distribution of this file, with or without modification,
 % are permitted in any medium without royalty provided the copyright
@@ -30,7 +30,7 @@
 \defsheet{table-llX}{3}{|l l X|}
 \defsheet{table-llXr}{4}{|l l X r|}
 
-\pagefooter{ARMv7 version 7 page \thepage}
+\pagefooter{ARMv7 version 8 page \thepage}
 
 \begin{document}
 \begin{multicols}{3}
@@ -126,8 +126,8 @@ BLX		& rel$^{ }_{25}$	& LR=PC$^{ }_{31:1}$:1; Set=0; PC$+$=rel$^{\pm}_{24:2}$:0$
 BLX		& rx			& LR=PC$^{ }_{31:1}$:0; Set=rx$^{ }_{0}$; PC=rx$^{ }_{31:1}$:0	& A \\
 BX		& rx			& Set = rx$^{ }_{0}$; PC = rx$^{ }_{31:1}$:0	& A \\
 %BXJ		& rx			& Set=2; PC = rx$^{ }_{31:1}$:0			& \\
-TBB		& rx, ry		& PC = PC $+$ [rx $+$ ry]$^{\emptyset}_{B0}$	& T \\
-TBH		& rx, ry, LSL \#1	& PC = PC $+$ [rx $+$ ry $\lsl$ 1]$^{\emptyset}_{H0}$	& T \\
+TBB		& [rx, ry]		& PC = PC $+$ 2 $\umul$ [rx $+$ ry]$^{\emptyset}_{8}$	& T \\
+TBH		& [rx, ry, LSL \#1]	& PC = PC $+$ 2 $\umul$ [rx $+$ 2 $\umul$ ry]$^{\emptyset}_{16}$	& T \\
 \end{asmtable}
 %
 \begin{asmtable}{Load and Store Instructions}
