@@ -47,9 +47,9 @@ Floating point and coprocessor instructions are not included
 
 ARM v8 A64
 ----------
-A64 instruction set of ARM. Also includes an extra page with system
-registers for ARMv8-A. Debug features and compatibility with AArch32
-has been omitted.
+A64 instruction set of ARM, including v1 additions. Also includes an
+extra page with system registers for ARMv8-A. Debug features and
+compatibility with AArch32 has been omitted.
 Floating point and SIMD instructions are not included
 
 
@@ -100,3 +100,5 @@ Sources
 [11] "MIPS DSP Module for the MIPS32 Architecture" (MD00374)
 [12] "ARM Architecture Reference Manual, ARMv8 for ARMv8-A architecture
      profile" (DDI 0487A.k)
+[13] "ARM Architecture Reference Manual, ARMv8 for ARMv8-A architecture
+     profile" (DDI 0487B.a)

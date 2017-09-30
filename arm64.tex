@@ -21,18 +21,19 @@
 \def\sheetheadercolor{black!10}
 \def\sheetrowcolor{black!5}
 
-\newcolumntype{N}{>{\raggedleft\arraybackslash}m{1.2em}}
+\newcolumntype{N}{>{\raggedleft\arraybackslash}m{0.6em}}
 \def\tabcolsep{2pt}
 \def\arraystretch{1.3}
-\defsheet{asmtable}{4}{|m{4.8em} m{7.2em}|X|N|}
+\defsheet{asmtable}{4}{|m{6.3em} m{7.2em}|X|N|}
 \defsheet{asmtable2}{4}{|m{3.0em} m{10.5em}|X|N|}
 \defsheet{table-lX}{2}{|l X|}
 \defsheet{table-lXN}{3}{|l|X|N|}
 \defsheet{table-llX}{3}{|l l X|}
 \defsheet{table-lXr}{3}{|l X r|}
 \defsheet{table-llXr}{4}{|l l X r|}
+\defsheet{table2-lX}{4}{|l X|l X|}
 
-\pagefooter{ARM64 version 1 page \thepage}
+\pagefooter{ARM64 version 2 page \thepage}
 
 \begin{document}
 \begin{multicols}{3}
@@ -44,11 +45,11 @@
 %
 \begin{asmtable}{Arithmetic Instructions}
 ADC\{S\}	& rd, rn, rm		& rd = rn + rm  + C				& \\
-ADD\{S\}	& rd, rn, op2		& rd = rn + op2					& SP \\
-ADR		& Xd, $\pm$rel$^{ }_{21}$	& Xd = PC $+$ rel$^{\pm}_{ }$			& \\
+ADD\{S\}	& rd, rn, op2		& rd = rn + op2					& S \\
+ADR		& Xd, $\pm$rel$^{ }_{21}$	& Xd = PC $+$ rel$^{\pm}_{ }$		& \\
 ADRP		& Xd, $\pm$rel$^{ }_{33}$	& Xd = PC$^{ }_{63:12}$:0$^{ }_{12}$ $+$ rel$^{\pm}_{33:12}$:0$^{ }_{12}$	& \\
-\textit{CMN}	& rd, op2		& rd $+$ op2					& SP \\
-\textit{CMP}	& rd, op2		& rd $-$ op2					& SP \\
+\textit{CMN}	& rd, op2		& rd $+$ op2					& S \\
+\textit{CMP}	& rd, op2		& rd $-$ op2					& S \\
 MADD		& rd, rn, rm, ra	& rd = ra $+$ rn $\umul$ rm			& \\
 \textit{MNEG}	& rd, rn, rm		& rd = $-$ rn $\umul$ rm			& \\
 MSUB		& rd, rn, rm, ra	& rd = ra $-$ rn $\umul$ rm			& \\
@@ -62,7 +63,7 @@ SMADDL		& Xd, Wn, Wm, Xa	& Xd = Xa $+$ Wn $\smul$ Wm			& \\
 SMSUBL		& Xd, Wn, Wm, Xa	& Xd = Xa $-$ Wn $\smul$ Wm			& \\
 SMULH		& Xd, Xn, Xm		& Xd = (Xn $\smul$ Xm)$^{ }_{127:64}$		& \\
 \textit{SMULL}	& Xd, Wn, Wm		& Xd = Wn $\smul$ Wm				& \\
-SUB\{S\}	& rd, rn, op2		& rd = rn - op2					& SP \\
+SUB\{S\}	& rd, rn, op2		& rd = rn - op2					& S \\
 UDIV		& rd, rn, rm		& rd = rn $\udiv$ rm				& \\
 UMADDL		& Xd, Wn, Wm, Xa	& Xd = Xa $+$ Wn $\umul$ Wm			& \\
 \textit{UMNEGL}	& Xd, Wn, Wm		& Xd = $-$ Wn $\umul$ Wm			& \\
@@ -71,72 +72,26 @@ UMULH		& Xd, Xn, Xm		& Xd = (Xn $\umul$ Xm)$^{ }_{127:64}$		& \\
 \textit{UMULL}	& Xd, Wn, Wm		& Xd = Wn $\umul$ Wm				& \\
 \end{asmtable}
 %
-\begin{asmtable}{Conditional Instructions}
-CCMN		& rn, \#i$^{ }_{5}$, \#f$^{ }_{4}$, cc	& if(cc) rn $+$ i; else N:Z:C:V = f	& \\
-CCMN		& rn, rm, \#f$^{ }_{4}$, cc	& if(cc) rn $+$ rm; else N:Z:C:V = f		& \\
-CCMP		& rn, \#i$^{ }_{5}$, \#f$^{ }_{4}$, cc	& if(cc) rn $-$ i; else N:Z:C:V = f	& \\
-CCMP		& rn, rm, \#f$^{ }_{4}$, cc	& if(cc) rn $-$ rm; else N:Z:C:V = f		& \\
-\textit{CINC}	& rd, rn, cc		& if(cc) rd = rn $+$ 1; else rd = rn		& \\
-\textit{CINV}	& rd, rn, cc		& if(cc) rd = $\sim$rn; else rd = rn		& \\
-\textit{CNEG}	& rd, rn, cc		& if(cc) rd = $-$rn; else rd = rn		& \\
-CSEL		& rd, rn, rm, cc	& if(cc) rd = rn; else rd = rm			& \\
-\textit{CSET}	& rd, cc		& if(cc) rd = 1; else rd = 0			& \\
-\textit{CSETM}	& rd, cc		& if(cc) rd = $\sim$0; else rd = 0		& \\
-CSINC		& rd, rn, rm, cc	& if(cc) rd = rn; else rd = rm $+$ 1		& \\
-CSINV		& rd, rn, rm, cc	& if(cc) rd = rn; else rd = $\sim$rm		& \\
-CSNEG		& rd, rn, rm, cc	& if(cc) rd = rn; else rd = $-$rm		& \\
-\end{asmtable}
-%
 \begin{asmtable}{Bit Manipulation Instructions}
+%\textit{BFC}	& rd, \#p, \#n		& rd$^{ }_{p+n-1:p}$ = 0$^{ }_{n}$		& 2 \\
 BFI		& rd, rn, \#p, \#n	& rd$^{ }_{p+n-1:p}$ = rn$^{ }_{n-1:0}$		& \\
 %BFM		& rd, rn, \#ir, \#is	& Meta instruction for BFI,BFXIL		& \\
 BFXIL		& rd, rn, \#p, \#n	& rd$^{ }_{n-1:0}$ = rn$^{ }_{p+n-1:p}$		& \\
 CLS		& rd, rn		& rd = CountLeadingOnes(rn)			& \\
 CLZ		& rd, rn		& rd = CountLeadingZeros(rn)			& \\
-EXTR		& rd, rn, rm, \#p	& rd = rn$^{ }_{p-1:0}$:rm$^{ }_{N-1:p}$	& \\
+EXTR		& rd, rn, rm, \#p	& rd = rn$^{ }_{p-1:0}$:rm$^{ }_{N0}$		& \\
 RBIT		& rd, rn		& rd = ReverseBits(rn)				& \\
 REV		& rd, rn		& rd = BSwap(rn)				& \\
 REV16		& rd, rn		& for(n=0..1|3) rd$^{ }_{Hn}$=BSwap(rn$^{ }_{Hn}$)	& \\
 REV32		& Xd, Xn		& Xd=BSwap(Xn$^{ }_{63:32}$):BSwap(Xn$^{ }_{31:0}$)	& \\
+%\textit{REV64}	& Xd, Xn		& Xd = BSwap(Xn)				& \\
 \{S,U\}BFIZ	& rd, rn, \#p, \#n	& rd = rn$^{?}_{n-1:0}$ $\lsl$ p		& \\
 %SBFM		& rd, rn, \#ir, \#is	& Meta instruction for ASR,SBFIZ,SBFX,SXTB,SXTH,SXTW	& \\
 \{S,U\}BFX	& rd, rn, \#p, \#n	& rd = rn$^{?}_{p+n-1:p}$			& \\
-\textit{\{S,U\}XTB}	& rd, Wn	& rd = Wn$^{?}_{7:0}$				& \\
-\textit{\{S,U\}XTH}	& rd, Wn	& rd = Wn$^{?}_{15:0}$				& \\
+\textit{\{S,U\}XT\{B,H\}}	& rd, Wn	& rd = Wn$^{?}_{N0}$			& \\
 \textit{SXTW}	& Xd, Wn		& Xd = Wn$^{\pm}_{ }$				& \\
 %UBFM		& rd, rn, \#ir, \#is	& Meta instruction for LSL,LSR,UBFIZ,UBFX,UXTB,UXTH	& \\
 \end{asmtable}
-%
-\begin{asmtable}{Load and Store Instructions}
-LDP		& rt, rt2, [addr]	& rt2:rt = [addr]$^{ }_{2N}$			& \\
-LDPSW		& Xt, Xt2, [addr]	& Xt = [addr]$^{\pm}_{32}$; Xt2 = [addr$+$4]$^{\pm}_{32}$	& \\
-LD\{U\}R	& rt, [addr]		& rt = [addr]$^{ }_{N}$				& \\
-LD\{U\}RB	& Wt, [addr]		& Wt = [addr]$^{\emptyset}_{8}$			& \\
-LD\{U\}RH	& Wt, [addr]		& Wt = [addr]$^{\emptyset}_{16}$		& \\
-LD\{U\}RSB	& rt, [addr]		& rt = [addr]$^{\pm}_{8}$			& \\
-LD\{U\}RSH	& rt, [addr]		& rt = [addr]$^{\pm}_{16}$			& \\
-LD\{U\}RSW	& Xt, [addr]		& Xt = [addr]$^{\pm}_{32}$			& \\
-PRFM		& prfop, addr		& Prefetch(addr, prfop)				& \\
-STP		& rt, rt2, [addr]	& [addr]$^{ }_{2N}$ = rt2:rt			& \\
-ST\{U\}R	& rt, [addr]		& [addr]$^{ }_{N}$ = rt				& \\
-ST\{U\}RB	& Wt, [addr]		& [addr]$^{ }_{8}$ = Wt$^{ }_{7:0}$		& \\
-ST\{U\}RH	& Wt, [addr]		& [addr]$^{ }_{16}$ = Wt$^{ }_{15:0}$		& \\
-\end{asmtable}
-%
-\begin{table-llX}{Addressing Modes}
-xxP,LDPSW	& [Xn\{, \#i$^{ }_{7+s}$\}]	& addr = Xn $+$ i$^{\pm}_{6+s:s}$:0$^{ }_{s}$ \\
-xxP,LDPSW	& [Xn], \#i$^{ }_{7+s}$		& addr = Xn; Xn $+$= i$^{\pm}_{6+s:s}$:0$^{ }_{s}$ \\
-xxP,LDPSW	& [Xn, \#i$^{ }_{7+s}$]!	& Xn$+$=i$^{\pm}_{6+s:s}$:0$^{ }_{s}$; addr=Xn \\
-xxR*,PRFM	& [Xn\{, \#i$^{ }_{12+s}$\}]	& addr = Xn $+$ i$^{\emptyset}_{11+s:s}$:0$^{ }_{s}$ \\
-xxR*		& [Xn], \#i$^{ }_{9}$		& addr = Xn; Xn $+$= i$^{\pm}_{ }$ \\
-xxR*		& [Xn, \#i$^{ }_{9}$]!		& Xn $+$= i$^{\pm}_{ }$; addr = Xn \\
-xxR*,PRFM	& [Xn,Xm\{, LSL \#0|s\}]	& addr = Xn + Xm $\lsl$ s \\
-xxR*,PRFM	& [Xn,Wm,UXTW\{ \#0|s\}]	& addr = Xn + Wm$^{\emptyset}_{ }$ $\lsl$ s \\
-xxR*,PRFM	& [Xn,Wm,SXTW\{ \#0|s\}]	& addr = Xn + Wm$^{\pm}_{ }$ $\lsl$ s \\
-xxR*,PRFM	& [Xn,Xm,SXTX\{ \#0|s\}]	& addr = Xn + Xm$^{\pm}_{ }$ $\lsl$ s \\
-xxUR*,PRFM	& [Xn\{, \#i$^{ }_{9}$\}]	& addr = Xn $+$= i$^{\pm}_{ }$ \\
-LDR\{SW\},PRFM	& $\pm$rel$^{ }_{21}$		& addr = PC $+$ rel$^{\pm}_{20:2}$:0$^{ }_{2}$ \\
-\end{table-llX}
 %
 \begin{asmtable}{Logical and Move Instructions}
 AND\{S\}	& rd, rn, op2		& rd = rn \& op2				& \\
@@ -152,14 +107,14 @@ LSL		& rd, rn, rm		& rd = rn $\lsl$ rm				& \\
 LSR		& rd, rn, rm		& rd = rn $\lsr$ rm				& \\
 \textit{LSR}	& rd, rn, \#i$^{ }_{6}$	& rd = rn $\lsr$ i				& \\
 %LSRV		& rd, rn, rm		& Meta instruction for LSR			& \\
-\textit{MOV}	& rd, rn		& rd = rn					& SP \\
+\textit{MOV}	& rd, rn		& rd = rn					& S \\
 \textit{MOV}	& rd, \#i		& rd = i					& \\
-MOVK		& rd,\#i$^{ }_{16}$\{,sh\}	& rd$^{ }_{sh+15:sh}$ = i	& \\
-MOVN		& rd,\#i$^{ }_{16}$\{,sh\}	& rd = $\sim$(i$^{\emptyset}_{ }$ $\lsl$ sh)	& \\
-MOVZ		& rd,\#i$^{ }_{16}$\{,sh\}	& rd = i$^{\emptyset}_{ }$ $\lsl$ sh	& \\
+MOVK		& rd,\#i$^{ }_{16}$\{, sh\}	& rd$^{ }_{sh+15:sh}$ = i		& \\
+MOVN		& rd,\#i$^{ }_{16}$\{, sh\}	& rd = $\sim$(i$^{\emptyset}_{ }$ $\lsl$ sh)	& \\
+MOVZ		& rd,\#i$^{ }_{16}$\{, sh\}	& rd = i$^{\emptyset}_{ }$ $\lsl$ sh	& \\
 \textit{MVN}	& rd, op2		& rd = $\sim$op2				& \\
 ORN		& rd, rn, op2		& rd = rn | $\sim$op2				& \\
-ORR		& rd, rn, op2		& rd = rn | op2				& \\
+ORR		& rd, rn, op2		& rd = rn | op2					& \\
 \textit{ROR}	& rd, rn, \#i$^{ }_{6}$	& rd = rn $\ror$ i				& \\
 ROR		& rd, rn, rm		& rd = rn $\ror$ rm				& \\
 \textit{TST}	& rn, op2		& rn \& op2					& \\
@@ -178,26 +133,76 @@ TBNZ		& rn, \#i, rel$^{ }_{16}$	& if(rn$^{ }_{i}$ $\ne$ 0) PC $+$= rel$^{\pm}_{1
 TBZ		& rn, \#i, rel$^{ }_{16}$	& if(rn$^{ }_{i}$ $=$ 0) PC $+$= rel$^{\pm}_{15:2}$:0$^{ }_{2}$	& \\
 \end{asmtable}
 %
-\begin{table-lX}{Keys}
-\{S\}			& Optional suffix, if present update NZCV flags \\
-N			& Operand bit size (32 or 64) \\
-s			& Operand log byte size (0=byte,1=hword,2=word,3=dword) \\
-rd, rn, rm, rt		& General register of either size (Wn or Xn) \\
-cc			& Condition code \\
-prfop			& P\{LD,LI,ST\}L\{1..3\}\{KEEP,STRM\} \\
-\{,sh\}			& Optional halfword left shift (LSL \#\{16,32,48\}) \\
-val$^{\pm}_{ }$, val$^{\emptyset}_{ }$, val$^{?}_{ }$	& Value is sign/zero extended (? depends on instruction) \\
-$\smul$ $\sdiv$ $\asr$	& Operation is signed \\
-\end{table-lX}
+\begin{asmtable}{Atomic Instructions}
+CAS\{A\}\{L\}		& rs, rt, [Xn]	& if (rs $=$ [Xn]$^{ }_{N}$) [Xn]$^{ }_{N}$ = rt	& 1 \\
+\multicolumn{2}{|l|}{CAS\{A\}\{L\}\{B,H\} Ws, Wt, [Xn]}	& if (Ws$^{ }_{N0}$ $=$ [Xn]$^{ }_{N}$) [Xn]$^{ }_{N}$ = Wt$^{ }_{N0}$	& 1 \\
+CAS\{A\}\{L\}P		& rs,rs2,rt,rt2,[Xn]	& if (rs2:rs $=$ [Xn]$^{ }_{2N}$) [Xn]$^{ }_{2N}$ = rt2:rt	& 1 \\
+\multicolumn{2}{|l|}{LDao\{A\}\{L\}\{B,H\} Ws, Wt, [Xn]}	& Wt=[Xn]$^{\emptyset}_{N}$; [Xn]$^{ }_{N}$=ao([Xn]$^{ }_{N}$,Ws$^{ }_{N0}$)	& 1 \\
+LDao\{A\}\{L\}		& rs, rt, [Xn]	& rt = [Xn]$^{ }_{N}$; [Xn]$^{ }_{N}$ = ao([Xn]$^{ }_{N}$, rs)	& 1 \\
+\multicolumn{2}{|l|}{STao\{A\}\{L\}\{B,H\} Ws, [Xn]}	& [Xn]$^{ }_{N}$ = ao([Xn]$^{ }_{N}$, Ws$^{ }_{N0}$)	& 1 \\
+STao\{A\}\{L\}		& rs, [Xn]	& [Xn]$^{ }_{N}$ = ao([Xn]$^{ }_{N}$, rs)	& 1 \\
+\multicolumn{2}{|l|}{SWP\{A\}\{L\}\{B,H\} Ws, Wt, [Xn]}	& Wt = [Xn]$^{\emptyset}_{N}$; [Xn]$^{ }_{N}$ = Ws$^{ }_{N0}$	& 1 \\
+SWP\{A\}\{L\}		& rs, rt, [Xn]	& rt = [Xn]$^{ }_{N}$; [Xn]$^{ }_{N}$ = rs	& 1 \\
+\end{asmtable}
 %
-\begin{table-llX}{Operand 2}
+\begin{asmtable}{Conditional Instructions}
+CCMN		& rn, \#i$^{ }_{5}$, \#f$^{ }_{4}$, cc	& if(cc) rn $+$ i; else N:Z:C:V = f	& \\
+CCMN		& rn, rm, \#f$^{ }_{4}$, cc	& if(cc) rn $+$ rm; else N:Z:C:V = f	& \\
+CCMP		& rn, \#i$^{ }_{5}$, \#f$^{ }_{4}$, cc	& if(cc) rn $-$ i; else N:Z:C:V = f	& \\
+CCMP		& rn, rm, \#f$^{ }_{4}$, cc	& if(cc) rn $-$ rm; else N:Z:C:V = f	& \\
+\textit{CINC}	& rd, rn, cc		& if(cc) rd = rn $+$ 1; else rd = rn		& \\
+\textit{CINV}	& rd, rn, cc		& if(cc) rd = $\sim$rn; else rd = rn		& \\
+\textit{CNEG}	& rd, rn, cc		& if(cc) rd = $-$rn; else rd = rn		& \\
+CSEL		& rd, rn, rm, cc	& if(cc) rd = rn; else rd = rm			& \\
+\textit{CSET}	& rd, cc		& if(cc) rd = 1; else rd = 0			& \\
+\textit{CSETM}	& rd, cc		& if(cc) rd = $\sim$0; else rd = 0		& \\
+CSINC		& rd, rn, rm, cc	& if(cc) rd = rn; else rd = rm $+$ 1		& \\
+CSINV		& rd, rn, rm, cc	& if(cc) rd = rn; else rd = $\sim$rm		& \\
+CSNEG		& rd, rn, rm, cc	& if(cc) rd = rn; else rd = $-$rm		& \\
+\end{asmtable}
+%
+\begin{asmtable}{Load and Store Instructions}
+LDP		& rt, rt2, [addr]	& rt2:rt = [addr]$^{ }_{2N}$			& \\
+LDPSW		& Xt, Xt2, [addr]	& Xt = [addr]$^{\pm}_{32}$; Xt2 = [addr$+$4]$^{\pm}_{32}$	& \\
+LD\{U\}R	& rt, [addr]		& rt = [addr]$^{ }_{N}$				& \\
+LD\{U\}R\{B,H\}	& Wt, [addr]		& Wt = [addr]$^{\emptyset}_{N}$			& \\
+\multicolumn{2}{|l|}{LD\{U\}RS\{B,H\} rt, [addr]}	& rt = [addr]$^{\pm}_{N}$	& \\
+LD\{U\}RSW	& Xt, [addr]		& Xt = [addr]$^{\pm}_{32}$			& \\
+PRFM		& prfop, addr		& Prefetch(addr, prfop)				& \\
+STP		& rt, rt2, [addr]	& [addr]$^{ }_{2N}$ = rt2:rt			& \\
+ST\{U\}R	& rt, [addr]		& [addr]$^{ }_{N}$ = rt				& \\
+ST\{U\}R\{B,H\}	& Wt, [addr]		& [addr]$^{ }_{N}$ = Wt$^{ }_{N0}$		& \\
+\end{asmtable}
+%
+\begin{table-llX}{Addressing Modes (addr)}
+xxP,LDPSW	& [Xn\{, \#i$^{ }_{7+s}$\}]	& addr = Xn $+$ i$^{\pm}_{6+s:s}$:0$^{ }_{s}$ \\
+xxP,LDPSW	& [Xn], \#i$^{ }_{7+s}$		& addr=Xn; Xn$+$=i$^{\pm}_{6+s:s}$:0$^{ }_{s}$ \\
+xxP,LDPSW	& [Xn, \#i$^{ }_{7+s}$]!	& Xn$+$=i$^{\pm}_{6+s:s}$:0$^{ }_{s}$; addr=Xn \\
+xxR*,PRFM	& [Xn\{, \#i$^{ }_{12+s}$\}]	& addr = Xn $+$ i$^{\emptyset}_{11+s:s}$:0$^{ }_{s}$ \\
+xxR*		& [Xn], \#i$^{ }_{9}$		& addr = Xn; Xn $+$= i$^{\pm}_{ }$ \\
+xxR*		& [Xn, \#i$^{ }_{9}$]!		& Xn $+$= i$^{\pm}_{ }$; addr = Xn \\
+xxR*,PRFM	& [Xn,Xm\{, LSL \#0|s\}]	& addr = Xn + Xm $\lsl$ s \\
+xxR*,PRFM	& [Xn,Wm,\{S,U\}XTW\{ \#0|s\}]	& addr = Xn + Wm$^{?}_{ }$ $\lsl$ s \\
+xxR*,PRFM	& [Xn,Xm,SXTX\{ \#0|s\}]	& addr = Xn + Xm$^{\pm}_{ }$ $\lsl$ s \\
+xxUR*,PRFM	& [Xn\{, \#i$^{ }_{9}$\}]	& addr = Xn $+$= i$^{\pm}_{ }$ \\
+LDR\{SW\},PRFM	& $\pm$rel$^{ }_{21}$		& addr = PC $+$ rel$^{\pm}_{20:2}$:0$^{ }_{2}$ \\
+\end{table-llX}
+%
+\begin{table2-lX}{Atomic Operations (ao)}
+ADD	& [Xn] $+$ rs		& SMAX	& [Xn] $\sgt$ rs ? [Xn] : rs \\
+CLR	& [Xn] \& $\sim$rs	& SMIN	& [Xn] $\slt$ rs ? [Xn] : rs \\
+EOR	& [Xn] $\oplus$ rs	& UMAX	& [Xn] $\ugt$ rs ? [Xn] : rs \\
+SET	& [Xn] | rs		& UMIN	& [Xn] $\ult$ rs ? [Xn] : rs \\
+\end{table2-lX}
+%
+\begin{table-llX}{Operand 2 (op2)}
 all		& \textit{rm}			& rm \\
 all		& rm, LSL \#i$^{ }_{6}$		& rm $\lsl$ i \\
 all		& rm, LSR \#i$^{ }_{6}$		& rm $\lsr$ i \\
 all		& rm, ASR \#i$^{ }_{6}$		& rm $\asr$ i \\
 logical		& rm, ROR \#i$^{ }_{6}$		& rm $\ror$ i \\
-arithmetic	& Wm, \{S,U\}XTB\{ \#i$^{ }_{3}$\}	& Wm$^{?}_{8}$ $\lsl$ i \\
-arithmetic	& Wm, \{S,U\}XTH\{ \#i$^{ }_{3}$\}	& Wm$^{?}_{16}$ $\lsl$ i \\
+arithmetic	& Wm, \{S,U\}XTB\{ \#i$^{ }_{3}$\}	& Wm$^{?}_{B0}$ $\lsl$ i \\
+arithmetic	& Wm, \{S,U\}XTH\{ \#i$^{ }_{3}$\}	& Wm$^{?}_{H0}$ $\lsl$ i \\
 arithmetic	& Wm, \{S,U\}XTW\{ \#i$^{ }_{3}$\}	& Wm$^{?}_{ }$ $\lsl$ i \\
 arithmetic	& Xm, \{S,U\}XTX\{ \#i$^{ }_{3}$\}	& Xm$^{?}_{ }$ $\lsl$ i \\
 arithmetic	& \#i$^{ }_{12}$		& i$^{\emptyset}_{ }$ \\
@@ -219,7 +224,62 @@ XZR	& Zero \\
 PC	& Program counter \\
 \end{table-lX}
 %
-\begin{table-llX}{Condition Codes}
+\begin{table-lXr}{Special Purpose Registers}
+SPSR\_EL\{1..3\}	& Process state on exception entry to EL\{1..3\}	& 64 \\
+ELR\_EL\{1..3\}		& Exception return address from EL\{1..3\}		& \\
+SP\_EL\{0..2\}		& Stack pointer for EL\{0..2\}				& 64 \\
+SPSel			& SP selection (0: SP=SP\_EL0, 1: SP=SP\_ELn)		& \\
+CurrentEL		& Current Exception level (at bits 3..2)		& RO \\
+DAIF			& Current interrupt mask bits (at bits 9..6)		& \\
+NZCV			& Condition flags (at bits 31..28)			& \\
+FPCR			& Floating-point operation control			& \\
+FPSR			& Floating-point status					& \\
+%SPSR\_irq		& Process state on entry to AArch32 IRQ mode		& \\
+%SPSR\_abt		& Process state on entry to AArch32 Abort mode		& \\
+%SPSR\_und		& Process state on entry to AArch32 Undefined mode	& \\
+%SPSR\_fiq		& Process state on entry to AArch32 FIQ mode		& \\
+\end{table-lXr}
+%
+\begin{table-lX}{Keys}
+%\{S\}			& Optional suffix, if present update NZCV flags \\
+N			& Operand bit size (8, 16, 32 or 64) \\
+s			& Operand log byte size (0=byte,1=hword,2=word,3=dword) \\
+rd, rn, rm, rt		& General register of either size (Wn or Xn) \\
+prfop			& P\{LD,LI,ST\}L\{1..3\}\{KEEP,STRM\} \\
+\{,sh\}			& Optional halfword left shift (LSL \#\{16,32,48\}) \\
+val$^{\pm}_{ }$, val$^{\emptyset}_{ }$, val$^{?}_{ }$	& Value is sign/zero extended (? depends on instruction) \\
+$\smul$ $\sdiv$ $\asr$ $\sgt$ $\slt$	& Operation is signed \\
+\end{table-lX}
+%
+\begin{asmtable}{Checksum Instructions}
+CRC32\{B,H\}	& Wd, Wn, Wm		& Wd=CRC32(Wn,0x04c11db7,Wm$^{ }_{N0}$)	& \\
+CRC32W		& Wd, Wn, Wm		& Wd = CRC32(Wn,0x04c11db7,Wm)		& \\
+CRC32X		& Wd, Wn, Xm		& Wd = CRC32(Wn,0x04c11db7,Xm)		& \\
+CRC32C\{B,H\}	& Wd, Wn, Wm		& Wd=CRC32(Wn,0x1edc6f41,Wm$^{ }_{N0}$)	& \\
+CRC32CW		& Wd, Wn, Wm		& Wd = CRC32(Wn,0x1edc6f41,Wm)		& \\
+CRC32CX		& Wd, Wn, Xm		& Wd = CRC32(Wn,0x1edc6f41,Xm)		& \\
+\end{asmtable}
+%
+\begin{asmtable}{Load and Store Instructions with Attribute}
+LD\{A\}XP	& rt, rt2, [Xn]		& rt:rt2 = [Xn, <SetExclMonitor>]$^{ }_{2N}$	& \\
+LD\{A\}\{X\}R	& rt, [Xn]		& rt = [Xn, <SetExclMonitor>]$^{ }_{N}$		& \\
+\multicolumn{2}{|l|}{LD\{A\}\{X\}R\{B,H\} Wt, [Xn]}	& Wt = [Xn, <SetExclMonitor>]$^{\emptyset}_{N}$	& \\
+LDNP		& rt,rt2,[Xn\{,\#i$^{ }_{7+s}$\}]	& rt2:rt = [Xn $+$ i$^{\pm}_{6+s:s}$:0$^{ }_{s}$, <Temp>]$^{ }_{2N}$	& \\
+LDTR		& rt, [Xn\{, \#i$^{ }_{9}$\}]	& rt = [Xn $+$= i$^{\pm}_{ }$, <Unpriv>]$^{ }_{N}$	& \\
+LDTR\{B,H\}	& Wt, [Xn\{, \#i$^{ }_{9}$\}]	& Wt = [Xn $+$= i$^{\pm}_{ }$, <Unpriv>]$^{\emptyset}_{N}$	& \\
+LDTRS\{B,H\}	& rt, [Xn\{, \#i$^{ }_{9}$\}]	& rt = [Xn $+$= i$^{\pm}_{ }$, <Unpriv>]$^{\pm}_{N}$	& \\
+LDTRSW		& Xt, [Xn\{, \#i$^{ }_{9}$\}]	& Xt = [Xn $+$= i$^{\pm}_{ }$, <Unpriv>]$^{\pm}_{32}$	& \\
+STLR		& rt, [Xn]		& [Xn, <Release>]$^{ }_{N}$ = rt		& \\
+STLR\{B,H\}	& Wt, [Xn]		& [Xn, <Release>]$^{ }_{N}$ = Wt$^{ }_{N0}$	& \\
+ST\{L\}XP	& Wd, rt, rt2, [Xn]	& [Xn, <Excl>]$^{ }_{2N}$=rt:rt2; Wd=fail?1:0	& \\
+ST\{L\}XR	& Wd, rt, [Xn]		& [Xn, <Excl>]$^{ }_{N}$=rt; Wd=fail?1:0	& \\
+\multicolumn{2}{|l|}{ST\{L\}XR\{B,H\} Wd, Wt, [Xn]}	& [Xn, <Excl>]$^{ }_{N}$=Wt$^{ }_{N0}$; Wd=fail?1:0	& \\
+STNP		& rt,rt2,[Xn\{,\#i$^{ }_{7+s}$\}]	& [Xn $+$ i$^{\pm}_{6+s:s}$:0$^{ }_{s}$, <Temp>]$^{ }_{2N}$ = rt2:rt	& \\
+STTR		& rt, [Xn\{, \#i$^{ }_{9}$\}]	& [Xn $+$= i$^{\pm}_{ }$, <Unpriv>]$^{ }_{N}$ = rt	& \\
+STTR\{B,H\}	& Wt, [Xn\{, \#i$^{ }_{9}$\}]	& [Xn $+$= i$^{\pm}_{ }$, <Unpriv>]$^{ }_{N}$ = Wt$^{ }_{N0}$	& \\
+\end{asmtable}
+%
+\begin{table-llX}{Condition Codes (cc)}
 EQ	& Equal					& Z \\
 NE	& Not equal				& !Z \\
 CS/HS	& Carry set, Unsigned higher or same	& C \\
@@ -238,7 +298,8 @@ AL	& Always (default)			& 1 \\
 \end{table-llX}
 %
 \begin{table-lX}{Notes for Instruction Set}
-SP & SP/WSP may be used as operand(s) instead of XZR/WZR \\
+S	& SP/WSP may be used as operand(s) instead of XZR/WZR \\
+1	& Introduced in ARMv8.1 \\
 \end{table-lX}
 %
 \begin{asmtable2}{System Instructions}
@@ -248,6 +309,7 @@ CLREX		& \{\#i$^{ }_{4}$\}	& ClearExclusiveLocal()				& \\
 DMB		& barrierop		& DataMemoryBarrier(barrierop)			& \\
 DSB		& barrierop		& DataSyncBarrier(barrierop)			& \\
 ERET		&			& PC=ELR\_ELn;PSTATE=SPSR\_ELn			& \\
+%ESB		&			& ErrorSyncBarrier()				& 2 \\
 %HINT		& \#$^{ }_{7}$		& Meta instruction for NOP,YIELD,WFE,WFI,SEV,SEVL	& \\
 HVC		& \#$^{ }_{16}$		& CallHypervisor(i)				& \\
 ISB		& \{SY\}		& InstructionSyncBarrier(SY)			& \\
@@ -257,6 +319,7 @@ MSR		& SPSel, \#i$^{ }_{1}$	& PSTATE.SP = i					& \\
 MSR		& DAIFSet, \#i$^{ }_{4}$	& PSTATE.DAIF |= i			& \\
 MSR		& DAIFClr, \#i$^{ }_{4}$	& PSTATE.DAIF \&= $\sim$i		& \\
 NOP		&			&						& \\
+%PSB		& CSYNC			& ProfilingSynchronizationBarrier()		& 2 \\
 SEV		&			& SendEvent()					& \\
 SEVL		&			& EventRegisterSet()				& \\
 SMC		& \#i$^{ }_{16}$	& CallSecureMonitor(i)				& \\
@@ -280,8 +343,7 @@ TLBI	& ASIDE1\{IS\}, Xx	& TLB inv by ASID			& \\
 TLBI	& IPAS2\{L\}E1\{IS\}, Xx	& TLB inv by IPA \{last level\}	& \\
 TLBI	& VAA\{L\}E1\{IS\}, Xx	& TLB inv by VA, all ASID \{last level\}	& \\
 TLBI	& VA\{L\}E\{1..3\}\{IS\}, Xx	& TLB inv by VA \{last level\}	& \\
-TLBI	& VMALLE1\{IS\}		& TLB inv by VMID, all, at stage 1	& \\
-TLBI	& VMALLS12E1\{IS\}	& TLB inv by VMID, all, at stage 1\&2	& \\
+TLBI	& VMALL\{S12\}E1\{IS\}	& TLB inv by VMID, all, at stage 1\{\&2\}	& \\
 \end{asmtable2}
 %
 \begin{table-lX}{DMB and DSB Options}
@@ -293,65 +355,13 @@ ST		& Full system, store \\
 SY		& Full system, all \\
 \end{table-lX}
 %
-\begin{asmtable}{Checksum Instructions}
-CRC32B		& Wd, Wn, Wm		& Wd = CRC32(Wn,0x04c11db7,Wm$^{ }_{7:0}$)	& \\
-CRC32H		& Wd, Wn, Wm		& Wd = CRC32(Wn,0x04c11db7,Wm$^{ }_{15:0}$)	& \\
-CRC32W		& Wd, Wn, Wm		& Wd = CRC32(Wn,0x04c11db7,Wm)		& \\
-CRC32X		& Wd, Wn, Xm		& Wd = CRC32(Wn,0x04c11db7,Xm)		& \\
-CRC32CB		& Wd, Wn, Wm		& Wd = CRC32(Wn,0x1edc6f41,Wm$^{ }_{7:0}$)	& \\
-CRC32CH		& Wd, Wn, Wm		& Wd = CRC32(Wn,0x1edc6f41,Wm$^{ }_{15:0}$)	& \\
-CRC32CW		& Wd, Wn, Wm		& Wd = CRC32(Wn,0x1edc6f41,Wm)		& \\
-CRC32CX		& Wd, Wn, Xm		& Wd = CRC32(Wn,0x1edc6f41,Xm)		& \\
-\end{asmtable}
-%
-\begin{asmtable}{Load and Store Instructions with Attribute}
-LD\{A\}XP	& rt, rt2, [Xn]		& rt:rt2 = [Xn, <SetExclMonitor>]$^{ }_{2N}$	& \\
-LD\{AX\}R	& rt, [Xn]		& rt = [Xn, <SetExclMonitor>]$^{ }_{N}$		& \\
-LD\{AX\}RB	& Wt, [Xn]		& Wt = [Xn, <SetExclMonitor>]$^{\emptyset}_{8}$	& \\
-LD\{AX\}RH	& Wt, [Xn]		& Wt = [Xn, <SetExclMonitor>]$^{\emptyset}_{16}$	& \\
-LDNP		& rt,rt2,[Xn\{,\#i$^{ }_{7+s}$\}]	& rt2:rt = [Xn $+$ i$^{\pm}_{6+s:s}$:0$^{ }_{s}$, <Temp>]$^{ }_{2N}$	& \\
-LDTR		& rt, [Xn\{, \#i$^{ }_{9}$\}]	& rt = [Xn $+$= i$^{\pm}_{ }$, <Unpriv>]$^{ }_{N}$	& \\
-LDTRB		& Wt, [Xn\{, \#i$^{ }_{9}$\}]	& Wt = [Xn $+$= i$^{\pm}_{ }$, <Unpriv>]$^{\emptyset}_{8}$	& \\
-LDTRH		& Wt, [Xn\{, \#i$^{ }_{9}$\}]	& Wt = [Xn $+$= i$^{\pm}_{ }$, <Unpriv>]$^{\emptyset}_{16}$	& \\
-LDTRSB		& rt, [Xn\{, \#i$^{ }_{9}$\}]	& rt = [Xn $+$= i$^{\pm}_{ }$, <Unpriv>]$^{\pm}_{8}$	& \\
-LDTRSH		& rt, [Xn\{, \#i$^{ }_{9}$\}]	& rt = [Xn $+$= i$^{\pm}_{ }$, <Unpriv>]$^{\pm}_{16}$	& \\
-LDTRSW		& Xt, [Xn\{, \#i$^{ }_{9}$\}]	& Xt = [Xn $+$= i$^{\pm}_{ }$, <Unpriv>]$^{\pm}_{32}$	& \\
-STLR		& rt, [Xn]		& [Xn, <Release>]$^{ }_{N}$ = rt				& \\
-STLRB		& Wt, [Xn]		& [Xn, <Release>]$^{ }_{8}$ = Wt$^{ }_{7:0}$	& \\
-STLRH		& Wt, [Xn]		& [Xn, <Release>]$^{ }_{16}$ = Wt$^{ }_{15:0}$	& \\
-ST\{L\}XP	& Wd, rt, rt2, [Xn]	& [Xn, <Excl>]$^{ }_{2N}$ = rt:rt2; Wd=fail?1:0	& \\
-ST\{L\}XR	& Wd, rt, [Xn]		& [Xn, <Excl>]$^{ }_{N}$=rt; Wd=fail?1:0		& \\
-ST\{L\}XRB	& Wd, Wt, [Xn]		& [Xn, <Excl>]$^{ }_{8}$=Wt$^{ }_{7:0}$; Wd=fail?1:0	& \\
-ST\{L\}XRH	& Wd, Wt, [Xn]		& [Xn, <Excl>]$^{ }_{16}$=Wt$^{ }_{15:0}$; Wd=fail?1:0	& \\
-STNP		& rt,rt2,[Xn\{,\#i$^{ }_{7+s}$\}]	& [Xn $+$ i$^{\pm}_{6+s:s}$:0$^{ }_{s}$, <Temp>]$^{ }_{2N}$ = rt2:rt	& \\
-STTR		& rt, [Xn\{, \#i$^{ }_{9}$\}]	& [Xn $+$= i$^{\pm}_{ }$, <Unpriv>]$^{ }_{N}$ = rt	& \\
-STTRB		& Wt, [Xn\{, \#i$^{ }_{9}$\}]	& [Xn $+$= i$^{\pm}_{ }$, <Unpriv>]$^{ }_{8}$ = Wt$^{ }_{7:0}$	& \\
-STTRH		& Wt, [Xn\{, \#i$^{ }_{9}$\}]	& [Xn $+$= i$^{\pm}_{ }$, <Unpriv>]$^{ }_{16}$ = Wt$^{ }_{15:0}$	& \\
-\end{asmtable}
-%
-\begin{table-lXr}{Special Purpose Registers}
-SPSR\_EL\{1..3\}	& Process state on exception entry to EL\{1..3\}	& 64 \\
-ELR\_EL\{1..3\}		& Exception return address from EL\{1..3\}		& \\
-SP\_EL\{0..2\}		& Stack pointer for EL\{0..2\}				& 64 \\
-SPSel			& SP selection (0: SP=SP\_EL0, 1: SP=SP\_ELn)		& \\
-CurrentEL		& Current Exception level (at bits 3..2)		& RO \\
-DAIF			& Current interrupt mask bits (at bits 9..6)		& \\
-NZCV			& Condition flags (at bits 31..28)			& \\
-FPCR			& Floating-point operation control			& \\
-FPSR			& Floating-point status					& \\
-%SPSR\_irq		& Process state on entry to AArch32 IRQ mode		& \\
-%SPSR\_abt		& Process state on entry to AArch32 Abort mode		& \\
-%SPSR\_und		& Process state on entry to AArch32 Undefined mode	& \\
-%SPSR\_fiq		& Process state on entry to AArch32 FIQ mode		& \\
-\end{table-lXr}
-%
 %\begin{asmtable}{Debug Instructions}
 %DCPS\{123\}	& \{\#$^{ }_{16}$\}	& DebugChangePE\{123\}(i)			& \\
 %DRPS		&			& DebugRestoreState()				& \\
 %HLT		& \#$^{ }_{16}$		& DebugHalt(i)					& \\
 %\end{asmtable}
 %
-
+\newpage
 \begin{center}
 {\Large\bfseries ARMv8-A System}
 \end{center}
@@ -369,106 +379,12 @@ TTBR0\_EL\{1..3\}		& Translation Table Base 0 (4/16/64kb aligned)	& 64 \\
 TTBR1\_EL1			& Translation Table Base 1 (4/16/64kb aligned)	& 64 \\
 TCR\_EL\{1..3\}			& Translation Control			& 64 \\
 VTTBR\_EL2			& Virt Translation Table Base (4/16/64kb aligned)	& 64 \\
-VTCR\_EL2			& Virt Translation Control	& \\
+VTCR\_EL2			& Virt Translation Control		& \\
 %DACR32\_EL2			& Domain Access Control			& \\
 \{A\}MAIR\_EL\{1..3\}		& \{Auxiliary\} Memory Attribute Indirection	& 64 \\
+LOR\{S,E\}A\_EL1		& LORegion \{Start,End\} Address	& 64,1 \\
+LOR\{C,N,ID\}\_EL1		& LORegion \{Control,Number,ID\}	& 64,1 \\
 \end{table-lXr}
-%
-\begin{table-llXr}{System Control Register (SCTLR)}
-M	& 0x00000001 & MMU enabled					& \\
-A	& 0x00000002 & Alignment check enabled				& \\
-C	& 0x00000004 & Data and unified caches enabled			& \\
-SA	& 0x00000008 & Enable SP alignment check			& \\
-SA0	& 0x00000010 & Enable SP alignment check for EL0		& E1 \\
-%CP15BEN	& 0x00000020 & Disable barriers in EL0 AArch32			& E1 \\
-%ITD	& 0x00000080 & Disable IT in EL0 AArch32			& E1 \\
-%SED	& 0x00000100 & Disable SETEND in EL0 AArch32			& E1 \\
-UMA	& 0x00000200 & Trap EL0 access of DAIF to EL1			& E1 \\
-I	& 0x00001000 & Instruction cache enabled			& \\
-DZE	& 0x00004000 & Trap EL0 DC instruction to EL1			& E1 \\
-UCT	& 0x00008000 & Trap EL0 access of CTR\_EL0 to EL1		& E1 \\
-nTWI	& 0x00010000 & Trap EL0 WFI instruction to EL1			& E1 \\
-nTWE	& 0x00040000 & Trap EL0 WFE instruction to EL1			& E1 \\
-WXN	& 0x00080000 & Write permission implies XN			& \\
-E0E	& 0x01000000 & Data at EL0 is big-endian			& E1 \\
-EE	& 0x02000000 & Data at EL1 is big-endian			& \\
-UCI	& 0x04000000 & Trap EL0 cache instructions to EL1		& E1 \\
-\end{table-llXr}
-%
-\begin{table-llXr}{Secure Configuration Register (SCR)}
-NS	& 0x0001 & System state is non-secure unless in EL3		& \\
-IRQ	& 0x0002 & IRQs taken to EL3					& \\
-FIQ	& 0x0004 & FIQs taken to EL3					& \\
-EA	& 0x0008 & External aborts and SError taken to EL3		& \\
-SMD	& 0x0080 & Secure monitor call disable				& \\
-HCE	& 0x0100 & Hyp Call enable					& \\
-SIF	& 0x0200 & Secure instruction fetch				& \\
-RW	& 0x0400 & Lower level is AArch64				& \\
-ST	& 0x0800 & Trap secure EL1 to CNTPS registers to EL3		& \\
-TWI	& 0x1000 & Trap EL\{0..2\} WFI instruction to EL3		& \\
-TWE	& 0x2000 & Trap EL\{0..2\} WFE instruction to EL3		& \\
-\end{table-llXr}
-%
-\begin{table-lXr}{ID Registers}
-MIDR\_EL1			& Main ID				& RO \\
-MPIDR\_EL1			& Multiprocessor Affinity		& RO,64 \\
-REVIDR\_EL1			& Revision ID				& RO \\
-CCSIDR\_EL1			& Current Cache Size ID			& RO \\
-CLIDR\_EL1			& Cache Level ID			& RO \\
-AIDR\_EL1			& Auxiliary ID				& RO \\
-CSSELR\_EL1			& Cache Size Selection			& \\
-CTR\_EL0			& Cache Type				& RO \\
-DCZID\_EL0			& Data Cache Zero ID			& RO \\
-VPIDR\_EL2			& Virtualization Processor ID		& \\
-VMPIDR\_EL2			& Virtualization Multiprocessor ID	& 64 \\
-%ID\_PFR\{0,1\}\_EL1		& AArch32 Processor Feature \{0,1\}	& RO \\
-%ID\_DFR0\_EL1			& AArch32 Debug Feature 0		& RO \\
-%ID\_AFR0\_EL1			& AArch32 Auxiliary Feature 0		& RO \\
-%ID\_MMFR\{0..4\}\_EL1		& AArch32 Memory Model Feature \{0..4\}	& RO \\
-%ID\_ISAR\{0..5\}\_EL1		& AArch32 Instruction Set Attribute \{0..5\}	& RO \\
-%MVFR\{0..2\}\_EL1		& AArch43 Medial and VFP Feature \{0..2\}	& RO \\
-ID\_AA64PFR\{0,1\}\_EL1		& AArch64 Processor Feature \{0,1\}	& RO,64 \\
-ID\_AA64DFR\{0,1\}\_EL1		& AArch64 Debug Feature \{0,1\}		& RO,64 \\
-ID\_AA64AFR\{0,1\}\_EL1		& AArch64 Auxiliary Feature \{0,1\}	& RO,64 \\
-ID\_AA64ISAR\{0,1\}\_EL1	& AArch64 Instruction Set Attribute \{0,1\}	& RO,64 \\
-ID\_AA64MMFR\{0,1\}\_EL1	& AArch64 Memory Model Feature \{0,1\}	& RO,64 \\
-CONTEXTIDR\_EL1			& Context ID				& \\
-TPIDR\_EL\{0..3\}		& Software Thread ID			& 64 \\
-TPIDRRO\_EL0			& EL0 Read-only Software Thread ID	& 64 \\
-\end{table-lXr}
-%
-\begin{table-lX}{Exception Classes}
-0x00		& Unknown reason \\
-0x01		& Trapped WFI or WFE instruction execution \\
-%0x03,0x04	& Trapped \{MCR/MRC,MCRR/MRRC\} access with coproc 15 \\
-%0x05,0x0c	& Trapped \{MCR/MRC,MRRC\} access with coproc 14 \\
-%0x06		& Trapped LDC or STC access \\
-0x07		& Trapped access to SIMD/FP \\
-0x08		& Trapped VMRS access \\
-0x0e		& Illegal Execution state \\
-0x11,0x15	& SVC instruction execution in AArch\{32,64\} state \\
-0x12,0x16	& HVC instruction execution in AArch\{32,64\} state \\
-0x13,0x17	& SMC instruction execution in AArch\{32,64\} state \\
-0x18		& Trapped MSR, MRS, or System instruction execution \\
-0x1f		& Implementation defined exception to EL3 \\
-0x20,0x21	& Instruction Abort from \{lower,current\} level \\
-0x22,0x26	& \{PC,SP\} alignment fault \\
-0x24,0x25	& Data Abort from \{lower,current\} level \\
-0x28,0x2c	& Trapped float-point exception from AArch\{32,64\} state \\
-0x2f		& SError interrupt \\
-0x30,0x31	& Breakpoint exception from \{lower,current\} level \\
-0x32,0x33	& Software Step exception from \{lower,current\} level \\
-0x34,0x35	& Watchpoint exception from \{lower,current\} level \\
-0x38,0x3c	& \{BKPT,BRK\} instruction excecution from AArch\{32,64\} state \\
-%0x3a		& Vector Catch exception from AArch32 state \\
-\end{table-lX}
-%
-\begin{table-lX}{Exception Vectors}
-0x000,0x080,0x100,0x180	& \{Sync,IRQ,FIQ,SError\} from cur lvl with SP\_EL0 \\
-0x200,0x280,0x300,0x380	& \{Sync,IRQ,FIQ,SError\} from cur lvl with SP\_ELn \\
-0x400,0x480,0x500,0x580	& \{Sync,IRQ,FIQ,SError\} from lower lvl using A64 \\
-0x600,0x680,0x700,0x780	& \{Sync,IRQ,FIQ,SError\} from lower lvl using A32 \\
-\end{table-lX}
 %
 \begin{table-lXr}{Exception Registers}
 %IFSR32\_EL2			& Instruction Fault Status		& \\
@@ -502,23 +418,131 @@ PMEVTYPER\{0..30\}\_EL0		& PM Event Type \{0..30\}		& \\
 PMCCFILTR\_EL0			& PM Cycle Count Filter			& \\
 \end{table-lXr}
 %
+\begin{table-lXr}{ID Registers}
+MIDR\_EL1			& Main ID				& RO \\
+MPIDR\_EL1			& Multiprocessor Affinity		& RO,64 \\
+REVIDR\_EL1			& Revision ID				& RO \\
+CCSIDR\_EL1			& Current Cache Size ID			& RO \\
+CLIDR\_EL1			& Cache Level ID			& RO \\
+AIDR\_EL1			& Auxiliary ID				& RO \\
+CSSELR\_EL1			& Cache Size Selection			& \\
+CTR\_EL0			& Cache Type				& RO \\
+DCZID\_EL0			& Data Cache Zero ID			& RO \\
+VPIDR\_EL2			& Virtualization Processor ID		& \\
+VMPIDR\_EL2			& Virtualization Multiprocessor ID	& 64 \\
+%ID\_PFR\{0,1\}\_EL1		& AArch32 Processor Feature \{0,1\}	& RO \\
+%ID\_DFR0\_EL1			& AArch32 Debug Feature 0		& RO \\
+%ID\_AFR0\_EL1			& AArch32 Auxiliary Feature 0		& RO \\
+%ID\_MMFR\{0..4\}\_EL1		& AArch32 Memory Model Feature \{0..4\}	& RO \\
+%ID\_ISAR\{0..5\}\_EL1		& AArch32 Instruction Set Attribute \{0..5\}	& RO \\
+%MVFR\{0..2\}\_EL1		& AArch43 Medial and VFP Feature \{0..2\}	& RO \\
+ID\_AA64PFR\{0,1\}\_EL1		& AArch64 Processor Feature \{0,1\}	& RO,64 \\
+ID\_AA64DFR\{0,1\}\_EL1		& AArch64 Debug Feature \{0,1\}		& RO,64 \\
+ID\_AA64AFR\{0,1\}\_EL1		& AArch64 Auxiliary Feature \{0,1\}	& RO,64 \\
+ID\_AA64ISAR\{0,1\}\_EL1	& AArch64 Instruction Set Attribute \{0,1\}	& RO,64 \\
+ID\_AA64MMFR\{0,1\}\_EL1	& AArch64 Memory Model Feature \{0,1\}	& RO,64 \\
+CONTEXTIDR\_EL1			& Context ID				& \\
+TPIDR\_EL\{0..3\}		& Software Thread ID			& 64 \\
+TPIDRRO\_EL0			& EL0 Read-only Software Thread ID	& 64 \\
+\end{table-lXr}
+%
+\begin{table-lX}{Exception Vectors}
+0x000,0x080,0x100,0x180	& \{Sync,IRQ,FIQ,SError\} from cur lvl with SP\_EL0 \\
+0x200,0x280,0x300,0x380	& \{Sync,IRQ,FIQ,SError\} from cur lvl with SP\_ELn \\
+0x400,0x480,0x500,0x580	& \{Sync,IRQ,FIQ,SError\} from lower lvl using A64 \\
+0x600,0x680,0x700,0x780	& \{Sync,IRQ,FIQ,SError\} from lower lvl using A32 \\
+\end{table-lX}
+%
+\begin{table-llXr}{System Control Register (SCTLR)}
+M	& 0x00000001 & MMU enabled					& \\
+A	& 0x00000002 & Alignment check enabled				& \\
+C	& 0x00000004 & Data and unified caches enabled			& \\
+SA	& 0x00000008 & Enable SP alignment check			& \\
+SA0	& 0x00000010 & Enable SP alignment check for EL0		& E1 \\
+%CP15BEN	& 0x00000020 & Disable barriers in EL0 AArch32			& E1 \\
+%ITD	& 0x00000080 & Disable IT in EL0 AArch32			& E1 \\
+%SED	& 0x00000100 & Disable SETEND in EL0 AArch32			& E1 \\
+UMA	& 0x00000200 & Trap EL0 access of DAIF to EL1			& E1 \\
+I	& 0x00001000 & Instruction cache enabled			& \\
+DZE	& 0x00004000 & Trap EL0 DC instruction to EL1			& E1 \\
+UCT	& 0x00008000 & Trap EL0 access of CTR\_EL0 to EL1		& E1 \\
+nTWI	& 0x00010000 & Trap EL0 WFI instruction to EL1			& E1 \\
+nTWE	& 0x00040000 & Trap EL0 WFE instruction to EL1			& E1 \\
+WXN	& 0x00080000 & Write permission implies XN			& \\
+%IESB	& 0x00200000 & Implicit error synchronization barrier enable	& 2 \\
+SPAN	& 0x00800000 & Set privileged access never			& E1,1 \\
+E0E	& 0x01000000 & Data at EL0 is big-endian			& E1 \\
+EE	& 0x02000000 & Data at EL1 is big-endian			& \\
+UCI	& 0x04000000 & Trap EL0 cache instructions to EL1		& E1 \\
+%nTLSMD	& 0x10000000 & No trap load/store multiple to device		& E1,2 \\
+%LSMAOE	& 0x20000000 & Load/store multi atomicity and order enable	& E1,2 \\
+\end{table-llXr}
+%
 \begin{table-lXr}{Generic Timer Registers}
 CNTFRQ\_EL0			& Ct Frequency (in Hz)			& \\
-CNTPCT\_EL0			& Ct Physical Count			& RO,64 \\
-CNTVCT\_EL0			& Ct Virtual Count			& RO,64 \\
+CNT\{P,V\}CT\_EL0		& Ct \{Physical,Virtual\} Count		& RO,64 \\
 CNTVOFF\_EL2			& Ct Virtual Offset			& 64 \\
 CNTHCTL\_EL2			& Ct Hypervisor Control			& \\
 CNTKCTL\_EL1			& Ct Kernel Control			& \\
-CNT\{P,V\}\_TVAL\_EL0		& Ct \{Physical,Virtual\} Timer TimerValue	& \\
-CNT\{P,V\}\_CTL\_EL0		& Ct \{Physical,Virtual\} Timer Control		& \\
-CNT\{P,V\}\_CVAL\_EL0		& Ct \{Physical,Virtual\} Timer CompareValue	& 64 \\
-CNTHP\_TVAL\_EL2		& Ct Hypervisor Physical Timer TimerValue	& \\
-CNTHP\_CTL\_EL2			& Ct Hypervisor Physical Timer Control	& \\
-CNTHP\_CVAL\_EL2		& Ct Hypervisor Physical Timer CompareValue	& 64 \\
-CNTPS\_TVAL\_EL1		& Ct Physical Secure Timer TimerValue	& \\
-CNTPS\_CTL\_EL1			& Ct Physical Secure Timer Control	& \\
-CNTPS\_CVAL\_EL1		& Ct Physical Secure Timer CompareValue	& 64 \\
+CNT\{P,V\}\_\{TVAL,CTL,CVAL\}\_EL0	& Ct \{Physical,Virtual\} Timer	& \\
+%CNT\{P,V\}\_TVAL\_EL0		& Ct \{Physical,Virtual\} Timer TimerValue	& \\
+%CNT\{P,V\}\_CTL\_EL0		& Ct \{Physical,Virtual\} Timer Control		& \\
+%CNT\{P,V\}\_CVAL\_EL0		& Ct \{Physical,Virtual\} Timer CompareValue	& 64 \\
+CNTHP\_\{TVAL,CTL,CVAL\}\_EL2	& Ct Hypervisor Physical Timer		& \\
+%CNTHP\_TVAL\_EL2		& Ct Hypervisor Physical Timer TimerValue	& \\
+%CNTHP\_CTL\_EL2			& Ct Hypervisor Physical Timer Control	& \\
+%CNTHP\_CVAL\_EL2		& Ct Hypervisor Physical Timer CompareValue	& 64 \\
+CNTPS\_\{TVAL,CTL,CVAL\}\_EL1	& Ct Physical Secure Timer		& \\
+%CNTPS\_TVAL\_EL1		& Ct Physical Secure Timer TimerValue	& \\
+%CNTPS\_CTL\_EL1			& Ct Physical Secure Timer Control	& \\
+%CNTPS\_CVAL\_EL1		& Ct Physical Secure Timer CompareValue	& 64 \\
+CNTHV\_\{TVAL,CTL,CVAL\}\_EL2	& Ct Virtual Timer			& 1 \\
+%CNTHV\_TVAL\_EL2		& Ct Virtual Timer TimerValue		& 1 \\
+%CNTHV\_CTL\_EL2			& Ct Virtual Timer Control		& 1 \\
+%CNTHV\_CVAL\_EL2		& Ct Virtual Timer CompareValue		& 64,1 \\
 \end{table-lXr}
+%
+\begin{table-lX}{Exception Classes}
+0x00		& Unknown reason \\
+0x01		& Trapped WFI or WFE instruction execution \\
+%0x03,0x04	& Trapped \{MCR/MRC,MCRR/MRRC\} access with coproc 15 \\
+%0x05,0x0c	& Trapped \{MCR/MRC,MRRC\} access with coproc 14 \\
+%0x06		& Trapped LDC or STC access \\
+0x07		& Trapped access to SIMD/FP \\
+0x08		& Trapped VMRS access \\
+0x0e		& Illegal Execution state \\
+0x11,0x15	& SVC instruction execution in AArch\{32,64\} state \\
+0x12,0x16	& HVC instruction execution in AArch\{32,64\} state \\
+0x13,0x17	& SMC instruction execution in AArch\{32,64\} state \\
+0x18		& Trapped MSR, MRS, or System instruction execution \\
+0x1f		& Implementation defined exception to EL3 \\
+0x20,0x21	& Instruction Abort from \{lower,current\} level \\
+0x22,0x26	& \{PC,SP\} alignment fault \\
+0x24,0x25	& Data Abort from \{lower,current\} level \\
+0x28,0x2c	& Trapped float-point exception from AArch\{32,64\} state \\
+0x2f		& SError interrupt \\
+0x30,0x31	& Breakpoint exception from \{lower,current\} level \\
+0x32,0x33	& Software Step exception from \{lower,current\} level \\
+0x34,0x35	& Watchpoint exception from \{lower,current\} level \\
+0x38,0x3c	& \{BKPT,BRK\} instruction excecution from AArch\{32,64\} state \\
+%0x3a		& Vector Catch exception from AArch32 state \\
+\end{table-lX}
+%
+\begin{table-llXr}{Secure Configuration Register (SCR)}
+NS	& 0x0001 & System state is non-secure unless in EL3		& \\
+IRQ	& 0x0002 & IRQs taken to EL3					& \\
+FIQ	& 0x0004 & FIQs taken to EL3					& \\
+EA	& 0x0008 & External aborts and SError taken to EL3		& \\
+SMD	& 0x0080 & Secure monitor call disable				& \\
+HCE	& 0x0100 & Hyp Call enable					& \\
+SIF	& 0x0200 & Secure instruction fetch				& \\
+RW	& 0x0400 & Lower level is AArch64				& \\
+ST	& 0x0800 & Trap secure EL1 to CNTPS registers to EL3		& \\
+TWI	& 0x1000 & Trap EL\{0..2\} WFI instruction to EL3		& \\
+TWE	& 0x2000 & Trap EL\{0..2\} WFE instruction to EL3		& \\
+TLOR	& 0x4000 & Trap LOR registers					& 1 \\
+%TERR	& 0x8000 & Trap error record accesses				& 2 \\
+\end{table-llXr}
 %
 %\begin{table-lXr}{Debug Registers}
 %OSDTRRX\_EL1		& OS Lock Data Transfer RX		& \\
