@@ -1,5 +1,5 @@
 %
-% Copyright (C) 2014-2017 Anders Olofsson
+% Copyright (C) 2014-2018 Anders Olofsson
 %
 % Copying and distribution of this file, with or without modification,
 % are permitted in any medium without royalty provided the copyright
@@ -15,6 +15,7 @@
 \usepackage{amssymb}
 \usepackage{verbatim}
 \usepackage{ulem}
+\usepackage{makecell}
 
 \def\sheetheaderfont{\bfseries}
 \def\sheettablefont{\footnotesize\sffamily}
@@ -25,12 +26,14 @@
 \def\tabcolsep{2pt}
 \def\arraystretch{1.3}
 \defsheet{asmtable}{4}{|m{4.6em} m{6.7em}|X|N|}
+\defsheet{asmtable2}{4}{|m{6.5em} m{5.3em}|X|N|}
+\defsheet{asmtable3}{4}{|m{5.0em} m{8.0em}|X|N|}
 \defsheet{table-lX}{2}{|l X|}
 \defsheet{table-lXN}{3}{|l|X|N|}
 \defsheet{table-llX}{3}{|l l X|}
 \defsheet{table-llXr}{4}{|l l X r|}
 
-\pagefooter{ARMv7 version 8 page \thepage}
+\pagefooter{ARMv7 version 9 page \thepage}
 
 \begin{document}
 \begin{multicols}{3}
@@ -44,7 +47,7 @@
 ADC\{S\}	& rx, ry, op2		& rx = ry $+$ op2 $+$ C 			& \\
 ADD\{S\}	& rx, ry, op2		& rx = ry $+$ op2 				& \\
 ADDW		& rx, ry, \#i$^{ }_{12}$	& rx = ry $+$ i$^{\emptyset}_{ }$	& T \\
-ADR		& rx, $\pm$rel$^{ }_{12}$	& rx = PC $\pm$ rel			& \\
+ADR		& rx, $\pm$rel$^{ }_{12}$	& rx = PC $+$ rel$^{\pm}_{ }$		& \\
 CMN		& rx, op2		& rx $+$ op2					& \\
 CMP		& rx, op2		& rx $-$ op2					& \\
 QADD		& rx, ry, rz		& rx = SATS(ry $+$ rz, 32)			& D \\
@@ -60,8 +63,8 @@ SSAT16		& rx, \#j$^{ }_{4}$, ry	& rx = SATS(ry$^{\pm}_{H1}$, j)$^{\pm}_{ }$:SATS
 SUB\{S\}	& rx, ry, op2		& rx = ry $-$ op2 				& \\
 SUBW		& rx, ry, \#i$^{ }_{12}$	& rx = ry $-$ i$^{\emptyset}_{ }$	& T \\
 UDIV		& rx, ry, rz		& rx = ry $\udiv$ rz				& 7 \\
-USAD8		& rx, ry, rz		& rx = $\sum_{n=0}^{3}$(ABS(ry$^{\emptyset}_{Bn}$)$-$rz$^{\emptyset}_{Bn}$)	& 6,D \\
-USADA8		& rx, ry, rz, rw	& rx = rw $+$ $\sum_{n=0}^{3}$(ABS(ry$^{\emptyset}_{Bn}$)$-$rz$^{\emptyset}_{Bn}$)	& 6,D \\
+USAD8		& rx, ry, rz		& rx = $\sum_{n=0}^{3}$($\lvert$ry$^{\emptyset}_{Bn}$$\rvert$ $-$ rz$^{\emptyset}_{Bn}$)	& 6,D \\
+USADA8		& rx, ry, rz, rw	& rx = rw $+$ $\sum_{n=0}^{3}$($\lvert$ry$^{\emptyset}_{Bn}$$\rvert$ $-$ rz$^{\emptyset}_{Bn}$)	& 6,D \\
 USAT		& rx, \#j$^{ }_{5}$, ry\{slr\}	& rx = SATU(ry $\lsl\asr$ sh, j)$^{\pm}_{ }$	& 6 \\
 USAT16		& rx, \#i$^{ }_{4}$, ry	& rx = SATU(ry$^{\pm}_{H1}$, i)$^{\pm}_{ }$:SATU(ry$^{\pm}_{H0}$, i)$^{\pm}_{ }$	& 6,D \\
 \end{asmtable}
@@ -154,28 +157,28 @@ STRH\{T\}	& rx, [addr]			& [addr]$^{ }_{16}$ = rx$^{ }_{H0}$	& \\
 \end{asmtable}
 %
 \begin{table-llX}{ARM LDR/STR Addressing Modes}
-non-T		& [rz\{, \#$\pm$i$^{ }_{8}$\}]\{!\}	& addr = rz $\pm$ i; if(!) rz = addr \\
-xxR\{,B\}	& [rz\{, \#$\pm$i$^{ }_{12}$\}]\{!\}	& addr = rz $\pm$ i; if(!) rz = addr \\
-any		& [rz]\{, \#$\pm$i$^{ }_{8}$\}	& addr = rz; rz $\pm$= i \\
-xxR\{,B\}\{T\}	& [rz], \#$\pm$i$^{ }_{12}$	& addr = rz; rz $\pm$= i \\
+non-T		& [rz\{, \#$\pm$i$^{ }_{8}$\}]\{!\}	& addr = rz $+$ i$^{\pm}_{ }$; if(!) rz = addr \\
+xxR\{,B\}	& [rz\{, \#$\pm$i$^{ }_{12}$\}]\{!\}	& addr = rz $+$ i$^{\pm}_{ }$; if(!) rz = addr \\
+any		& [rz]\{, \#$\pm$i$^{ }_{8}$\}	& addr = rz; rz $+$= i$^{\pm}_{ }$ \\
+xxR\{,B\}\{T\}	& [rz], \#$\pm$i$^{ }_{12}$	& addr = rz; rz $+$= i$^{\pm}_{ }$ \\
 non-T		& [rz, $\pm$rw]\{!\}		& addr = rz $\pm$ rw; if(!) rz = addr \\
 xxR\{,B\}	& [rz, $\pm$rw\{AS\}]\{!\}	& addr = rz $\pm$ AS(rw); if(!) rz = addr \\
 any		& [rz], $\pm$rw			& addr = rz; rz $\pm$= rw \\
 xxR\{,B\}\{T\}	& [rz], $\pm$rw\{AS\}		& addr = rz; rz $\pm$= AS(rw) \\
-LD non-T	& $\pm$rel$^{ }_{8}$		& addr = PC $\pm$ rel \\
-LDR\{,B\}	& $\pm$rel$^{ }_{12}$		& addr = PC $\pm$ rel \\
+LD non-T	& $\pm$rel$^{ }_{8}$		& addr = PC $+$ rel$^{\pm}_{ }$ \\
+LDR\{,B\}	& $\pm$rel$^{ }_{12}$		& addr = PC $+$ rel$^{\pm}_{ }$ \\
 \end{table-llX}
 %
 \begin{table-llX}{Thumb2 LDR/STR Addressing Modes}
-any		& [rz\{, \#i$^{ }_{8}$\}]	& addr = rz $+$ i \\
-xxR\{,B,H,SB,SH\}	& [rz, \#i$^{ }_{12}$]	& addr = rz $+$ i \\
-xxR\{,B,H,SB,SH\}	& [rz, \#$\pm$i$^{ }_{8}$]\{!\}	& addr = rz $\pm$ i; if(!) rz = addr \\
-xxR\{,B,H,SB,SH\}	& [rz], \#$\pm$i$^{ }_{8}$	& addr = rz; rz $\pm$= i \\
+any		& [rz\{, \#i$^{ }_{8}$\}]	& addr = rz $+$ i$^{\emptyset}_{ }$ \\
+xxR\{,B,H,SB,SH\}	& [rz, \#i$^{ }_{12}$]	& addr = rz $+$ i$^{\emptyset}_{ }$ \\
+xxR\{,B,H,SB,SH\}	& [rz, \#$\pm$i$^{ }_{8}$]\{!\}	& addr = rz $+$ i$^{\pm}_{ }$; if(!) rz = addr \\
+xxR\{,B,H,SB,SH\}	& [rz], \#$\pm$i$^{ }_{8}$	& addr = rz; rz $+$= i$^{\pm}_{ }$ \\
 xxR\{,B,H,SB,SH\}	& [rz,rw\{,LSL \#i$^{ }_{2}$\}]	& addr = rz $+$ rw $\lsl$ i \\
-LDR\{,B,H,SB,SH\}	& $\pm$rel$^{ }_{12}$	& addr = PC $\pm$ rel \\
-xxRD		& [rz\{, \#$\pm$i$^{ }_{10}$\}]\{!\}	& addr=rz$\pm$i$^{ }_{9:2}$:0$^{ }_{1:0}$; if(!) rz=addr \\
-xxRD		& [rz], \#$\pm$i$^{ }_{10}$	& addr = rz; rz $\pm$= i$^{\pm}_{9:2}$:0$^{ }_{1:0}$ \\
-LDRD		& $\pm$rel$^{ }_{10}$		& addr = PC $\pm$ rel$^{ }_{9:2}$:0$^{ }_{1:0}$	\\
+LDR\{,B,H,SB,SH\}	& $\pm$rel$^{ }_{12}$	& addr = PC $+$ rel$^{\pm}_{ }$ \\
+xxRD		& [rz\{, \#$\pm$i$^{ }_{10}$\}]\{!\}	& addr=rz$+$i$^{\pm}_{9:2}$:0$^{ }_{1:0}$; if(!) rz=addr \\
+xxRD		& [rz], \#$\pm$i$^{ }_{10}$	& addr = rz; rz $+$= i$^{\pm}_{9:2}$:0$^{ }_{1:0}$ \\
+LDRD		& $\pm$rel$^{ }_{10}$		& addr = PC $+$ rel$^{\pm}_{9:2}$:0$^{ }_{1:0}$	\\
 \end{table-llX}
 %
 \begin{asmtable}{Multiplication Instructions}
@@ -270,7 +273,7 @@ MSR		& Rbanked, rx		& Rbanked = rx					& 7 \\
 MSR		& xPSR\_\{cxsf\}, i	& \{CPSR,SPSR\}$^{ }_{f,s,x,c}$ = i$^{ }_{f,s,x,c}$	& A \\
 MSR		& xPSR\_\{cxsf\}, rx	& \{CPSR,SPSR\}$^{ }_{f,s,x,c}$ = rx$^{ }_{f,s,x,c}$	& \\
 RFEdi		& rx\{!\}		& LDMdi rx\{!\}, \{PC, CPSR\}			& \\
-SMC		& \#i$^{ }_{4}$		& CallSecureMonitor()				& 6k \\
+SMC		& \#i$^{ }_{4}$		& CallSecureMonitor(i)				& 6k \\
 SRSdi		& SP\{!\}, \#mode	& STMdi SP\_mode\{!\}, \{LR, SPSR\}		& 6 \\
 \end{asmtable}
 %
@@ -296,8 +299,8 @@ PLI		& [addr]		& PreloadInstr(addr)				& 7 \\
 %PLI		& [rx, $\pm$ry\{AS\}]	& PreloadInstr(rx $\pm$ AS(ry))			& A,7 \\
 SETEND		& \{BE/LE\}		& EndianState = \{BE/LE\}			& I,6 \\
 SEV		&			& SendEvent()					& 6k \\
-SVC		& \#i$^{ }_{24}$	& CallSupervisor()				& A \\
-UDF		& \#i$^{ }_{16}$	& UndefinedException()				& \\
+SVC		& \#i$^{ }_{24}$	& CallSupervisor(i)				& A \\
+UDF		& \#i$^{ }_{16}$	& UndefinedException(i)				& \\
 WFE		&			& WaitForEvent()				& 6k \\
 WFI		&			& WaitForInterrupt()				& 6k \\
 YIELD		&			& HintYield()					& 6k \\
@@ -327,6 +330,7 @@ H\{0,1\}		& Selected half word (bits 15:0 or 31:16) \\
 \{AS\}			& ARM shift or rotate (LSL/ROR \#\{1..31\}, LSR/ASR \#\{1..32\} or RRX) \\
 value$^{\pm}_{ }$, value$^{\emptyset}_{ }$	& Value is sign/zero extended\\
 $\smul$ $\sdiv$ $\asr$	& Operation is signed \\
+$\lvert$x$\rvert$	& Absolute of value \\
 \end{table-lX}
 %
 \begin{table-llX}{General Registers}
@@ -413,14 +417,14 @@ BLX		& rel$^{ }_{23}$	& LR=PC$^{ }_{31:1}$:1; Set=0; PC$+$=rel$^{\pm}_{22:2}$:0$
 BLX		& rx			& LR=PC$^{ }_{31:1}$:1; Set=rx$^{ }_{0}$; PC=rx$^{ }_{31:1}$:0	& \\
 BX		& rx			& Set=rx$^{ }_{0}$; PC = rx$^{ }_{31:1}$:0	& \\
 CBNZ		& rx, rel$^{ }_{7}$	& if(rx $\ne$ 0) PC $+$= rel$^{\emptyset}_{6:1}$:0	& I,6t \\
-CBZ		& rx, rel$^{ }_{7}$	& if(rx $=$ 0) PC $+$= rel$^{\emptyset}_{6:1}$:0	& I,6t \\
+CBZ		& rx, rel$^{ }_{7}$	& if(rx $\eq$ 0) PC $+$= rel$^{\emptyset}_{6:1}$:0	& I,6t \\
 CPSI\{D,E\}	& \{aif\}		& \{a\}\{i\}\{f\} = (E ? 1 : 0)			& 6 \\
 IT\{t\{t\{t\}\}\}	& cc		& if(cc) NextInstruction			& I,6t \\
 NOP		&			&						& 6k \\
 SETEND		& \{BE/LE\}		& EndianState = \{BE/LE\}			& I,6 \\
 SEV		&			& SendEvent()					& 7 \\
-SVC		& \#i$^{ }_{8}$		& CallSupervisor()				& \\
-UDF		& \#i$^{ }_{8}$		& UndefinedException()				& \\
+SVC		& \#i$^{ }_{8}$		& CallSupervisor(i)				& \\
+UDF		& \#i$^{ }_{8}$		& UndefinedException(i)				& \\
 WFE		&			& WaitForEvent()				& 7 \\
 WFI		&			& WaitForInterrupt()				& 7 \\
 YIELD		&			& HintYield()					& 7 \\
@@ -473,6 +477,299 @@ STRH		& rx, [ry\{, \#i$^{ }_{6}$\}]	& [ry $+$ i$^{\emptyset}_{5:1}$:0]$^{ }_{16}
 STRH		& rx, [ry, rz]		& [ry $+$ rz]$^{ }_{16}$ = rx$^{ }_{15:0}$	& \\
 \end{asmtable}
 %
+\newpage
+\begin{center}
+{\Large\bfseries ARMv7 Floating-point and \\* Advanced SIMD Extensions}
+\end{center}
+%
+\begin{asmtable}{Load/Store Instructions}
+VLDMDB		& rx\{!\}, flist			& flist = [rx $-$ f$\times$cnt]; if(!) rx$-$=f$\times$cnt	& \\
+VLDMIA		& rx\{!\}, flist			& flist = [rx]; if(!) rx $+$= f$\times$cnt			& \\
+VLDR		& fx,[ry\{,\#$\pm$i$^{ }_{10}$\}]	& fx = [ry $+$ i$^{\pm}_{9:2}$0$^{ }_{1:0}$]$^{ }_{f}$		& \\
+VLDR		& fx, $\pm$rel$^{ }_{10}$		& fx = [PC $+$ rel$^{\pm}_{9:2}$0$^{ }_{1:0}$]$^{ }_{f}$	& \\
+VSTMDB		& rx\{!\}, flist			& [rx $-$ f$\times$cnt] = flist; if(!) rx$-$=f$\times$cnt	& \\
+VSTMIA		& rx\{!\}, flist			& flist = [rx]; if(!) rx $+$= f$\times$cnt      		& \\
+VSTR		& fx,[ry\{,\#$\pm$i$^{ }_{10}$\}]	& [ry $+$ i$^{\pm}_{9:2}$0$^{ }_{1:0}$]$^{ }_{f}$ = fx		& \\
+\end{asmtable}
+%
+\begin{asmtable}{SIMD Load/Store Instructions}
+VLD1.z		& \{dx...\}, [addr]	& ...:dx$^{'}_{ }$:dx = [addr]$^{ }_{64 \umul cnt}$			& \\ % z = 8,16,32,64
+VLD1.z		& \{dx[]...\}, [addr]	& (...:dx$^{'}_{ }$:dx)$^{ }_{z*}$ = [addr]$^{ }_{z}$			& \\ % z = 8,16,32
+VLD1.z		& \{dx[i]\}, [addr]	& dx$^{ }_{zi}$ = [addr]$^{ }_{z}$					& \\ % z = 8,16,32
+VLD2.z		& \{dx...\}, [addr]	& ...:dx$^{ }_{z2}$:dx$^{'}_{z1}$:dx$^{ }_{z1}$:dx$^{'}_{z0}$:dx$^{ }_{z0}$=[addr]$^{ }_{64 \umul cnt}$	& \\ % z = 8,16,32
+VLD2.z		& \{dx[]...\}, [addr]	& dx$^{'}_{z*}$:dx$^{ }_{z*}$ = [addr]$^{ }_{2z}$			& \\ % z = 8,16,32
+VLD2.z		& \{dx[i]...\}, [addr]	& dx$^{'}_{zi}$:dx$^{ }_{zi}$ = [addr]$^{ }_{2z}$			& \\ % z = 8,16,32
+VLD3.z		& \{dx...\}, [addr]	& ...:dx$^{'}_{z1}$:dx$^{ }_{z1}$:dx$^{''}_{z0}$:dx$^{'}_{z0}$:dx$^{ }_{z0}$=[addr]$^{ }_{64 \umul cnt}$	& \\ % z = 8,16,32
+VLD3.z		& \{dx[]...\}, [addr]	& dx$^{''}_{z*}$:dx$^{'}_{z*}$:dx$^{ }_{z*}$ = [addr]$^{ }_{3z}$	& \\ % z = 8,16,32
+VLD3.z		& \{dx[i]...\}, [addr]	& dx$^{''}_{zi}$:dx$^{'}_{zi}$:dx$^{ }_{zi}$ = [addr]$^{ }_{3z}$	& \\ % z = 8,16,32
+VLD4.z		& \{dx...\}, [addr]	& ...:dx$^{ }_{z1}$:dx$^{'''}_{z0}$:dx$^{''}_{z0}$:dx$^{'}_{z0}$:dx$^{ }_{z0}$=[addr]$^{ }_{64 \umul cnt}$	& \\ % z = 8,16,32
+VLD4.z		& \{dx[]...\}, [addr]	& dx$^{'''}_{z*}$:dx$^{''}_{z*}$:dx$^{'}_{z*}$:dx$^{ }_{z*}$ = [addr]$^{ }_{4z}$	& \\ % z = 8,16,32
+VLD4.z		& \{dx[i]...\}, [addr]	& dx$^{'''}_{zi}$:dx$^{''}_{zi}$:dx$^{'}_{zi}$:dx$^{ }_{zi}$ = [addr]$^{ }_{4z}$	& \\ % z = 8,16,32
+VST1.z		& \{dx...\}, [addr]	& [addr]$^{ }_{64 \umul cnt}$ = ...:dx$^{'}_{ }$:dx			& \\ % z = 8,16,32,64
+VST1.z		& \{dx[i]\}, [addr]	& [addr]$^{ }_{z}$ = dx$^{ }_{zi}$					& \\ % z = 8,16,32
+VST2.z		& \{dx...\}, [addr]	& [addr]$^{ }_{64 \umul cnt}$ = ...:dx$^{'}_{z1}$:dx$^{ }_{z1}$:dx$^{'}_{z0}$:dx$^{ }_{z0}$	& \\ % z = 8,16,32
+VST2.z		& \{dx[i]...\}, [addr]	& [addr]$^{ }_{2z}$ = dx$^{'}_{zi}$:dx$^{ }_{zi}$			& \\ % z = 8,16,32
+VST3.z		& \{dx...\}, [addr]	& [addr]$^{ }_{64 \umul cnt}$=...:dx$^{'}_{z1}$:dx$^{ }_{z1}$:dx$^{''}_{z0}$:dx$^{'}_{z0}$:dx$^{ }_{z0}$	& \\ % z = 8,16,32
+VST3.z		& \{dx[i]...\}, [addr]	& [addr]$^{ }_{3z}$ = dx$^{''}_{zi}$:dx$^{'}_{zi}$:dx$^{ }_{zi}$		& \\ % z = 8,16,32
+VST4.z		& \{dx...\}, [addr]	& [addr]$^{ }_{64 \umul cnt}$=...:dx$^{ }_{z1}$:dx$^{'''}_{z0}$:dx$^{''}_{z0}$:dx$^{'}_{z0}$:dx$^{ }_{z0}$	& \\ % z = 8,16,32
+VST4.z		& \{dx[i]...\}, [addr]	& [addr]$^{ }_{4z}$ = dx$^{'''}_{zi}$:dx$^{''}_{zi}$:dx$^{'}_{zi}$:dx$^{ }_{zi}$	& \\ % z = 8,16,32
+\end{asmtable}
+%
+\begin{table-lX}{VLDx/VSTx Addressing Modes}
+rz\{:align\}		& addr = rz \\
+rz\{:align\}!		& addr = rz; rz $+$= (z$\lsr$3) $\times$ cnt \\
+rz\{:align\}, rw	& addr = rz; rz $+$= rw \\
+\end{table-lX}
+%
+\begin{asmtable2}{SIMD Reciprocal Instructions}
+VRECPE.F32	& mx, my		& mx$^{ }_{32*}$=RecipEstimateFloat(my$^{ }_{32*}$)				& \\
+VRECPE.U32	& mx, my		& mx$^{ }_{32*}$=RecipEstimateInt(my$^{ }_{32*}$)				& \\
+VRECPS.F32	& mx, my, mz		& mx$^{ }_{32*}$=RecipStepFloat(my$^{ }_{32*}$, mz$^{ }_{32*}$)			& \\
+VRSQRTE.F32	& mx, my		& mx$^{ }_{32*}$=SqrtEstimateFloat(my$^{ }_{32*}$)				& \\
+VRSQRTE.U32	& mx, my		& mx$^{ }_{32*}$=SqrtEstimateInt(my$^{ }_{32*}$)				& \\
+VRSQRTS.F32	& mx, my, mz		& mx$^{ }_{32*}$=SqrtStepFloat(my$^{ }_{32*}$, mz$^{ }_{32*}$)			& \\
+\end{asmtable2}
+%
+\begin{asmtable2}{Floating-point Instructions}
+VABS.f		& fx, fy		& fx = $\lvert$fy$\rvert$			& \\
+VADD.f		& fx, fy, fz		& fx = fy $+$ fz				& \\
+VCMP\{E\}.f	& fd, \#0.0		& FPSCR\_nzcv = Compare(fx, 0)			& \\
+VCMP\{E\}.f	& fx, fy		& FPSCR\_nzcv = Compare(fx, fy)			& \\
+VCVT.F32.F64	& sx, dy		& sx = Float2Float(dy)				& \\
+VCVT.F64.F32	& dx, sy		& dx = Float2Float(sy)				& \\
+VCVT.sz.f	& fx, fy, \#i$^{ }_{5}$	& fx = Float2Fixed(fy, i)$^{s}_{ }$		& V3 \\ % z = 16,32
+VCVT.f.s32	& fx, sy		& fx = Int2Float(sy$^{s}_{ }$)			& \\
+VCVT.f.sz	& fx, fy, \#i$^{ }_{5}$	& fx = Fixed2Float(fy$^{s}_{ }$, i)		& V3 \\ % z = 16,32
+VCVT\{R\}.s32.f	& sx, fy		& sx = Float2Int(fy)$^{s}_{ }$			& \\
+VCVTx.F16.F32	& sx, sy		& sx$^{ }_{Hx}$ = Float2Float(sy)		& V3 \\
+VCVTx.F32.F16	& sx, sy		& sx = Float2Float(sy$^{ }_{Hx}$)		& V3 \\
+VDIV.f		& fx, fy, fz		& fx = fy $\udiv$ dz				& \\
+VFMa.f		& fx, fy, fz		& fx $\pm$= fy $\umul$ fz			& V4 \\
+VFMNa.f		& fx, fy, fz		& fx = $-$fx $\pm$ fy $\umul$ fz		& V4 \\
+VMLa.f		& fx, fy, fz		& fx $\pm$= $\lfloor$fy $\umul$ fz$\rfloor$	& \\
+VMOV.f		& fx, \#$\pm$i$^{ }_{7}$	& fx = $\pm$i				& V3 \\
+VMOV.f		& fx, fy		& fx = fy					& \\
+VMUL.f		& fx, fy, fz		& fx = fy $\umul$ fz				& \\
+VNEG.f		& fx, fy		& fx = $-$fy					& \\
+VNMLa.f		& fx, fy, fz		& fx = $-$fx $\pm$ $-\lfloor$fy $\umul$ fz$\rfloor$	& \\
+VNMUL.f		& fx, fy, fz		& fx = $-\lfloor$fy $\umul$ fz$\rfloor$	& \\
+VSQRT.f		& fx, fy		& fx = SQRT(fy)					& \\
+VSUB.f		& fx, fy, fz		& fx = fy $-$ fz				& \\
+\end{asmtable2}
+%
+\begin{asmtable3}{Register Transfer Instructions}
+VMOV\{.32\}	& dx[i], ry		& dx$^{ }_{32i}$ = ry				& \\
+VMOV\{.32\}	& rx, dy[i]		& rx = dy$^{ }_{32i}$				& \\
+VMOV		& sx, ry		& sx = ry					& \\
+VMOV		& rx, sy		& rx = sy					& \\
+VMOV		& sx, sx$^{'}_{ }$, ry, rz	& sx$^{'}_{ }$:sx = rz:ry		& \\
+VMOV		& rx, ry, sz, sz$^{'}_{ }$	& ry:rx = sz$^{'}_{ }$:sz		& \\
+VMOV		& dx, ry, rz		& dx = rz:ry					& \\
+VMOV		& rx, ry, dz		& ry:rx = dz					& \\
+VMRS		& rx, fpreg		& rx = fpreg					& \\
+VMRS		& APSR\_nzcv,FPSCR	& APSR\_nzcv = FPSCR\_nzcv			& \\
+VMSR		& fpreg, rx		& fpreg = rx					& \\
+\end{asmtable3}
+%
+\begin{asmtable3}{SIMD Register Transfer Instructions}
+VDUP.z		& mx, ry		& mx$^{ }_{z*}$ = ry$^{ }_{z}$			& \\ % z = 8,16,32
+VDUP.z		& mx, dy[i]		& mx$^{ }_{z*}$ = dy$^{ }_{zi}$			& \\ % z = 8,16,32
+VMOV.z		& dx[i], ry		& dx$^{ }_{zi}$ = ry$^{ }_{z}$			& \\ % z = 8,16
+VMOV.sz		& rx, dy[i]		& rx = dy$^{s}_{zi}$				& \\ % z = 8,16
+VMOV		& mx, my		& mx = my					& \\
+\end{asmtable3}
+%
+\begin{table-lX}{Floating-point System Registers}
+FPEXC	& Floating-point Exception Control \\
+FPSCR	& Floating-point Status and Control \\
+FPSID	& Floating-point System ID \\
+MVFR\{0..1\}	& Media and VFP Feature \{0..1\} \\
+\end{table-lX}
+%
+\begin{table-llX}{Floating-point Status and Control Register (FPSCR)}
+IOC	& 0x00000001	& Invalid Operation cumulative exception	\\
+DZC	& 0x00000002	& Division by Zero cumulative exception		\\
+OFC	& 0x00000004	& Overflow cumulative exception			\\
+UFC	& 0x00000008	& Underflow cumulative exception		\\
+IXC	& 0x00000010	& Inexact cumulative exception			\\
+IDC	& 0x00000080	& Input Denormal cumulative exception		\\
+IOE	& 0x00000100	& Invalid Operation exception trap enable	\\
+DZE	& 0x00000200	& Division by Zero exception trap enable	\\
+OFE	& 0x00000400	& Overflow exception trap enable		\\
+UFE	& 0x00000800	& Underflow exception trap enable		\\
+IXE	& 0x00001000	& Inexact exception trap enable			\\
+IDE	& 0x00008000	& Input Denormal exception trap enable		\\
+%Len	& 0x00070000	& VFP vector length				\\ % Deprecated
+%Stride	& 0x00300000	& VFP vector stride				\\ % Deprecated
+RMode	& 0x00c00000	& Rounding mode (RN,RP,RM,RZ)			\\
+FZ	& 0x01000000	& Flush-to-zero mode				\\
+DN	& 0x02000000	& Default NaN mode				\\
+AHP	& 0x04000000	& Alternative half-precision			\\
+QC	& 0x08000000	& Cumulative saturation				\\
+V	& 0x10000000	& Overflow condition flag			\\
+C	& 0x20000000	& Carry condition flag				\\
+Z	& 0x40000000	& Zero condition flag				\\
+N	& 0x80000000	& Negative condition flag			\\
+\end{table-llX}
+%
+\begin{table-lX}{Floating-point and SIMD Keys}
+s		& Operation signess (S or U) \\
+z		& Data size (8, 16, or 32) \\
+f		& Floating-point size (F32 or F64) \\
+sx, dx, qx	& Singleword/doubleword/quadword register \\
+fx, fy, fz	& Floating-point register (sx or dx depending on data size) \\
+mx, my, mz	& SIMD register (dx or qx) \\
+cm		& SIMD comparison operator (GE, GT, LE, or LT) \\
+$\lfloor$x$\rfloor$	& Value is rounded \\
+x $\lsl\lsr$ y	& (y $\ult$ 0) ? (x $\lsr$ $-$y) : (x $\lsl$ y) \\
+$\max$ $\min$	& Maximum/minimum value \\
+\end{table-lX}
+%
+\begin{table-lX}{Notes for Floating-point and SIMD Instructions}
+V3,V4	& Introduced in VFPv3, VFPv4 \\
+SH,S2	& Introduced in SIMD with half-precision floats, SIMDv2 \\
+F	& Instruction with data type F32 also exists \\
+\end{table-lX}
+%
+\begin{asmtable2}{SIMD Addition and Subtraction Instructions}
+VABA.sz		& mx, my, mz		& mx$^{ }_{z*}$ $\pm$= $\lvert$my$^{ }_{z*}$ $-$ mz$^{ }_{z*}$$\rvert$		& \\ % z = 8,16,32
+VABAL.sz	& qx, dy, dz		& qx$^{ }_{2z*}$ $\pm$= $\lvert$dy$^{ }_{z*}$ $-$ dz$^{ }_{z*}$$\rvert$		& \\ % z = 8,16,32
+VABD.sz		& mx, my, mz		& mx$^{ }_{z*}$ = $\lvert$my$^{ }_{z*}$ $-$ mz$^{ }_{z*}$$\rvert$		& F \\ % z = 8,16,32
+VABDL.sz	& qx, dy, dz		& qx$^{ }_{2z*}$ = $\lvert$dy$^{ }_{z*}$ $-$ dz$^{ }_{z*}$$\rvert$		& \\ % z = 8,16,32
+VABS.Sz		& mx, my		& mx$^{ }_{z*}$ = $\lvert$my$^{ }_{z*}$$\rvert$					& F \\ % z = 8,16,32
+VADD.Iz		& mx, my, mz		& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $+$ mz$^{ }_{z*}$				& F \\ % z = 8,16,32,64
+VADDHN.Iz	& dx, qy, qz		& dx$^{ }_{0\text{.}5z*}$ = (qy$^{ }_{z*}$ $+$ qz$^{ }_{z*}$)$\lsr$z		& \\ % z = 16,32,64
+VADDL.sz	& qx, dy, dz		& qx$^{ }_{z*}$ = dy$^{s}_{z*}$ $+$ dz$^{s}_{z*}$				& \\ % z = 8,16,32
+VADDW.sz	& qx, qy, dz		& qx$^{ }_{z*}$ = qy$^{ }_{z*}$ $+$ dz$^{s}_{z*}$				& \\ % z = 8,16,32
+VHADD.sz	& mx, my, mz		& mx$^{ }_{z*}$ = (my$^{s}_{z*}$ $+$ mz$^{s}_{z*}$) $\lsr$ 1			& \\ % z = 8,16,32
+VHSUB.sz	& mx, my, mz		& mx$^{ }_{z*}$ = (my$^{s}_{z*}$ $-$ mz$^{s}_{z*}$) $\lsr$ 1			& \\ % z = 8,16,32
+VNEG.Sz		& mx, my		& mx$^{ }_{z*}$ = 0 $-$ my$^{ }_{z*}$						& F \\ % z = 8,16,32
+VPADAL.sz	& mx, my		& mx$^{ }_{2z*}$ $+$= my$^{ }_{2z*[2z-1:z]}$ $+$ my$^{ }_{2z*[z-1:0]}$		& \\ % z = 8,16,32
+VPADD.Iz	& dx, dy, dz		& dx$^{ }_{z*}$=(dz:dy)$^{ }_{2z*[2z-1:z]}$$+$(dz:dy)$^{ }_{2z*[z-1:0]}$	& F \\ % z = 8,16,32
+VPADDL.sz	& mx, my		& mx$^{ }_{2z*}$ = my$^{ }_{2z*[2z-1:z]}$ $+$ my$^{ }_{2z*[z-1:0]}$		& \\ % z = 8,16,32
+VRADDHN.Iz	& dx, qy, qz		& dx$^{ }_{0\text{.}5z*}$ = $\lfloor$qy$^{ }_{z*}$ $+$ qz$^{ }_{z*}$$\rfloor$ $\lsr$ z	& \\ % z = 16,32,64
+VRHADD.sz	& mx, my, mz		& mx$^{ }_{z*}$ = $\lfloor$(my$^{s}_{z*}$ $+$ mz$^{s}_{z*}$) $\lsr$ 1$\rfloor$	& \\ % z = 8,16,32
+VRSUBHN.Iz	& dx, qy, qz		& dx$^{ }_{0\text{.}5z*}$ = $\lfloor$qy$^{ }_{z*}$ $-$ qz$^{ }_{z*}$$\rfloor$ $\lsr$ z	& \\ % z = 16,32,64
+VQABS.Sz	& mx, my		& mx$^{ }_{z*}$ = SATS($\lvert$my$^{ }_{z*}$$\rvert$, z)			& \\ % z = 8,16,32
+VQADD.sz	& mx, my, mz		& mx$^{ }_{z*}$ = SATs(my$^{ }_{z*}$ $+$ mz$^{ }_{z*}$, z)			& \\ % z = 8,16,32,64
+VQNEG.Sz	& mx, my		& mx$^{ }_{z*}$ = SATS(0 - my$^{ }_{z*}$, z)					& \\ % z = 8,16,32
+VQSUB.sz	& mx, my, mz		& mx$^{ }_{z*}$ = SATs(my$^{ }_{z*}$ $-$ mz$^{ }_{z*}$, z)			& \\ % z = 8,16,32,64
+VSUB.Iz		& mx, my, mz		& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $-$ mz$^{ }_{z*}$				& F \\ % z = 8,16,32,64
+VSUBHN.Iz	& dx, qy, qz		& dx$^{ }_{0\text{.}5z*}$ = (qy$^{ }_{z*}$ $-$ qz$^{ }_{z*}$) $\lsr$ z		& \\ % z = 16,32,64
+VSUBL.sz	& qx, dy, dz		& qx$^{ }_{z*}$ = dy$^{s}_{z*}$ $-$ dz$^{s}_{z*}$				& \\ % z = 8,16,32
+VSUBW.sz	& qx, qy, dz		& qx$^{ }_{z*}$ = qy$^{ }_{z*}$ $-$ dz$^{s}_{z*}$				& \\ % z = 8,16,32
+\end{asmtable2}
+%
+\begin{asmtable2}{SIMD Data Convertion Instructions}
+VCVT.F16.F32	& dx, qy		& dx$^{ }_{16*}$ = Float2Float(qy$^{ }_{32*}$)					& SH \\
+VCVT.F32.F16	& qx, dy		& qx$^{ }_{32*}$ = Float2Float(dy$^{ }_{16*}$)					& SH \\
+VCVT.F32.s32	& mx, my		& mx$^{ }_{32*}$ = Int2Float(my$^{s}_{32*}$)					& \\
+VCVT.F32.s32	& mx, my, \#i$^{ }_{6}$	& mx$^{ }_{32*}$ = Fixed2Float(my$^{s}_{32*}$, i)				& \\
+VCVT.s32.F32	& mx, my		& mx$^{ }_{32*}$ = Float2Int(my)$^{s}_{32*}$					& \\
+VCVT.s32.F32	& mx, my, \#i$^{ }_{6}$	& mx$^{ }_{32*}$ = Float2Fixed(my, i)$^{s}_{32*}$				& \\
+VMOVL.sz	& qx, dy		& qx$^{ }_{2z*}$ = dy$^{\pm}_{z*}$						& \\ % z = 8,16,32
+VMOVN.Iz	& dx, qy		& dx$^{ }_{0\text{.}5z*}$ = qy$^{ }_{z*[0\text{.}5z-1:0]}$			& \\ % z = 16,32,64
+VQMOVN.sz	& dx, qy		& dx$^{ }_{0\text{.}5z*}$ = SATs(qy$^{ }_{z*}$, 0.5z)				& \\ % z = 16,32,64
+VQMOVUN.Sz	& dx, qy		& dx$^{ }_{0\text{.}5z*}$ = SATU(qy$^{ }_{z*}$, 0.5z)				& \\ % z = 16,32,64
+VUZP.z		& mx, my		& my = ...:my$^{ }_{z3}$:my$^{ }_{z1}$:...:mx$^{ }_{z3}$:mx$^{ }_{z1}$ \newline mx = ...:my$^{ }_{z2}$:my$^{ }_{z0}$:...:mx$^{ }_{z2}$:mx$^{ }_{z0}$ 	& \\ %z!=64
+VZIP.z		& mx, my		& my:mx = ...:my$^{ }_{z1}$:mx$^{ }_{z1}$:my$^{ }_{z0}$:mx$^{ }_{z0}$		& \\ % z = 8,16,32
+\end{asmtable2}
+%
+\begin{asmtable}{SIMD Bitwise Instructions}
+VAND			& mx, my, mz		& mx = my \& mz				& \\
+\textit{VAND.Iz}	& \{mx, \}mx, \#i	& mx$^{ }_{z*}$ \&= i			& \\ % z = 8,16,32,64
+VBIC			& mx, my, mz		& mx = my \& $\sim$mz			& \\
+VBIC.Iz			& \{mx, \}mx, \#i	& mx$^{ }_{z*}$ \&= $\sim$i		& \\ % z = 16,32 (8,64 as instruction alias)
+VEOR			& mx, my, mz		& mx = my $\oplus$  mz			& \\
+VBIF			& mx, my, mz		& if(mz$^{ }_{1*}$ $=$ 0) mx$^{ }_{1*}$ = my$^{ }_{1*}$	& \\
+VBIT			& mx, my, mz		& if(mz$^{ }_{1*}$ $=$ 1) mx$^{ }_{1*}$ = my$^{ }_{1*}$	& \\
+VBSL			& mx, my, mz		& mx$^{ }_{1*}$ = mx$^{ }_{1*}$ $=$ 1 ? my$^{ }_{1*}$ : mz$^{ }_{1*}$	& \\
+VEXT.z			& mx,my,mz,\#i$^{ }_{4}$	& mx$^{ }_{z*}$ = mz$^{ }_{z*[i-1:0]}$:my$^{ }_{z*[z-1:z-i+1]}$	& \\ % z = 8,16,32,64
+VMOV.Iz			& mx, \#i		& mx$^{ }_{z*}$ = i			& F \\ % z = 8,16,32,64
+VMVN.Iz			& mx, \#i		& mx$^{ }_{z*}$ = $\sim$i		& \\ % z = 16,32
+VMVN			& mx, my		& mx = $\sim$my				& \\
+VORR.Iz			& \{mx, \}mx, \#i	& mx$^{ }_{z*}$ |= i			& \\ % z = 16,32 (8,64 as instruction alias)
+VORR			& mx, my, mz		& mx = my | mz				& \\
+VORN			& mx, my, mz		& mx = my | $\sim$mz			& \\
+\textit{VORN.Iz}	& \{mx, \}mx, \#i	& mx$^{ }_{z*}$ |= $\sim$i		& \\ % z = 8,16,32,64
+\end{asmtable}
+%
+\begin{asmtable}{SIMD Comparision Instructions}
+VACcm.F32	& mx, my, mz		& mx$^{ }_{32*}$=$\lvert$my$^{ }_{32*}$$\rvert$ cm $\lvert$mz$^{ }_{32*}$$\rvert$ ?1$^{ }_{32}$:0$^{ }_{32}$	& \\
+VCEQ.Iz		& mx, my, mz		& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $\eq$ mz$^{ }_{z*}$ ? 1$^{ }_{z}$ : 0$^{ }_{z}$		& F \\ % z = 8,16,32
+VCEQ.Iz		& mx, my, \#0		& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $\eq$ 0 ? 1$^{ }_{z}$ : 0$^{ }_{z}$			& F \\ % z = 8,16,32
+VCcm.sz		& mx, my, mz		& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $cm^{s}_{ }$ mz$^{ }_{z*}$ s 1$^{ }_{z}$ : 0$^{ }_{z}$	& F \\ % z = 8,16,32
+VCcm.Sz		& mx, my, \#0		& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $\bar{cm}$ 0 ? 1$^{ }_{z}$ : 0$^{ }_{z}$		& F \\ % z = 8,16,32
+VMAX.sz		& mx, my, mz		& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $\max^{s}_{ }$ mz$^{ }_{z*}$				& F \\ % z = 8,16,32
+VMIN.sz		& mx, my, mz		& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $\min^{s}_{ }$ mz$^{ }_{z*}$				& F \\ % z = 8,16,32
+VPMAX.sz	& dx, dy, dz		& dx$^{ }_{z*}$=(dz:dy)$^{ }_{2z*[2z-1:z]}$$\max^{s}_{ }$dz:dy$^{ }_{2z*[z-1:0]}$	& F \\ % z = 8,16,32
+VPMIN.sz	& dx, dy, dz		& dx$^{ }_{z*}$=(dz:dy)$^{ }_{2z*[2z-1:z]}$$\min^{s}_{ }$dz:dy$^{ }_{2z*[z-1:0]}$	& F \\ % z = 8,16,32
+VTST.z		& mx, my, mz		& mx$^{ }_{z*}$ = (my$^{ }_{z*}$\&mz$^{ }_{z*}$ $\ne$ 0) ? 1$^{ }_{z}$ : 0$^{ }_{z}$	& \\ % z = 8,16,32
+\end{asmtable}
+%
+\begin{asmtable}{SIMD Misc Processing Instructions}
+VCLS.Sz		& mx, my		& mx$^{ }_{z*}$ = CountLeadingSignBits(my$^{ }_{z*}$)				& \\ % z = 8,16,32
+VCLZ.Iz		& mx, my		& mx$^{ }_{z*}$ = CountLeadingZeros(my$^{ }_{z*}$)				& \\ % z = 8,16,32
+VCNT.8		& mx, my		& mx$^{ }_{8*}$ = CountOneBits(my$^{ }_{8*}$)					& \\
+VREV16.8	& mx, my		& mx$^{ }_{16*}$ = my$^{ }_{16*[7:0]}$:my$^{ }_{16*[15:8]}$			& \\
+VREV32.8	& mx, my		& mx$^{ }_{32*}$ = my$^{ }_{32*[7:0]}$:..:my$^{ }_{32*[31:24]}$			& \\
+VREV32.16	& mx, my		& mx$^{ }_{32*}$ = my$^{ }_{32*[15:0]}$:my$^{ }_{32*[31:16]}$			& \\
+VREV64.8	& mx, my		& mx$^{ }_{64*}$ = my$^{ }_{64*[15:0]}$:...:my$^{ }_{64*[63:48]}$		& \\
+VREV64.16	& mx, my		& mx$^{ }_{64*}$ = my$^{ }_{64*[7:0]}$:...:my$^{ }_{64*[63:56]}$		& \\
+VREV64.32	& mx, my		& mx$^{ }_{64*}$ = my$^{ }_{64*[31:0]}$:my$^{ }_{64*[63:32]}$			& \\
+VSWP		& mx, my		& my:mx = mx:my									& \\
+VTBL.8		& dx, {dy...}, dz	& dx$^{ }_{8*}$ = dz$^{ }_{8*}$ $\ult$ cnt$\umul$8 ? (dy:...)$^{ }_{8dz^{ }_{8*}}$ : 0	& \\
+VTBX.8		& dx, {dy...}, dz	& if(dz$^{ }_{8*}$ $\ult$ cnt$\umul$8) dx$^{ }_{8*}$ = (dy:...)$^{ }_{8dz^{ }_{8*}}$	& \\
+VTRN.z		& mx, my		& if(even) my$^{ }_{z*}$:mx$^{ }_{z*+1}$ = mx$^{ }_{z*+1}$:my$^{ }_{z*}$	& \\ % z = 8,16,32
+\end{asmtable}
+%
+\begin{asmtable2}{SIMD Shift Instructions}
+VQRSHL.sz	& mx, my, mz		& mx$^{ }_{z*}$ = SATs($\lfloor$my$^{ }_{z*}$ $\lsl\lsr^{s}_{ }$ mz$^{ }_{z*}\rfloor$, z)	& \\ % z = 8,16,32,64
+VQRSHRN.sz	& dx, qy, \#i$^{ }_{5}$	& dx$^{ }_{0\text{.}5z*}$ = SATs($\lfloor$qy$^{ }_{z*}$ $\lsr^{s}_{ }$ i$\rfloor$, z)	& \\ % z = 16,32,64
+VQRSHRUN.Sz	& dx, qy, \#i$^{ }_{5}$	& dx$^{ }_{0\text{.}5z*}$ = SATU($\lfloor$qy$^{\pm}_{z*}$ $\asr$ i$\rfloor$, z)	& \\ % z = 16,32,64
+VQSHL.sz	& mx, my, mz		& mx$^{ }_{z*}$ = SATs(my$^{ }_{z*}$ $\lsl\lsr^{s}_{ }$ mz$^{ }_{z*}$, z)	& \\ % z = 8,16,32,64
+VQSHL.sz	& mx, my, \#i$^{ }_{5}$	& mx$^{ }_{z*}$ = SATs(my$^{ }_{z*}$ $\lsl$ i, z)				& \\ % z = 8,16,32,64
+VQSHLU.Sz	& mx, my, \#i$^{ }_{5}$	& mx$^{ }_{z*}$ = SATU(my$^{ }_{z*}$ $\lsl\asr$ i, z)				& \\ % z = 8,16,32,64
+VQSHRN.sz	& dx, qy, \#i$^{ }_{5}$	& dx$^{ }_{0\text{.}5z*}$ = SATs(qy$^{ }_{z*}$ $\lsr^{s}_{ }$ i, z)		& \\ % z = 16,32,64
+VQSHRUN.Sz	& dx, qy, \#i$^{ }_{5}$	& dx$^{ }_{0\text{.}5z*}$ = SATU(qy$^{\pm}_{z*}$ $\asr$ i, z)			& \\ % z = 16,32,64
+VRSHL.sz	& mx, my, mz		& mx$^{ }_{z*}$ = $\lfloor$my$^{ }_{z*}$ $\lsl\lsr^{s}_{ }$ mz$^{ }_{z*}\rfloor$	& \\ % z = 8,16,32,64
+VRSHR.sz	& mx, my, \#i$^{ }_{6}$	& mx$^{ }_{z*}$ = $\lfloor$my$^{ }_{z*}$ $\lsr^{s}_{ }$ i$\rfloor$		& \\ % z = 8,16,32,64
+VRSRA.sz	& mx, my, \#i$^{ }_{6}$	& mx$^{ }_{z*}$ $+$= $\lfloor$my$^{ }_{z*}$ $\lsr^{s}_{ }$ i$\rfloor$		& \\ % z = 8,16,32,64
+VRSHRN.Iz	& dx, qy, \#i$^{ }_{5}$	& dx$^{ }_{0\text{.}5z*}$ = $\lfloor$qy$^{ }_{z*}$ $\lsr$ i$\rfloor$		& \\ % z = 16,32,64
+VSHL.Iz		& mx, my, \#i$^{ }_{6}$	& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $\lsl$ i					& \\ % z = 8,16,32,64
+VSHL.sz		& mx, my, mz		& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $\lsl\lsr^{s}_{ }$ mz$^{ }_{z*}$		& \\ % z = 8,16,32,64
+VSHLL.sz	& qx, dy, \#i$^{ }_{5}$	& qx$^{ }_{0\text{.}5z*}$ = dy$^{ }_{z*}$ $\lsl$ i				& \\ % z = 8,16,32
+VSHLL.Iz	& qx, dy, \#z		& qx$^{ }_{2z*}$ = dy$^{ }_{z*}$ $\lsl$ z					& \\ % z = 8,16,32
+VSHR.sz		& mx, my, \#i$^{ }_{6}$	& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $\lsr^{s}_{ }$ i				& \\ % z = 8,16,32,64
+VSHRN.Iz	& dx, qy, \#i$^{ }_{5}$	& dx$^{ }_{0\text{.}5z*}$ = qy$^{ }_{z*}$ $\lsr$ i				& \\ % z = 16,32,64
+VSLI.z		& mx, my, \#i$^{ }_{6}$	& mx$^{ }_{z*[z-1:i]}$ = my$^{ }_{z*[z-i-1:0]}$					& \\ % z = 8,16,32,64
+VSRA.sz		& mx, my, \#i$^{ }_{6}$	& mx$^{ }_{z*}$ $+$= my$^{ }_{z*}$ $\lsr^{s}_{ }$ i				& \\ % z = 8,16,32,64
+VSRI.z		& mx, my, \#i$^{ }_{6}$	& mx$^{ }_{z*[z-i-1:0]}$ = my$^{ }_{z*[z-1:i]}$					& \\ % z = 8,16,32,64
+\end{asmtable2}
+%
+\begin{asmtable2}{SIMD Multiply Instructions}
+VFMa.F32	& mx, my, mz		& mx$^{ }_{z*}$ $\pm$= my$^{ }_{z*}$ $\umul$ mz$^{ }_{z*}$			& S2 \\
+VMLa.Iz		& mx, my, mz		& mx$^{ }_{z*}$ $\pm$= my$^{ }_{z*}$ $\umul$ mz$^{ }_{z*}$			& F \\ % z = 8,16,32
+VMLa.Iz		& mx, my, dz[i]		& mx$^{ }_{z*}$ $\pm$= my$^{ }_{z*}$ $\umul$ dz$^{ }_{zi}$			& F \\ % z = 16,32
+VMLaL.sz	& qx, dy, dz		& qx$^{ }_{2z*}$ $\pm$= dy$^{ }_{z*}$ $\umul^{s}_{ }$ dz$^{ }_{z*}$		& \\ % z = 8,16,32
+VMLaL.sz	& qx, dy, dz[i]		& qx$^{ }_{2z*}$ $\pm$= dy$^{ }_{z*}$ $\umul^{s}_{ }$ dz$^{ }_{zi}$		& \\ % z = 16,32
+VMUL.Iz		& mx, my, mz		& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $\umul$ mz$^{ }_{z*}$				& F \\ % z = 8,16,32
+VMUL.Iz		& mx, my, dz[i]		& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $\umul$ dz$^{ }_{zi}$				& F \\ % z = 16,32
+VMUL.P8		& mx, my, mz		& mx$^{ }_{8*}$ = my$^{ }_{8*}$ $\ast$ mz$^{ }_{8*}$				& \\
+VMULL.P8	& qx, dy, dz		& qx$^{ }_{16*}$ = dy$^{ }_{8*}$ $\ast$ dz$^{ }_{8*}$				& \\
+VMULL.sz	& qx, dy, dz		& qx$^{ }_{2z*}$ = dy$^{ }_{z*}$ $\umul^{s}_{ }$ dz$^{ }_{z*}$			& \\ % z = 8,16,32
+VMULL.sz	& qx, dy, dz[i]		& qx$^{ }_{2z*}$ = dy$^{ }_{z*}$ $\umul^{s}_{ }$ dz$^{ }_{zi}$			& \\ % z = 16,32
+VQDMLaL.Sz	& qx, dy, dz		& qx$^{ }_{2z*}$ $\pm$= SATS(2$\smul$dy$^{ }_{z*}$$\smul$dz$^{ }_{z*}$, z)	& \\ % z = 16,32
+VQDMLaL.Sz	& qx, dy, dz[i]		& qx$^{ }_{2z*}$ $\pm$= SATS(2$\smul$dy$^{ }_{z*}$$\smul$dz$^{ }_{zi}$, z)	& \\ % z = 16,32
+VQDMULH.Sz	& mx, my, mz		& mx$^{ }_{z*}$=SATS(2$\smul$my$^{ }_{z*}$$\smul$mz$^{ }_{z*}$, 2z)$\lsr$z	& \\ % z = 16,32
+VQDMULH.Sz	& mx, my, dz[i]		& mx$^{ }_{z*}$=SATS(2$\smul$my$^{ }_{z*}$$\smul$dz$^{ }_{zi}$, 2z)$\lsr$z	& \\ % z = 16,32
+VQDMULL.Sz	& qx, dy, dz		& qx$^{ }_{2z*}$=SATS(2$\smul$dy$^{ }_{z*}$$\smul$dz$^{ }_{z*}$, 2z)		& \\ % z = 16,32
+VQDMULL.Sz	& qx, dy, dz[i]		& qx$^{ }_{2z*}$=SATS(2$\smul$dy$^{ }_{z*}$$\smul$dz$^{ }_{zi}$, 2z)		& \\ % z = 16,32
+VQRDMULH.Sz	& mx, my, mz		& mx$^{ }_{z*}$=SATS($\lfloor$2$\smul$my$^{ }_{z*}$$\smul$mz$^{ }_{z*}$$\rfloor$,2z)$\lsr$z	& \\ % z = 16,32
+VQRDMULH.Sz	& mx, my, dz[i]		& mx$^{ }_{z*}$=SATS($\lfloor$2$\smul$my$^{ }_{z*}$$\smul$dz$^{ }_{zi}$$\rfloor$,2z)$\lsr$z	& \\ % z = 16,32
+\end{asmtable2}
+%
+\newpage
 \begin{center}
 {\Large\bfseries ARMv7-A \& ARMv7-R System}
 \end{center}

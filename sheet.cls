@@ -1,5 +1,5 @@
 %
-% Copyright (C) 2014 Anders Olofsson
+% Copyright (C) 2014-2018 Anders Olofsson
 %
 % Copying and distribution of this file, with or without modification,
 % are permitted in any medium without royalty provided the copyright
@@ -98,3 +98,6 @@
 \def\ugt{\text{>}}
 \def\sge{\bar{\ge}}
 \def\uge{\ge}
+\def\eq{=}
+\def\max{\wedge}
+\def\min{\vee}
