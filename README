@@ -1,5 +1,5 @@
 Instruction Set Quick Reference Sheets
-Copyright (C) 2014-2019 Anders Sonmark
+Copyright (C) 2014-2020 Anders Sonmark
 
 Copying and distribution of this file, with or without modification,
 are permitted in any medium without royalty provided the copyright
@@ -73,14 +73,15 @@ rev 2 instructions.
 Floating point and coprocessor 2 instructions are not included.
 
 
-PIC16
+PIC Mid-range
 -----
-Instruction set of PIC16 including extended instruction set.
+Instruction set of PIC mid range devices including extended instruction
+set.
 
 
-PIC18
+PIC High end
 -----
-Instruction set of PIC18 including extended instructions.
+Instruction set of PIC high end devices including extended instructions.
 
 
 Sources
