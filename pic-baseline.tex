@@ -1,0 +1,114 @@
+%
+% Copyright (C) 2020 Anders Sonmark
+%
+% Copying and distribution of this file, with or without modification,
+% are permitted in any medium without royalty provided the copyright
+% notice and this notice are preserved.  This file is offered as-is,
+% without any warranty.
+%
+\documentclass{sheet}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{ae,aecompl}
+\usepackage[english]{babel}
+\usepackage[a5paper, landscape, margin=.1in]{geometry}
+\usepackage{amssymb}
+\usepackage{verbatim}
+
+\def\sheetheaderfont{\bfseries}
+\def\sheettablefont{\footnotesize\sffamily}
+\def\sheetheadercolor{black!10}
+\def\sheetrowcolor{black!5}
+
+\newcolumntype{N}{>{\raggedleft\arraybackslash}m{1.4em}}
+\def\tabcolsep{2pt}
+\def\arraystretch{1.3}
+\defsheet{asmtable}{5}{|m{4.8em} m{3.8em}|X|m{2.3em}|N|}
+\defsheet{table-X}{1}{|X|}
+\defsheet{table-lX}{2}{|l X|}
+\defsheet{table-lXN}{3}{|l|X|N|}
+
+\pagefooter{PIC Baseline version 1 page \thepage}
+
+\begin{document}
+\begin{multicols}{2}
+\raggedcolumns
+
+\begin{center}
+{\Large\bfseries PIC Baseline Quick Reference}
+\end{center}
+%
+\begin{table-lX}{Keys}
+f		& Register address (bits 4:0) \\
+d		& Destination select (W for WREG or F for [f]) \\
+i		& Immediate operand \\
+{}[f]           & [f] for standard or [BSR:f] for enhanced \\
+\end{table-lX}
+%
+\begin{table-lXN}{Registers}
+INDF		& [FSR] & \\
+TMR0		& Timer 0 value & \\
+PCL		& Program Counter (bits 7:0) & \\
+STATUS		& Status (x,PA1:0,TO,PD,Z,DC,C) & \\
+FSR		& Indirect Data Memory Address Pointer & \\
+OSCCAL		& Oscillator Calibration & \\
+PORT\{ABC\ldots\}	& I/O Port \{ABC\ldots\} Read/Write pins & \\
+%WREG		& Working Register & H \\
+TRIS\{ABC\ldots\}       & I/O Port \{ABC\ldots\} Direction (0=Output, 1=Input) & H \\
+OPTION		& Option bits (x,x,T0CS,T0SE,PSA,PS2:0) & H \\
+BSR		& Bank Select & H,E \\
+\end{table-lXN}
+%
+\begin{asmtable}{Jump, Skip, and System Instructions}
+BTFSC		& f, i$^{ }_{3}$	& if([f]$^{ }_{i}$ $=$ 0) PC $+$= 1		& -	& 2 \\
+BTFSS		& f, i$^{ }_{3}$	& if([f]$^{ }_{i}$ $=$ 1) PC $+$= 1		& -	& 2 \\
+CALL		& ptr$^{ }_{8}$		& Push(PC); PC = PA:0:ptr			& -	& 2 \\
+CLRWDT		&			& WDT = 0; TO = 1; PD = 1			& -	& \\
+DECFSZ		& f, d			& d = [f] $-$ 1; if(d $=$ 0) PC $+$= 1		& -	& 2 \\
+GOTO		& ptr$^{ }_{9}$		& PC = PA:ptr					& -	& 2 \\
+INCFSZ		& f, d			& d = [f] $+$ 1; if(d $=$ 0) PC $+$= 1		& -	& 2 \\
+NOP		&			&						& -	& \\
+RETFIE		&			& PC = Pop; GIE = 1				& -	& 2,E \\
+RETLW		& i$^{ }_{8}$		& PC = Pop; WREG = i				& -	& 2 \\
+RETURN		&			& PC = Pop					& -	& 2,E \\
+SLEEP		&			& WDT = 0; TO = 1; PD = 0; Sleep		& -	& \\
+\end{asmtable}
+%
+\begin{asmtable}{Arithmetic and Bitwise Instructions}
+ADDWF		& f, d			& d = WREG $+$ [f]				& All	& \\
+ANDLW		& i$^{ }_{8}$		& WREG = WREG \& i				& Z	& \\
+ANDWF		& f, d			& d = WREG \& [f]				& Z	& \\
+BCF		& f, i$^{ }_{3}$	& [f]$^{ }_{i}$ = 0				& -	& \\
+BSF		& f, i$^{ }_{3}$	& [f]$^{ }_{i}$ = 1				& -	& \\
+COMF		& f, d			& d = $\sim$[f]					& Z	& \\
+DECF		& f, d			& d = [f] $-$ 1					& Z	& \\
+INCF		& f, d			& d = [f] $+$ 1					& Z	& \\
+IORLW		& i$^{ }_{8}$		& WREG = WREG | i				& Z	& \\
+IORWF		& f, d			& d = WREG | [f]				& Z	& \\
+RLF		& f, d			& C:d = C:[f] $\rol$ 1				& C	& \\
+RRF		& f, d			& C:d = C:[f] $\ror$ 1				& C	& \\
+SUBWF		& f, d			& d = $\sim$WREG $+$ [f] $+$ 1			& All	& \\
+SWAPF		& f, d			& d = [f]$^{ }_{3:0}$:[f]$^{ }_{7:4}$		& -	& \\
+XORLW		& i$^{ }_{8}$		& WREG = WREG $\oplus$ i			& Z	& \\
+XORWF		& f, d			& d = WREG $\oplus$ [f]				& Z	& \\
+\end{asmtable}
+%
+\begin{asmtable}{Data Transfer Instructions}
+CLRF		& f			& [f] = 0					& Z	& \\
+CLRW		&			& WREG = 0					& Z	& \\
+MOVF		& f, d			& d = [f]					& Z	& \\
+MOVLB		& i$^{ }_{3}$		& BSR = i					& -	& E \\
+MOVLW		& i$^{ }_{8}$		& WREG = i					& -	& \\
+MOVWF		& f			& [f] = WREG					& -	& \\
+OPTION		&			& OPTION = WREG					& -	& \\
+TRIS\{ABC\}	&			& TRIS\{ABC\} = WREG				& -	& \\
+\end{asmtable}
+%
+\begin{table-lX}{Notes}
+2	& Instruction takes two cycles (only one if conditional and false). \\
+E	& Only available with Enhanced Instruction Set. \\
+H	& Register is not in mapped in the register file. \\
+\end{table-lX}
+%
+\end{multicols}
+\end{document}

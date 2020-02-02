@@ -73,6 +73,12 @@ rev 2 instructions.
 Floating point and coprocessor 2 instructions are not included.
 
 
+PIC Baseline
+-----
+Instruction set of PIC baseline devices including extended
+instructions.
+
+
 PIC Mid-range
 -----
 Instruction set of PIC mid range devices including extended instruction
