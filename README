@@ -37,19 +37,19 @@ Note: I was unable to find the execution time for SETALC instruction
       CPU (Fujitsu MBL8086-2).
 
 
-ARM v7
+ARM AArch32
 ------
-Instruction sets of ARM, Thumb and Thumb2 including version information
-for ARM versions 6, 6T, 6k and 7. Also includes floating point and 
-Advanced SIMD extensions and extra pages with system registers both for
+A32 and T32 instruction sets of ARM, including version information for
+ARM versions 6, 6T, 6k and 7. Also includes floating point and Advanced
+SIMD extensions and extra pages with system registers both for
 ARMv7-A/R and ARMv7-M.
 
 
-ARM v8 A64
+ARM AArch64
 ----------
-A64 instruction set of ARM, including v1 additions. Also includes an
-extra page with system registers for ARMv8-A. Debug features and
-compatibility with AArch32 has been omitted.
+A64 instruction set of ARM up ARMv8.1. Also includes an extra page with
+system registers for ARMv8-A. Debug features and compatibility with
+AArch32 has been omitted.
 Floating point and SIMD instructions are not included
 
 

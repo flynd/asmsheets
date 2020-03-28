@@ -1,4 +1,4 @@
-TARGETS = 8086.pdf armv7.pdf arm64.pdf crisv10.pdf crisv32.pdf mips32r2.pdf pic-baseline.pdf pic-midrange.pdf pic-highend.pdf
+TARGETS = 8086.pdf aarch32.pdf aarch64.pdf crisv10.pdf crisv32.pdf mips32r2.pdf pic-baseline.pdf pic-midrange.pdf pic-highend.pdf
 
 all: $(TARGETS)
 
