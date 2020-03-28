@@ -47,8 +47,8 @@ ARMv7-A/R and ARMv7-M.
 
 ARM AArch64
 ----------
-A64 instruction set of ARM up ARMv8.1. Also includes an extra page with
-system registers for ARMv8-A. Debug features and compatibility with
+A64 instruction set of ARM up ARMv8.6. Also includes two extra pages
+with system registers for ARMv8-A. Debug features and compatibility with
 AArch32 has been omitted.
 Floating point and SIMD instructions are not included
 
@@ -106,6 +106,4 @@ Sources
 [10] "ARMv7-M Architecture Reference Manual" (DDI 0403E.b)
 [11] "MIPS DSP Module for the MIPS32 Architecture" (MD00374)
 [12] "ARM Architecture Reference Manual, ARMv8 for ARMv8-A architecture
-     profile" (DDI 0487A.k)
-[13] "ARM Architecture Reference Manual, ARMv8 for ARMv8-A architecture
-     profile" (DDI 0487B.a)
+     profile" (DDI 0487F.a)
