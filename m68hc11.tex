@@ -1,0 +1,327 @@
+%
+% Copyright (C) 2021 Anders Sonmark
+%
+% Copying and distribution of this file, with or without modification,
+% are permitted in any medium without royalty provided the copyright
+% notice and this notice are preserved.  This file is offered as-is,
+% without any warranty.
+%
+\documentclass{sheet}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{ae,aecompl}
+\usepackage[english]{babel}
+\usepackage[a4paper, landscape, margin=.1in]{geometry}
+\usepackage{amssymb}
+
+\def\sheetheaderfont{\bfseries}
+\def\sheettablefont{\footnotesize\sffamily}
+\def\sheetheadercolor{black!10}
+\def\sheetrowcolor{black!5}
+
+\newcolumntype{N}{>{\raggedleft\arraybackslash}m{0.6em}}
+\def\tabcolsep{2pt}
+\def\arraystretch{1.3}
+\defsheet{asmtable}{5}{|m{3.0em} m{3.5em}|X|m{2.8em} N|}
+\defsheet{table-X}{1}{|X|}
+\defsheet{table-lX}{2}{|l X|}
+\defsheet{table-Xr}{2}{|X r|}
+\defsheet{table-llX}{3}{|l l X|}
+\defsheet{table-lXl}{3}{|l X l|}
+\defsheet{table-XXXX}{4}{|X X X X|}
+
+\pagefooter{M68HC11 version 1 page \thepage}
+
+\begin{document}
+\begin{multicols}{3}
+\raggedcolumns
+
+\begin{center}
+{\Large\bfseries M68HC11 Quick Reference}
+\end{center}
+%
+\begin{table-lX}{Keys}
+a	& Accumulator register (A or B) \\
+Ix	& Index register (IX or IY) \\
+m	& Memory operand. Notes refer to valid addressing modes. \\
+cc	& Condition code \\
+value$^{\pm}_{ }$	& Value is sign extended\\
+value$^{\emptyset}_{ }$	& Value is zero extended\\
+$\asr$	& Operation is signed \\
+Push(list)	& foreach (list) \{ [SP]$^{ }_{8}$ = register; SP $-$= 1 \} \\
+Pop(list)	& foreach (list) \{ SP $+$= 1; register = [SP]$^{ }_{8}$ \} \\
+{}*****	& Flags HNZVC are unchanged (--), affected (*), or fixed (0 or 1) \\
+\end{table-lX}
+%
+\begin{asmtable}{Arithmetic Instructions}
+ABA	&			& A = A $+$ B				& *****		& \\
+ADCa	& \#i$^{ }_{8}$		& a = a $+$ i $+$ C			& *****		& \\
+ADCa	& m			& a = a $+$ [m]$^{ }_{8}$ $+$ C		& *****		& A \\
+ADDa	& \#i$^{ }_{8}$		& a = a $+$ i				& *****		& \\
+ADDa	& m			& a = a $+$ [m]$^{ }_{8}$		& *****		& A \\
+ADDD	& \#i$^{ }_{16}$	& A:B = A:B $+$ i			& {--}****	& \\
+ADDD	& m			& A:B = A:B $+$ [m]$^{ }_{16}$		& {--}****	& A \\
+CBA	&			& A $-$ B				& {--}****	& \\
+CMPa	& \#i$^{ }_{8}$		& a $-$ i				& {--}****	& \\
+CMPa	& m			& a $-$ [m]$^{ }_{8}$			& {--}****	& A \\
+CPD	& \#i$^{ }_{16}$	& A:B $-$ i				& {--}****	& \\
+CPD	& m			& A:B $-$ [m]$^{ }_{16}$		& {--}****	& A \\
+DAA	&			& if (H:A$^{ }_{3:0}$ $\ugt$ 9) \{ A $+$= 0x06 \}; \newline if (C:A$^{ }_{7:4}$ $\ugt$ 9) \{ A $+$= 0x60; C = 1 \}	& {--}**?*	& \\
+DEC	& m			& [m]$^{ }_{8}$ = [m]$^{ }_{8}$ $-$ 1	& {--}***{--}	& E \\
+DECa	&			& a = a $-$ 1				& {--}***{--}	& \\
+FDIV	&			& IX = A:B:0$^{ }_{16}$ $\udiv$ IX; A:B = Remainder	& {--}{--}***	& \\
+IDIV	&			& IX = A:B $\udiv$ IX; A:B = Remainder	& {--}{--}*0*	& \\
+INC	& m			& [m]$^{ }_{8}$ = [m]$^{ }_{8}$ $+$ 1	& {--}***{--}	& E \\
+INCa	&			& a = a $+$ 1				& {--}***{--}	& \\
+MUL	&			& A:B = A $\umul$ B			& {--}{--}{--}{--}*	& \\
+NEG	& m			& [m]$^{ }_{8}$ = 0 $-$ [m]$^{ }_{8}$	& {--}****	& E \\
+NEGa	&			& a = 0 $-$ a				& {--}****	& \\
+SBA	&			& A = A $-$ B				& {--}****	& \\
+SBCa	& \#i$^{ }_{8}$		& a = a $-$ i $-$ C			& {--}****	& \\
+SBCa	& m			& a = a $-$ [m]$^{ }_{8}$ $-$ C		& {--}****	& A \\
+SUBa	& \#i$^{ }_{8}$		& a = a $-$ i				& {--}****	& \\
+SUBa	& m			& a = a $-$ [m]$^{ }_{8}$		& {--}****	& A \\
+SUBD	& \#i$^{ }_{16}$	& A:B = A:B $-$ i			& {--}****	& \\
+SUBD	& m			& A:B = A:B $-$ [m]$^{ }_{16}$		& {--}****	& A \\
+TST	& m			& [m]$^{ }_{8}$ $-$ 0			& {--}**00	& E \\
+TSTa	&			& a $-$ 0				& {--}**00	& \\
+\end{asmtable}
+%
+\begin{asmtable}{Bitwise Instructions}
+ANDa	& \#i$^{ }_{8}$		& a = a \& i				& {--}**0{--}	& \\
+ANDa	& m			& a = a \& [m]$^{ }_{8}$		& {--}**0{--}	& A \\
+%\textit{ASL}	& m		& [m]$^{ }_{8}$ = [m]$^{ }_{8}$ $\lsl$ 1	& {--}****	& E \\
+%\textit{ASLa}	&		& a = a $\lsl$ 1			& {--}****	& \\
+%\textit{ASLD}	&		& A:B = A:B $\lsl$ 1			& {--}****	& \\
+ASR	& m			& [m]$^{ }_{8}$ = [m]$^{ }_{8}$ $\asr$ 1	& {--}****	& E \\
+ASRa	&			& a = a $\asr$ 1			& {--}****	& \\
+BCLR	& m i$^{ }_{8}$		& [m]$^{ }_{8}$ = [m]$^{ }_{8}$ \& $\sim$i	& {--}**0{--}	& D \\
+BITa	& \#i$^{ }_{8}$		& a \& i				& {--}**0{--}	& \\
+BITa	& m			& a \& [m]$^{ }_{8}$			& {--}**0{--}	& A \\
+BSET	& m i$^{ }_{8}$		& [m]$^{ }_{8}$ = [m]$^{ }_{8}$ | i	& {--}**0{--}	& D \\
+COM	& m			& [m]$^{ }_{8}$ = $\sim$[m]$^{ }_{8}$	& {--}**01	& E \\
+COMa	&			& a = $\sim$a				& {--}**01	& \\
+EORa	& \#i$^{ }_{8}$		& a = a $\oplus$ i			& {--}**0{--}	& \\
+EORa	& m			& a = a $\oplus$ [m]$^{ }_{8}$		& {--}**0{--}	& A \\
+LSL	& m			& [m]$^{ }_{8}$ = [m]$^{ }_{8}$ $\lsl$ 1	& {--}****	& E \\
+LSLa	&			& a = a $\lsl$ 1			& {--}****	& \\
+LSLD	&			& A:B = A:B $\lsl$ 1			& {--}****	& \\
+LSR	& m			& [m]$^{ }_{8}$ = [m]$^{ }_{8}$ $\lsr$ 1	& {--}0***	& E \\
+LSRa	&			& a = a $\lsr$ 1			& {--}0***	& \\
+LSRD	&			& A:B = A:B $\lsr$ 1			& {--}0***	& \\
+ORAa	& \#i$^{ }_{8}$		& a = a | i				& {--}**0{--}	& \\
+ORAa	& m			& a = a | [m]$^{ }_{8}$			& {--}**0{--}	& A \\
+ROL	& m			& C:[m]$^{ }_{8}$ = C:[m]$^{ }_{8}$ $\rol$ 1	& {--}****	& E \\
+ROLa	&			& C:a = C:a $\rol$ 1			& {--}****	& \\
+ROR	& m			& C:[m]$^{ }_{8}$ = C:[m]$^{ }_{8}$ $\ror$ 1	& {--}****	& E \\
+RORa	&			& C:a = C:a $\ror$ 1			& {--}****	& \\
+\end{asmtable}
+%
+\begin{asmtable}{Index and Stack Pointer Instructions}
+ABx	&			& Ix = Ix $+$ B$^{\emptyset}_{}$	& {--}{--}{--}{--}{--}	& \\
+CPx	& \#i$^{ }_{16}$	& Ix $-$ i				& {--}****	& \\
+CPx	& m			& Ix $-$ [m]$^{ }_{16}$			& {--}****	& A \\
+DES	&			& SP = SP $-$ 1				& {--}{--}{--}{--}{--}	& \\
+DEx	&			& Ix = Ix $-$ 1				& {--}{--}*{--}{--}	& \\
+INS	&			& SP = SP $+$ 1				& {--}{--}{--}{--}{--}	& \\
+INx	&			& Ix = Ix $+$ 1				& {--}{--}*{--}{--}	& \\
+LDS	& \#i$^{ }_{16}$	& SP = i				& {--}**0{--}	& \\
+LDS	& m			& SP = [m]$^{ }_{16}$			& {--}**0{--}	& A \\
+LDx	& \#i$^{ }_{16}$	& Ix = i				& {--}**0{--}	& \\
+LDx	& m			& Ix = [m]$^{ }_{16}$			& {--}**0{--}	& A \\
+PSHx	&			& Push(IxL,IxH)				& {--}{--}{--}{--}{--}	& \\
+PULx	&			& Pop(IxH,IxL)				& {--}{--}{--}{--}{--}	& \\
+STS	& m			& [m]$^{ }_{16}$ = SP			& {--}**0{--}	& A \\
+STx	& m			& [m]$^{ }_{16}$ = Ix			& {--}**0{--}	& A \\
+TSx	&			& Ix = SP $+$ 1				& {--}{--}{--}{--}{--}	& \\
+TxS	&			& SP = Ix $-$ 1				& {--}{--}{--}{--}{--}	& \\
+XGDx	&			& Ix:A:B = A:B:Ix			& {--}{--}{--}{--}{--}	& \\
+\end{asmtable}
+%
+\begin{asmtable}{Data Transfer Instructions}
+CLR	& m			& [m]$^{ }_{8}$ = 0			& {--}0100	& E \\
+CLRa	&			& a = 0					& {--}0100	& \\
+LDAa	& \#i$^{ }_{8}$		& a = i					& {--}**0{--}	& \\
+LDAa	& m			& a = [m]$^{ }_{8}$			& {--}**0{--}	& A \\
+LDD	& \#i$^{ }_{16}$	& A:B = i				& {--}**0{--}	& \\
+LDD	& m			& A:B = [m]$^{ }_{16}$			& {--}**0{--}	& A \\
+PSHa	&			& Push(a)				& {--}{--}{--}{--}{--}	& \\
+PULa	&			& Pop(a)				& {--}{--}{--}{--}{--}	& \\
+STAa	& m			& [m]$^{ }_{8}$ = a			& {--}**0{--}	& A \\
+STD	& m			& [m]$^{ }_{16}$ = A:B			& {--}**0{--}	& A \\
+TAB	&			& B = A					& {--}**0{--}	& \\
+TBA	&			& A = B					& {--}**0{--}	& \\
+\end{asmtable}
+%
+\begin{asmtable}{Jump and Branch Instructions}
+Bcc	& rel$^{ }_{8}$		& PC = PC $+$ rel$^{\pm}_{ }$		& {--}{--}{--}{--}{--}	& \\
+BRCLR	& m i$^{ }_{8}$ rel$^{ }_{8}$	& if (([m]$^{ }_{8}$ \& i) $=$ 0) PC = PC $+$ rel$^{\pm}_{ }$	& {--}{--}{--}{--}{--}	& D \\
+BRSET	& m i$^{ }_{8}$ rel$^{ }_{8}$	& if (([m]$^{ }_{8}$ \& i) $=$ i) PC = PC $+$ rel$^{\pm}_{ }$	& {--}{--}{--}{--}{--}	& D \\
+BSR	& rel$^{ }_{8}$		& Push(PCL,PCH); PC = PC $+$ rel$^{\pm}_{ }$	& {--}{--}{--}{--}{--}	& \\
+JMP	& m			& PC = m				& {--}{--}{--}{--}{--}	& E \\
+JSR	& m			& Push(PCL,PCH); PC = m			& {--}{--}{--}{--}{--}	& A \\
+NOP	&			&					& {--}{--}{--}{--}{--}	& \\
+RTI	&			& Pop(CCR,B,A,IXH,IXL,IYH,IYL,PCH,PCL)	& *****		& \\
+RTS	&			& Pop(PCH,PCL)				& {--}{--}{--}{--}{--}	& \\
+STOP	&			& if (S $=$ 0) PowerDown		& {--}{--}{--}{--}{--}	& \\
+SWI	&			& Push(PCL,PCH,IYL,IYH,IXL,IXH,A,B,CCR); \newline I = 1; PC = [SWI Vector]$^{ }_{16}$	& {--}{--}{--}{--}{--}	& \\
+WAI	&			& WaitForInterrupt			& {--}{--}{--}{--}{--}	& \\
+\end{asmtable}
+%
+\begin{asmtable}{Condition Code Register Instructions}
+CLC	&			& C = 0					& {--}{--}{--}{--}0	& \\
+CLI	&			& I = 0					& {--}{--}{--}{--}{--}	& \\
+CLV	&			& V = 0					& {--}{--}{--}0{--}	& \\
+SEC	&			& C = 1					& {--}{--}{--}{--}1	& \\
+SEI	&			& I = 1					& {--}{--}{--}{--}{--}	& \\
+SEV	&			& V = 1					& {--}{--}{--}1{--}	& \\
+TAP	&			& CCR = A				& *****		& \\
+TPA	&			& A = CCR				& {--}{--}{--}{--}{--}	& \\
+\end{asmtable}
+%
+\begin{table-XXXX}{Addressing Modes}
+i$^{ }_{8}$		& Direct (DIR)		& [i$^{\emptyset}_{ }$]		& A D \\
+i$^{ }_{16}$		& Extended (EXT)	& [i]				& A E \\
+\{i$^{ }_{8}$,\}X	& Indexed (INDX)	& [IX $+$ i$^{\emptyset}_{ }$]	& A D E \\
+\{i$^{ }_{8}$,\}Y	& Indexed (INDY)	& [IY $+$ i$^{\emptyset}_{ }$]	& A D E \\
+\end{table-XXXX}
+%
+\begin{table-lX}{Registers}
+0x00	& PORTA (PAI,OC\{2,3,4,5\},IC\{1,2,3\}) \\
+0x02	& PIOC (STAF,STAI,CWOM,HNDS,OIN,PLS,EGA,INVB) \\
+0x03	& PORTC (AD\{7,6,5,4,3,2,1,0\}) \\
+0x04	& PORTB (A\{15,14,13,12,11,10,9,8\}) \\
+0x05	& PORTCL \\
+0x07	& DDRC \\
+0x08	& PORTD (0,0,SS,SCK,MOSI,MISO,TxD,RxD) \\
+0x09	& DDRD \\
+0x0A	& PORTE (AN\{7,6,5,4,3,2,1,0\}) \\
+0x0B	& CFORC (FOC\{1,2,3,4,5\},0,0,0) \\
+0x0C	& OC1M (OC1M\{7,6,5,4,3\},0,0,0) \\
+0x0D	& OC1D (OC1D\{7,6,5,4,3\},0,0,0) \\
+0x0\{E,F\}	& TCNT\{H,L\} \\
+0x1\{0-5\}	& TIC1\{H,L\}, TIC2\{H,L\}, TIC3\{H,L\} \\
+0x1\{6-D\}	& TOC1\{H,L\}, TOC2\{H,L\}, TOC3\{H,L\}, TOC4\{H,L\} \\
+0x1\{E,F\}	& TIC4\{H,L\} / TOC5\{H,L\} \\
+0x20	& TCTL1 (OM2,OL2,OM3,OL3,OM4,OL4,OM5,OL5) \\
+0x21	& TCTL2 (EDG4\{B,A\},EDG1\{B,A\},EDG2\{B,A\},EDG3\{B,A\}) \\
+0x22	& TMSK1 (OC\{1,2,3,4\}I,IC4I/OC5I,IC\{1,2,3\}I) \\
+0x23	& TFLG1 (OC\{1,2,3,4\}F,IC4F/OC5F,IC\{1,2,3\}F) \\
+0x24	& TMSK2 (TOI,RTII,PAOVI,PAII,0,0,PR\{1,0\}) \\
+0x25	& TFLG2 (TOF,RTIF,PAOVF,PAIF,0,0,0,0) \\
+0x26	& PACTL (DDRA7,PAEN,PAMOD,PEDGE,\newline DDRA3,I4/O5,0,RTR\{1,0\}) \\
+0x27	& PACNT \\
+0x28	& SPCR (SPIE,SPE,DWOM,MSTR,CPOL,CPHA,SPR\{1,0\}) \\
+0x29	& SPSR (SPIF,WCOL,0,MODF,0,0,0,0) \\
+0x2A	& SPDR \\
+0x2B	& BAUD (TCLR,SCP\{2,1,0\},RCKB,SCR\{2,1,0\}) \\
+0x2C	& SCCR1 (R8,T8,0,M,WAKE,0,0,0) \\
+0x2D	& SCCR2 (TIE,TCIE,RIE,ILIE,TE,RE,RWU,SBK) \\
+0x2E	& SCSR (TDRE,TC,RDRF,IDLE,OR,NF,FE,0) \\
+0x2F	& SCDR \\
+0x30	& ADCTL (CCF,0,SCAN,MULT,C\{D,C,B,A\}) \\
+0x3\{1-4\}	& ADR\{1,2,3,4\} \\
+0x35	& BPROT (0,0,0,PTCON,BPRT\{3,2,1,0\}) \\
+0x36	& EPROG (MBE,0,ELAT,EXCOL,OXROW,T\{1,0\},PGM) \\
+0x39	& OPTION (ADPU,CSEL,IRQE,DLY,CME,0,CR\{1,0\}) \\
+0x3A	& COPRST (write 0x55 followed by 0xAA) \\
+0x3B	& PPROG (ODD,EVEN,ELAT,BYTE,\newline ROW,ERASE,EELAT,EEPGM) \\
+0x3C	& HPRIO (RBOOT,SMOD,MDA,IRV,PSEL\{3,2,1,0\}) \\
+0x3D	& INIT (RAM\{3,2,1,0\},REG\{3,2,1,0\}) \\
+0x3F	& CONFIG (EE\{3,2,1,0\},NOSEC,NOCOP,ROMON,EEON) \\
+\end{table-lX}
+%
+\begin{table-Xr}{Execution times}
+JMP							& 1+ \\
+ABA CBA DAA SBA TAB TAP TBA TPA				& 2 \\
+CLC CLI CLV NOP SEC SEI SEV STOP			& 2 \\
+ASRa CLRa COMa DECa INCa LSLa LSRa NEGa ROLa RORa TSTa	& 2 \\
+ADCa ADDa ANDa BITa CMPa EORa LDAa ORAa SBCa STAa SUBa	& 2+ \\
+ABX Bcc DES DEX INS INX LSLD LSRD PSHa TSX TXS XGDX	& 3 \\
+LDD LDS LDX STD STS STX					& 3+ \\
+PSHX PULa						& 4 \\
+ASR CLR COM DEC INC LSL LSR NEG ROL ROR TST		& 4+ \\
+ADDD CPX JSR SUBD					& 4+ \\
+PULX RTS						& 5 \\
+BCLR BRCLR BRSET BSET CPD				& 5+ \\
+BSR							& 6 \\
+MUL							& 10 \\
+RTI							& 12 \\
+SWI WAI							& 14 \\
+FDIV IDIV						& 41 \\
+Direct addressing					& +1 \\
+Extended addressing					& +2 \\
+Indirect addressing with IX				& +2 \\
+IY instead of IX as inherent and/or indexed addressing	& +1 \\
+\end{table-Xr}
+%
+\begin{table-lX}{Vectors}
+0xFFFE	& Power-on reset \\
+0xFFFC	& Clock monitor fail \\
+0xFFFA	& COP watchdog timeout \\
+0xFFF8	& Illegal opcode fetch \\
+0xFFF6	& SWI instruction \\
+0xFFF4	& XIRQ \\
+0xFFF2	& External IRQ or parallel I/O \\
+0xFFF0	& Real-time interrupt \\
+0xFFEE	& Timer input capture 1 \\
+0xFFEC	& Timer input capture 2 \\
+0xFFEA	& Timer input capture 3 \\
+0xFFE8	& Timer output capture 1 \\
+0xFFE6	& Timer output capture 2 \\
+0xFFE4	& Timer output capture 3 \\
+0xFFE2	& Timer output capture 4 \\
+0xFFE0	& Timer output capture 5 \\
+0xFFDE	& Timer overflow \\
+0xFFDC	& Pulse accumulator overflow \\
+0xFFDA	& Pulse accumulator input edge \\
+0xFFD8	& SPI transfer complete \\
+0xFFD6	& SCI serial system \\
+\end{table-lX}
+%
+\begin{table-llX}{Condition Code Register}
+C	& 0x01	& Carry/Borrow \\
+V	& 0x02	& Twos Complement Overflow Indicator \\
+Z	& 0x04	& Zero Indicator \\
+N	& 0x08	& Negative Indicator \\
+I	& 0x10	& I Interrupt Mask \\
+H	& 0x20	& Half Carry \\
+X	& 0x40	& X Interrupt Mask \\
+S	& 0x80	& Stop Disable \\
+\end{table-llX}
+%
+\begin{table-lXl}{Condition Codes}
+RA	& Always			& 1 \\
+RN	& Never				& 0 \\
+HI	& Higher			& !C \& !Z \\
+LS	& Lower or same			& C | Z \\
+HS/CC	& Higher / Carry clear		& !C \\
+LO/CS	& Lower / Carry set		& C \\
+NE	& Not equal			& !Z \\
+EQ	& Equal				& Z \\
+VC	& Overflow clear		& !V \\
+VS	& Overflow set			& V \\
+PL	& Plus				& !N \\
+MI	& Minus				& N \\
+GE	& Signed greater than or equal	& N $=$ V \\
+LT	& Signed less than		& N $\ne$ V \\
+GT	& Signed greater than		& (N $=$ V) \& !Z \\
+LE	& Signed less than or equal	& (N $\ne$ V) | Z \\
+\end{table-lXl}
+%
+\begin{table-lXl}{A/D Channels}
+0000	& PE0			& ADR1 \\
+0001	& PE1			& ADR2 \\
+0010	& PE2			& ADR3 \\
+0011	& PE3			& ADR4 \\
+0100	& PE4			& ADR1 \\
+0101	& PE5			& ADR2 \\
+0110	& PE6			& ADR3 \\
+0111	& PE7			& ADR4 \\
+1100	& V$^{ }_{H}$		& ADR1 \\
+1101	& V$^{ }_{L}$		& ADR2 \\
+1110	& 1/2 V$^{ }_{H}$	& ADR3 \\
+\end{table-lXl}
+%
+\end{multicols}
+\end{document}

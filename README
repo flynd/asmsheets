@@ -1,5 +1,5 @@
 Instruction Set Quick Reference Sheets
-Copyright (C) 2014-2020 Anders Sonmark
+Copyright (C) 2014-2021 Anders Sonmark
 
 Copying and distribution of this file, with or without modification,
 are permitted in any medium without royalty provided the copyright
@@ -66,6 +66,11 @@ Instruction set of CRIS v32 including execution times and example for
 performing division.
 
 
+M68HC11
+-------
+Instruction set for the Motorola 68HC11.
+
+
 MIPS32 R2
 ---------
 Instruction sets of MIPS32 release 2, including MIPS16e and DSP module
@@ -107,3 +112,4 @@ Sources
 [11] "MIPS DSP Module for the MIPS32 Architecture" (MD00374)
 [12] "ARM Architecture Reference Manual, ARMv8 for ARMv8-A architecture
      profile" (DDI 0487F.a)
+[13] "M68HC11 Reference Manual"
