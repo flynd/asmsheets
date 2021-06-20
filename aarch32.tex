@@ -1,5 +1,5 @@
 %
-% Copyright (C) 2014-2020 Anders Sonmark
+% Copyright (C) 2014-2021 Anders Sonmark
 %
 % Copying and distribution of this file, with or without modification,
 % are permitted in any medium without royalty provided the copyright
@@ -28,12 +28,16 @@
 \defsheet{asmtable}{4}{|m{4.6em} m{6.7em}|X|N|}
 \defsheet{asmtable2}{4}{|m{6.5em} m{5.3em}|X|N|}
 \defsheet{asmtable3}{4}{|m{5.0em} m{8.0em}|X|N|}
+\defsheet{asmtable4}{4}{|m{5.1em} m{6.7em}|X|N|}
+\defsheet{asmtable5}{4}{|m{7.5em} m{5.3em}|X|N|}
+\defsheet{asmtable6}{4}{|m{6.0em} m{8.0em}|X|N|}
+\defsheet{asmtable7}{4}{|m{5.8em} m{5.5em}|X|N|}
 \defsheet{table-lX}{2}{|l X|}
 \defsheet{table-lXN}{3}{|l|X|N|}
 \defsheet{table-llX}{3}{|l l X|}
 \defsheet{table-llXr}{4}{|l l X r|}
 
-\pagefooter{ARM AArch32 version 9 page \thepage}
+\pagefooter{ARM AArch32 version 10 page \thepage}
 
 \begin{document}
 \begin{multicols}{3}
@@ -43,185 +47,187 @@
 {\Large\bfseries ARM AArch32 Quick Reference}
 \end{center}
 %
-\begin{asmtable}{Arithmetic Instructions}
-ADC\{S\}	& rx, ry, op2		& rx = ry $+$ op2 $+$ C 			& \\
-ADD\{S\}	& rx, ry, op2		& rx = ry $+$ op2 				& \\
-ADDW		& rx, ry, \#i$^{ }_{12}$	& rx = ry $+$ i$^{\emptyset}_{ }$	& T \\
-ADR		& rx, $\pm$rel$^{ }_{12}$	& rx = PC $+$ rel$^{\pm}_{ }$		& \\
-CMN		& rx, op2		& rx $+$ op2					& \\
-CMP		& rx, op2		& rx $-$ op2					& \\
-QADD		& rx, ry, rz		& rx = SATS(ry $+$ rz, 32)			& D \\
-QDADD		& rx, ry, rz		& rx = SATS(ry $+$ SATS(2$\times$rz, 32), 32)	& D \\
-QDSUB		& rx, ry, rz		& rx = SATS(ry $-$ SATS(2$\times$rz, 32), 32)	& D \\
-QSUB		& rx, ry, rz		& rx = SATS(ry $-$ rz, 32)			& D \\
-RSB\{S\}	& rx, ry, op2		& rx = op2 $-$ ry 				& \\
-RSC\{S\}	& rx, ry, op2		& rx = op2 $-$ (ry $+$ C) 			& A \\
-SBC\{S\}	& rx, ry, op2		& rx = ry $-$ (op2 $+$ C)			& \\
-SDIV		& rx, ry, rz		& rx = ry $\sdiv$ rz				& 7 \\
-SSAT		& rx, \#j$^{ }_{5}$, ry\{slr\}	& rx = SATS(ry $\lsl\asr$ sh, j)$^{\pm}_{ }$	& 6 \\
-SSAT16		& rx, \#j$^{ }_{4}$, ry	& rx = SATS(ry$^{\pm}_{H1}$, j)$^{\pm}_{ }$:SATS(ry$^{\pm}_{H0}$, j)$^{\pm}_{ }$	& 6,D \\
-SUB\{S\}	& rx, ry, op2		& rx = ry $-$ op2 				& \\
-SUBW		& rx, ry, \#i$^{ }_{12}$	& rx = ry $-$ i$^{\emptyset}_{ }$	& T \\
-UDIV		& rx, ry, rz		& rx = ry $\udiv$ rz				& 7 \\
-USAD8		& rx, ry, rz		& rx = $\sum_{n=0}^{3}$($\lvert$ry$^{\emptyset}_{Bn}$$\rvert$ $-$ rz$^{\emptyset}_{Bn}$)	& 6,D \\
-USADA8		& rx, ry, rz, rw	& rx = rw $+$ $\sum_{n=0}^{3}$($\lvert$ry$^{\emptyset}_{Bn}$$\rvert$ $-$ rz$^{\emptyset}_{Bn}$)	& 6,D \\
-USAT		& rx, \#j$^{ }_{5}$, ry\{slr\}	& rx = SATU(ry $\lsl\asr$ sh, j)$^{\pm}_{ }$	& 6 \\
-USAT16		& rx, \#i$^{ }_{4}$, ry	& rx = SATU(ry$^{\pm}_{H1}$, i)$^{\pm}_{ }$:SATU(ry$^{\pm}_{H0}$, i)$^{\pm}_{ }$	& 6,D \\
-\end{asmtable}
-%
-\begin{table-lXN}{Operand 2}
-\#i$^{ }_{32}$	& i$^{ }_{8}$ $\ror$ i$^{ }_{4}$:0		& A \\
-\#i$^{ }_{32}$	& 0$^{ }_{24}$:i$^{ }_{8}$, 0$^{ }_{8}$:i$^{ }_{8}$0$^{ }_{8}$:i$^{ }_{8}$, i$^{ }_{8}$:0$^{ }_{8}$i$^{ }_{8}$:0$^{ }_{8}$ or i$^{ }_{8}$:i$^{ }_{8}$i$^{ }_{8}$:i$^{ }_{8}$	& T \\
-\#i$^{ }_{32}$	& 1:i$^{ }_{7}$ $\lsl$ \{1..24\}		& T \\
-rz		& rz						& \\
-rz, LSL \#n	& rz $\lsl$ \{1..31\}				& \\
-rz, LSR \#n	& rz $\lsr$ \{1..32\}				& \\
-rz, ASR \#n	& rz $\asr$ \{1..32\}				& \\
-rz, ROR \#n	& rz $\ror$ \{1..31\}				& \\
-rz, RRX		& C:rz$^{ }_{31:1}$; C = rz$^{ }_{0}$		& \\
-rz, LSL rw	& rz $\lsl$ rw					& A \\
-rz, LSR rw	& rz $\lsr$ rw					& A \\
-rz, ASR rw	& rz $\asr$ rw					& A \\
-rz, ROR rw	& rz $\ror$ rw					& A \\
-\end{table-lXN}
-%
-\begin{asmtable}{Bitwise and Move Instructions}
-AND\{S\}	& rx, ry, op2		& rx = ry \& op2 				& \\
-\textit{ASR\{S\}}	& rx, ry, \#j$^{ }_{5}$	& rx = ry $\asr$ j			& \\
-\textit{ASR\{S\}}	& rx, ry, Rs	& rx = ry $\asr$ Rs				& \\
-BFC		& rx, \#p, \#n		& rx$^{ }_{p+n-1:p}$ = 0$^{ }_{n}$		& 6t \\
-BFI		& rx, ry, \#p, \#n	& rx$^{ }_{p+n-1:p}$ = ry$^{ }_{n-1:0}$		& 6t \\
-BIC\{S\}	& rx, ry, op2		& rx = ry \& $\sim$op2 				& \\
-CLZ		& rx, ry		& rx = CountLeadingZeros(ry)			& \\
-EOR\{S\}	& rx, ry, op2		& rx = ry $\oplus$ op2 				& \\
-\textit{LSL\{S\}}	& rx, ry, \#i$^{ }_{5}$	& rx = ry $\lsl$ i			& \\
-\textit{LSL\{S\}}	& rx, ry, Rs	& rx = ry $\lsl$ Rs				& \\
-\textit{LSR\{S\}}	& rx, ry, \#j$^{ }_{5}$	& rx = ry $\lsr$ j			& \\
-\textit{LSR\{S\}}	& rx, ry, Rs	& rx = ry $\lsr$ Rs				& \\
-MOV\{S\}	& rx, op2		& rx = op2					& \\
-MOVT		& rx, \#i$^{ }_{16}$	& rx$^{ }_{31:16}$ = i				& 6t \\
-MOVW		& rx, \#i$^{ }_{16}$	& rx = i$^{\emptyset}_{ }$			& 6t \\
-MVN\{S\}	& rx, op2		& rx = $\sim$op2				& \\
-ORN\{S\}	& rx, ry, op2		& rx = ry | $\sim$op2				& T \\
-ORR\{S\}	& rx, ry, op2		& rx = ry | op2					& \\
-RBIT		& rx, ry		& rx = ReverseBits(ry)				& 6t \\
-REV		& rx, ry		& rx = ry$^{ }_{B0}$:ry$^{ }_{B1}$:ry$^{ }_{B2}$:ry$^{ }_{B3}$	& 6 \\
-REV16		& rx, ry		& rx = ry$^{ }_{B2}$:ry$^{ }_{B3}$:ry$^{ }_{B0}$:ry$^{ }_{B1}$	& 6 \\
-REVSH		& rx, ry		& rx = ry$^{\pm}_{B0}$:ry$^{ }_{B1}$		& 6 \\
-\textit{ROR\{S\}}	& rx, ry, \#i$^{ }_{5}$	& rx = ry $\ror$ i			& \\
-\textit{ROR\{S\}}	& rx, ry, Rs	& rx = ry $\ror$ Rs				& \\
-\textit{RRX\{S\}}	& rx, ry	& rx = C:ry$^{ }_{31:1}$; C = ry$^{ }_{0}$	& \\
-SBFX		& rx, ry, \#p, \#n	& rx = ry$^{\pm}_{p+n-1:p}$			& 6t \\
-TEQ		& rx, op2		& rx $\oplus$ op2				& \\
-TST		& rx, op2		& rx \& op2					& \\
-UBFX		& rx, ry, \#p, \#n	& rx = ry$^{\emptyset}_{p+n-1:p}$		& 6t \\
-\end{asmtable}
-%
-\begin{asmtable}{Branch and Jump Instructions}
-B		& rel$^{ }_{26}$	& PC = PC $+$ rel$^{\pm}_{25:2}$:0$^{ }_{1:0}$	& A \\
-B		& rel$^{ }_{25}$	& PC = PC $+$ rel$^{\pm}_{24:1}$:0		& T \\
-Bcc		& rel$^{ }_{21}$	& if(cc) PC = PC $+$ rel$^{\pm}_{20:1}$:0	& I \\
-BKPT		& \#i$^{ }_{16}$	& BreakPoint(i)					& I \\
-BL		& rel$^{ }_{26}$	& LR=PC$^{ }_{31:1}$:0; PC$+$=rel$^{\pm}_{25:2}$:0$^{ }_{1:0}$	& A \\
-BL		& rel$^{ }_{25}$	& LR=PC$^{ }_{31:1}$:1; PC$+$=rel$^{\pm}_{24:1}$:0	& T \\
-BLX		& rel$^{ }_{26}$	& LR=PC$^{ }_{31:1}$:0; Set=1; PC$+$=rel$^{\pm}_{25:1}$:0	& A \\
-BLX		& rel$^{ }_{25}$	& LR=PC$^{ }_{31:1}$:1; Set=0; PC$+$=rel$^{\pm}_{24:2}$:0$^{ }_{1:0}$	& T \\
-BLX		& rx			& LR=PC$^{ }_{31:1}$:0; Set=rx$^{ }_{0}$; PC=rx$^{ }_{31:1}$:0	& A \\
-BX		& rx			& Set = rx$^{ }_{0}$; PC = rx$^{ }_{31:1}$:0	& A \\
-%BXJ		& rx			& Set=2; PC = rx$^{ }_{31:1}$:0			& \\
-TBB		& [rx, ry]		& PC = PC $+$ 2 $\umul$ [rx $+$ ry]$^{\emptyset}_{8}$	& T \\
-TBH		& [rx, ry, LSL \#1]	& PC = PC $+$ 2 $\umul$ [rx $+$ 2 $\umul$ ry]$^{\emptyset}_{16}$	& T \\
-\end{asmtable}
-%
 \begin{asmtable}{Load and Store Instructions}
-LDMDA		& rx\{!\}, rlist		& rlist = [rx$-$4$\times$cnt$+$4]; if(!) rx$-$=4$\times$cnt	& A \\
-LDMDB		& rx\{!\}, rlist		& rlist = [rx $-$ 4$\times$cnt]; if(!) rx$-$=4$\times$cnt	& \\
-LDM\textit{IA}	& rx\{!\}, rlist		& rlist = [rx]; if(!) rx $+$= 4$\times$cnt	& \\
-LDMIB		& rx\{!\}, rlist		& rlist = [rx $+$ 4]; if(!) rx $+$= 4$\times$cnt	& A \\ 
-LDR\{T\}	& rx, [addr]			& rx = [addr]				& \\
-LDRB\{T\}	& rx, [addr]			& rx = [addr]$^{\emptyset}_{8}$		& \\
-LDRD		& rx, ry, [addr]		& ry:rx = [addr]			& \\
-LDRH\{T\}	& rx, [addr]			& rx = [addr]$^{\emptyset}_{16}$	& \\
-LDRSB\{T\}	& rx, [addr]			& rx = [addr]$^{\pm}_{8}$		& \\
-LDRSH\{T\}	& rx, [addr]			& rx = [addr]$^{\pm}_{16}$		& \\
-\textit{POP}	& rlist				& rlist = [SP]; SP $+$= 4$\times$cnt	& \\
-\textit{PUSH}	& rlist				& SP $-$= 4$\times$cnt; [SP] = rlist	& \\
-STMDA		& rx\{!\}, rlist		& [rx$-$4$\times$cnt$+$4] = rlist; if(!) rx$-$=4$\times$cnt	& A \\
-STMDB		& rx\{!\}, rlist		& [rx $-$ 4$\times$cnt] = rlist; if(!) rx$-$=4$\times$cnt	& \\
-STM\textit{IA}	& rx\{!\}, rlist		& [rx] = rlist; if(!) rx $+$= 4$\times$cnt	& \\
-STMIB		& rx\{!\}, rlist		& [rx$+$4] = rlist; if(!) rx $+$= 4$\times$cnt	& A \\ 
-STR\{T\}	& rx, [addr]			& [addr] = rx				& \\
-STRB\{T\}	& rx, [addr]			& [addr]$^{ }_{8}$ = rx$^{ }_{B0}$	& \\
-STRD		& rx, ry, [addr]		& [addr] = ry:rx			& \\
-STRH\{T\}	& rx, [addr]			& [addr]$^{ }_{16}$ = rx$^{ }_{H0}$	& \\
+LDMDA		& rn\{!\}, rlist		& rlist=[rn$-$4cnt$+$4]$^{ }_{32cnt}$; if(!) rn$-$=4cnt	& A \\
+LDMDB		& rn\{!\}, rlist		& rlist=[rn $-$ 4cnt]$^{ }_{32cnt}$; if(!) rn$-$=4cnt	& \\
+LDM\textit{IA}	& rn\{!\}, rlist		& rlist=[rn]$^{ }_{32cnt}$; if(!) rn $+$= 4cnt	& \\
+LDMIB		& rn\{!\}, rlist		& rlist=[rn $+$ 4]$^{ }_{32cnt}$; if(!) rn $+$= 4cnt	& A \\
+LDR\{T\}	& rt, [addr]			& rt = [addr]$^{ }_{32}$		& \\
+LDRB\{T\}	& rt, [addr]			& rt = [addr]$^{\emptyset}_{8}$		& \\
+LDRD		& rt, rt2, [addr]		& rt2:rt = [addr]$^{ }_{64}$		& \\
+LDRH\{T\}	& rt, [addr]			& rt = [addr]$^{\emptyset}_{16}$	& \\
+LDRSB\{T\}	& rt, [addr]			& rt = [addr]$^{\pm}_{8}$		& \\
+LDRSH\{T\}	& rt, [addr]			& rt = [addr]$^{\pm}_{16}$		& \\
+\textit{POP}	& rlist				& rlist = [SP]$^{ }_{32cnt}$; SP $+$= 4cnt	& \\
+\textit{PUSH}	& rlist				& SP $-$= 4cnt; [SP]$^{ }_{32cnt}$ = rlist	& \\
+STMDA		& rn\{!\}, rlist		& [rn$-$4cnt$+$4]$^{ }_{32cnt}$ = rlist; if(!) rn$-$=4cnt	& A \\
+STMDB		& rn\{!\}, rlist		& [rn $-$ 4cnt]$^{ }_{32cnt}$ = rlist; if(!) rn$-$=4cnt	& \\
+STM\textit{IA}	& rn\{!\}, rlist		& [rn]$^{ }_{32cnt}$ = rlist; if(!) rn $+$= 4cnt	& \\
+STMIB		& rn\{!\}, rlist		& [rn$+$4]$^{ }_{32cnt}$ = rlist; if(!) rn $+$= 4cnt	& A \\
+STR\{T\}	& rt, [addr]			& [addr]$^{ }_{32}$ = rt		& \\
+STRB\{T\}	& rt, [addr]			& [addr]$^{ }_{8}$ = rt$^{ }_{B0}$	& \\
+STRD		& rt, rt2, [addr]		& [addr]$^{ }_{64}$ = rt2:rt		& \\
+STRH\{T\}	& rt, [addr]			& [addr]$^{ }_{16}$ = rt$^{ }_{H0}$	& \\
 \end{asmtable}
 %
 \begin{table-llX}{ARM LDR/STR Addressing Modes}
-non-T		& [rz\{, \#$\pm$i$^{ }_{8}$\}]\{!\}	& addr = rz $+$ i$^{\pm}_{ }$; if(!) rz = addr \\
-xxR\{,B\}	& [rz\{, \#$\pm$i$^{ }_{12}$\}]\{!\}	& addr = rz $+$ i$^{\pm}_{ }$; if(!) rz = addr \\
-any		& [rz]\{, \#$\pm$i$^{ }_{8}$\}	& addr = rz; rz $+$= i$^{\pm}_{ }$ \\
-xxR\{,B\}\{T\}	& [rz], \#$\pm$i$^{ }_{12}$	& addr = rz; rz $+$= i$^{\pm}_{ }$ \\
-non-T		& [rz, $\pm$rw]\{!\}		& addr = rz $\pm$ rw; if(!) rz = addr \\
-xxR\{,B\}	& [rz, $\pm$rw\{AS\}]\{!\}	& addr = rz $\pm$ AS(rw); if(!) rz = addr \\
-any		& [rz], $\pm$rw			& addr = rz; rz $\pm$= rw \\
-xxR\{,B\}\{T\}	& [rz], $\pm$rw\{AS\}		& addr = rz; rz $\pm$= AS(rw) \\
+non-T		& [rn\{, \#$\pm$i$^{ }_{8}$\}]\{!\}	& addr = rn $+$ i$^{\pm}_{ }$; if(!) rn = addr \\
+xxR\{,B\}	& [rn\{, \#$\pm$i$^{ }_{13}$\}]\{!\}	& addr = rn $+$ i$^{\pm}_{ }$; if(!) rn = addr \\
+any		& [rn]\{, \#$\pm$i$^{ }_{8}$\}	& addr = rn; rn $+$= i$^{\pm}_{ }$ \\
+xxR\{,B\}\{T\}	& [rn], \#$\pm$i$^{ }_{13}$	& addr = rn; rn $+$= i$^{\pm}_{ }$ \\
+non-T		& [rn, $\pm$rm]\{!\}		& addr = rn $\pm$ rm; if(!) rn = addr \\
+xxR\{,B\}	& [rn, $\pm$rm\{, AS\}]\{!\}	& addr = rn $\pm$ AS(rm); if(!) rn = addr \\
+any		& [rn], $\pm$rm			& addr = rn; rn $\pm$= rm \\
+xxR\{,B\}\{T\}	& [rn], $\pm$rm\{, AS\}		& addr = rn; rn $\pm$= AS(rm) \\
 LD non-T	& $\pm$rel$^{ }_{8}$		& addr = PC $+$ rel$^{\pm}_{ }$ \\
-LDR\{,B\}	& $\pm$rel$^{ }_{12}$		& addr = PC $+$ rel$^{\pm}_{ }$ \\
+LDR\{,B\}	& $\pm$rel$^{ }_{13}$		& addr = PC $+$ rel$^{\pm}_{ }$ \\
 \end{table-llX}
 %
 \begin{table-llX}{Thumb2 LDR/STR Addressing Modes}
-any		& [rz\{, \#i$^{ }_{8}$\}]	& addr = rz $+$ i$^{\emptyset}_{ }$ \\
-xxR\{,B,H,SB,SH\}	& [rz, \#i$^{ }_{12}$]	& addr = rz $+$ i$^{\emptyset}_{ }$ \\
-xxR\{,B,H,SB,SH\}	& [rz, \#$\pm$i$^{ }_{8}$]\{!\}	& addr = rz $+$ i$^{\pm}_{ }$; if(!) rz = addr \\
-xxR\{,B,H,SB,SH\}	& [rz], \#$\pm$i$^{ }_{8}$	& addr = rz; rz $+$= i$^{\pm}_{ }$ \\
-xxR\{,B,H,SB,SH\}	& [rz,rw\{,LSL \#i$^{ }_{2}$\}]	& addr = rz $+$ rw $\lsl$ i \\
-LDR\{,B,H,SB,SH\}	& $\pm$rel$^{ }_{12}$	& addr = PC $+$ rel$^{\pm}_{ }$ \\
-xxRD		& [rz\{, \#$\pm$i$^{ }_{10}$\}]\{!\}	& addr=rz$+$i$^{\pm}_{9:2}$:0$^{ }_{1:0}$; if(!) rz=addr \\
-xxRD		& [rz], \#$\pm$i$^{ }_{10}$	& addr = rz; rz $+$= i$^{\pm}_{9:2}$:0$^{ }_{1:0}$ \\
-LDRD		& $\pm$rel$^{ }_{10}$		& addr = PC $+$ rel$^{\pm}_{9:2}$:0$^{ }_{1:0}$	\\
+any		& [rn\{, \#i$^{ }_{8}$\}]	& addr = rn $+$ i$^{\emptyset}_{ }$ \\
+xxR\{,B,H,SB,SH\}	& [rn, \#i$^{ }_{12}$]	& addr = rn $+$ i$^{\emptyset}_{ }$ \\
+xxR\{,B,H,SB,SH\}	& [rn, \#$\pm$i$^{ }_{8}$]\{!\}	& addr = rn $+$ i$^{\pm}_{ }$; if(!) rn = addr \\
+xxR\{,B,H,SB,SH\}	& [rn], \#$\pm$i$^{ }_{8}$	& addr = rn; rn $+$= i$^{\pm}_{ }$ \\
+xxR\{,B,H,SB,SH\}	& [rn,rm\{, LSL \#i$^{ }_{2}$\}]	& addr = rn $+$ rm $\lsl$ i \\
+LDR\{,B,H,SB,SH\}	& $\pm$rel$^{ }_{13}$	& addr = PC $+$ rel$^{\pm}_{ }$ \\
+xxRD		& [rn\{, \#$\pm$i$^{ }_{10}$\}]\{!\}	& addr = rn $+$ i$^{\pm}_{9:2}$:0$^{ }_{2}$; if(!) rn=addr \\
+xxRD		& [rn], \#$\pm$i$^{ }_{10}$	& addr = rn; rn $+$= i$^{\pm}_{9:2}$:0$^{ }_{2}$ \\
+LDRD		& $\pm$rel$^{ }_{10}$		& addr = PC $+$ rel$^{\pm}_{9:2}$:0$^{ }_{2}$	\\
 \end{table-llX}
 %
-\begin{asmtable}{Multiplication Instructions}
-MLA		& rx, ry, rz, rw	& rx = rw $+$ ry $\umul$ rz			& \\
-MLA\{S\}	& rx, ry, rz, rw	& rx = rw $+$ ry $\umul$ rz			& A \\
-MLS		& rx, ry, rz, rw	& rx = rw $-$ ry $\umul$ rz			& 6t \\
-MUL		& rx, ry, rz		& rx = ry $\umul$ rz				& \\
-MUL\{S\}	& rx, ry, rz		& rx = ry $\umul$ rz				& A \\
-SMLAxy		& rx, ry, rz, rw	& rx = rw $+$ ry$^{\pm}_{Hx}$ $\smul$ rz$^{\pm}_{Hy}$	& D \\
-SMLaD		& rx, ry, rz, rw	& rx = rw $+$ ry$^{\pm}_{H0}$$\smul$rz$^{\pm}_{H0}$ $\pm$ ry$^{\pm}_{H1}$$\smul$rz$^{\pm}_{H1}$	& 6,D \\
-SMLaDX		& rx, ry, rz, rw	& rx = rw $+$ ry$^{\pm}_{H0}$$\smul$rz$^{\pm}_{H1}$ $\pm$ ry$^{\pm}_{H1}$$\smul$rz$^{\pm}_{H0}$	& D \\
-SMLaLD		& rx, ry, rz, rw	& ry:rx $+$= rz$^{\pm}_{H0}$$\smul$rw$^{\pm}_{H0}$ $\pm$ rz$^{\pm}_{H1}$$\smul$rw$^{\pm}_{H1}$	& 6,D \\
-SMLaLDX		& rx, ry, rz, rw	& ry:rx $+$= rz$^{\pm}_{H0}$$\smul$rw$^{\pm}_{H1}$ $\pm$ rz$^{\pm}_{H1}$$\smul$rw$^{\pm}_{H0}$	& D \\
-SMLAL		& rx, ry, rz, rw	& ry:rx $+$= rz $\smul$ rw			& \\
-SMLAL\{S\}	& rx, ry, rz, rw	& ry:rx $+$= rz $\smul$ rw			& A \\
-SMLALxy		& rx, ry, rz, rw	& ry:rx $+$= rz$^{\pm}_{Hx}$ $\smul$ rw$^{\pm}_{Hy}$	& D \\
-SMLAWy		& rx, ry, rz, rw	& rx = rw $+$ ry $\smul$ rz$^{\pm}_{Hy}$	& D \\
-SMMLa		& rx, ry, rz, rw	& rx = rw $\pm$ (ry $\smul$ rz)$^{ }_{63:32}$	& 6,D \\
-SMMLaR		& rx, ry, rz, rw	& rx = rw $\pm$ (ry$\smul$rz $+$ 0x80000000)$^{ }_{63:32}$	& D \\
-SMMUL		& rx, ry, rz		& rx = (ry $\smul$ rz)$^{ }_{63:32}$		& 6,D \\
-SMMULR		& rx, ry, rz		& rx = (ry $\smul$ rz $+$ 0x80000000)$^{ }_{63:32}$	& D \\
-SMUaD		& rx, ry, rz		& rx = ry$^{\pm}_{H0}$ $\smul$ rz$^{\pm}_{H0}$ $\pm$ ry$^{\pm}_{H1}$ $\smul$ rz$^{\pm}_{H1}$	& 6,D \\
-SMUaDX		& rx, ry, rz		& rx = ry$^{\pm}_{H0}$ $\smul$ rz$^{\pm}_{H1}$ $\pm$ ry$^{\pm}_{H1}$ $\smul$ rz$^{\pm}_{H0}$	& D \\
-SMULxy		& rx, ry, rz		& rx = ry$^{\pm}_{Hx}$ $\smul$ rz$^{\pm}_{Hy}$	& D \\
-SMULL		& rx, ry, rz, rw	& ry:rx = rz $\smul$ rw				& \\
-SMULL\{S\}	& rx, ry, rz, rw	& ry:rx = rz $\smul$ rw				& A \\
-SMULWy		& rx, ry, rz		& rx = (ry $\smul$ rz$^{\pm}_{Hy}$)$^{ }_{47:16}$	& D \\
-UMAAL		& rx, ry, rz, rw	& ry:rx = ry $+$ rx $+$ rz $\umul$ rw		& D \\
-UMLAL		& rx, ry, rz, rw	& ry:rx $+$= rz $\umul$ rw			& \\
-UMULL		& rx, ry, rz, rw	& ry:rx = rz $\umul$ rw				& \\
+\begin{asmtable}{Arithmetic Instructions}
+ADC\{S\}	& rd, rn, op2		& rd = rn $+$ op2 $+$ C 			& \\
+ADD\{S\}	& rd, rn, op2		& rd = rn $+$ op2 				& \\
+ADDW		& rd, rn, \#i$^{ }_{12}$	& rd = rn $+$ i$^{\emptyset}_{ }$	& T \\
+ADR		& rd, $\pm$rel$^{ }_{12}$	& rd = PC $+$ rel$^{\pm}_{ }$		& \\
+CMN		& rn, op2		& rn $+$ op2					& \\
+CMP		& rn, op2		& rn $-$ op2					& \\
+MLA		& rd, rn, rm, ra	& rd = ra $+$ rn $\umul$ rm			& \\
+MLA\{S\}	& rd, rn, rm, ra	& rd = ra $+$ rn $\umul$ rm			& A \\
+MLS		& rd, rn, rm, ra	& rd = ra $-$ rn $\umul$ rm			& 6t \\
+MUL		& rd, rn, rm		& rd = rn $\umul$ rm				& \\
+MUL\{S\}	& rd, rn, rm		& rd = rn $\umul$ rm				& A \\
+RSB\{S\}	& rd, rn, op2		& rd = op2 $-$ rn 				& \\
+RSC\{S\}	& rd, rn, op2		& rd = op2 $-$ (rn $+$ C) 			& A \\
+SBC\{S\}	& rd, rn, op2		& rd = rn $-$ (op2 $+$ C)			& \\
+sDIV		& rd, rn, rm		& rd = rn $\udiv^{s}_{ }$ rm				& 7 \\
+sMLAL		& rd, rd2, rn, rm        & rd2:rd $+$= rn $\umul^{s}_{ }$ rm              & \\
+sMLAL\{S\}	& rd, rd2, rn, rm        & rd2:rd $+$= rn $\umul^{s}_{ }$ rm              & A \\
+sMULL		& rd, rd2, rn, rm        & rd2:rd = rn $\umul^{s}_{ }$ rm                 & \\
+sMULL\{S\}	& rd, rd2, rn, rm        & rd2:rd = rn $\umul^{s}_{ }$ rm                 & A \\
+sSAT		& rd,\#i$^{ }_{5}$,rn\{, slr\}        & rd = $\lfloor$rn $\lsl\asr$ sh$\rceil^{si}_{ }$       & 6 \\
+SUB\{S\}	& rd, rn, op2		& rd = rn $-$ op2 				& \\
+SUBW		& rd, rn, \#i$^{ }_{12}$	& rd = rn $-$ i$^{\emptyset}_{ }$	& T \\
+\end{asmtable}
+%
+\begin{asmtable}{Logical Instructions}
+AND\{S\}	& rd, rn, op2		& rd = rn \& op2 				& \\
+\textit{ASR\{S\}}	& rd, rn, \#i$^{ }_{5}$	& rd = rn $\asr$ i			& \\
+\textit{ASR\{S\}}	& rd, rn, rm	& rd = rn $\asr$ rm				& \\
+BIC\{S\}	& rd, rn, op2		& rd = rn \& $\sim$op2 				& \\
+EOR\{S\}	& rd, rn, op2		& rd = rn $\oplus$ op2 				& \\
+\textit{LSL\{S\}}	& rd, rn, \#i$^{ }_{5}$	& rd = rn $\lsl$ i			& \\
+\textit{LSL\{S\}}	& rd, rn, rm	& rd = rn $\lsl$ rm				& \\
+\textit{LSR\{S\}}	& rd, rn, \#i$^{ }_{5}$	& rd = rn $\lsr$ i			& \\
+\textit{LSR\{S\}}	& rd, rn, rm	& rd = rn $\lsr$ rm				& \\
+MOV\{S\}	& rd, op2		& rd = op2					& \\
+MOVT		& rd, \#i$^{ }_{16}$	& rd$^{ }_{H1}$ = i				& 6t \\
+MOVW		& rd, \#i$^{ }_{16}$	& rd = i$^{\emptyset}_{ }$			& 6t \\
+MVN\{S\}	& rd, op2		& rd = $\sim$op2				& \\
+ORN\{S\}	& rd, rn, op2		& rd = rn | $\sim$op2				& T \\
+ORR\{S\}	& rd, rn, op2		& rd = rn | op2					& \\
+\textit{ROR\{S\}}	& rd, rn, \#i$^{ }_{5}$	& rd = rn $\ror$ i			& \\
+\textit{ROR\{S\}}	& rd, rn, rm	& rd = rn $\ror$ rm				& \\
+\textit{RRX\{S\}}	& rd, rn	& rd = C:rn$^{ }_{31:1}$; C = rn$^{ }_{0}$	& \\
+TEQ		& rn, op2		& rn $\oplus$ op2				& \\
+TST		& rn, op2		& rn \& op2					& \\
+\end{asmtable}
+%
+\begin{asmtable}{Bit Manipulation Instructions}
+BFC		& rd, \#p, \#n		& rd$^{ }_{p+n-1:p}$ = 0$^{ }_{n}$		& 6t \\
+BFI		& rd, rn, \#p, \#n	& rd$^{ }_{p+n-1:p}$ = rn$^{ }_{n-1:0}$		& 6t \\
+CLZ		& rd, rn		& rd = CountLeadingZeros(rn)			& \\
+RBIT		& rd, rn		& rd = ReverseBits(rn)				& 6t \\
+REV		& rd, rn		& rd = rn$^{ }_{B0}$:rn$^{ }_{B1}$:rn$^{ }_{B2}$:rn$^{ }_{B3}$	& 6 \\
+REV16		& rd, rn		& rd = rn$^{ }_{B2}$:rn$^{ }_{B3}$:rn$^{ }_{B0}$:rn$^{ }_{B1}$	& 6 \\
+REVSH		& rd, rn		& rd = rn$^{\pm}_{B0}$:rn$^{ }_{B1}$		& 6 \\
+sBFX		& rd, rn, \#p, \#n	& rd = rn$^{s}_{p+n-1:p}$			& 6t \\
+sXTB		& rd, rn\{, rb\}	& rd = (rn $\ror$ sh)$^{s}_{B0}$		& 6 \\
+sXTH		& rd, rn\{, rb\}	& rd = (rn $\ror$ sh)$^{s}_{H0}$		& 6 \\
+\end{asmtable}
+%
+\begin{asmtable}{Branch and Jump Instructions}
+B		& rel$^{ }_{26}$	& PC = PC $+$ rel$^{\pm}_{25:2}$:0$^{ }_{2}$	& A \\
+B		& rel$^{ }_{25}$	& PC = PC $+$ rel$^{\pm}_{24:1}$:0$^{ }_{1}$	& T \\
+Bcc		& rel$^{ }_{21}$	& if(cc) PC = PC $+$ rel$^{\pm}_{20:1}$:0$^{ }_{1}$	& I \\
+BKPT		& \#i$^{ }_{16}$	& BreakPoint(i)					& I \\
+BL		& rel$^{ }_{26}$	& LR=PC$^{ }_{31:1}$:0$^{ }_{1}$; PC $+$= rel$^{\pm}_{25:2}$:0$^{ }_{2}$	& A \\
+BL		& rel$^{ }_{25}$	& LR=PC$^{ }_{31:1}$:1$^{ }_{1}$; PC $+$= rel$^{\pm}_{24:1}$:0$^{ }_{1}$	& T \\
+BLX		& rel$^{ }_{26}$	& LR=PC$^{ }_{31:1}$:0$^{ }_{1}$; Set=1; PC$+$=rel$^{\pm}_{25:1}$:0$^{ }_{1}$	& A \\
+BLX		& rel$^{ }_{25}$	& LR=PC$^{ }_{31:1}$:1$^{ }_{1}$; Set=0; PC$+$=rel$^{\pm}_{24:2}$:0$^{ }_{2}$	& T \\
+BLX		& rn			& LR=PC$^{ }_{31:1}$:0$^{ }_{1}$; Set=rn$^{ }_{0}$; PC=rn$^{ }_{31:1}$:0$^{ }_{1}$	& \\
+BX		& rn			& Set = rn$^{ }_{0}$; PC = rn$^{ }_{31:1}$:0$^{ }_{1}$	& \\
+%BXJ		& rn			& Set = 2; PC = rn$^{ }_{31:1}$:0			& \\
+CBNZ		& rn, rel$^{ }_{7}$	& if(rn $\ne$ 0) PC $+$= rel$^{\emptyset}_{6:1}$:0$^{ }_{1}$	& I,T \\
+CBZ		& rn, rel$^{ }_{7}$	& if(rn $\eq$ 0) PC $+$= rel$^{\emptyset}_{6:1}$:0$^{ }_{1}$	& I,T \\
+TBB		& [rn, rm]		& PC = PC $+$ 2 $\umul$ [rn $+$ rm]$^{\emptyset}_{8}$	& T \\
+TBH		& [rn,rm, LSL \#1]	& PC = PC $+$ 2 $\umul$ [rn $+$ 2 $\umul$ rm]$^{\emptyset}_{16}$	& T \\
+\end{asmtable}
+%
+\begin{table-lXN}{Operand 2 (op2)}
+\#i$^{ }_{32}$	& i$^{ }_{8}$ $\ror$ i$^{ }_{4}$:0$^{ }_{1}$	& A \\
+\#i$^{ }_{32}$	& 0$^{ }_{24}$:i$^{ }_{8}$, 0$^{ }_{8}$:i$^{ }_{8}$0$^{ }_{8}$:i$^{ }_{8}$, i$^{ }_{8}$:0$^{ }_{8}$i$^{ }_{8}$:0$^{ }_{8}$, or i$^{ }_{8}$:i$^{ }_{8}$i$^{ }_{8}$:i$^{ }_{8}$	& T \\
+\#i$^{ }_{32}$	& 1$^{ }_{1}$:i$^{ }_{7}$ $\lsl$ \{1..24\}	& T \\
+rm		& rm						& \\
+rm, LSL \#n	& rm $\lsl$ \{1..31\}				& \\
+rm, LSR \#n	& rm $\lsr$ \{1..32\}				& \\
+rm, ASR \#n	& rm $\asr$ \{1..32\}				& \\
+rm, ROR \#n	& rm $\ror$ \{1..31\}				& \\
+rm, RRX		& C:rm$^{ }_{31:1}$; C = rm$^{ }_{0}$		& \\
+rm, LSL rs	& rm $\lsl$ rs					& A \\
+rm, LSR rs	& rm $\lsr$ rs					& A \\
+rm, ASR rs	& rm $\asr$ rs					& A \\
+rm, ROR rs	& rm $\ror$ rs					& A \\
+\end{table-lXN}
+%
+\begin{asmtable}{DSP Extended Arithmetic Instructions}
+QADD		& rd, rn, rm		& rd = $\lfloor$rn $+$ rm$\rceil^{S32}$		& D \\
+QDADD		& rd, rn, rm		& rd = $\lfloor$rn $+$ $\lfloor$2 $\umul$ rm$\rceil^{S32}$ $\rceil^{S32}$	& D \\
+QDSUB		& rd, rn, rm		& rd = $\lfloor$rn $-$ $\lfloor$2 $\umul$ rm$\rceil^{S32}$ $\rceil^{S32}$	& D \\
+QSUB		& rd, rn, rm		& rd = $\lfloor$rn $-$ rm$\rceil^{S32}$		& D \\
+SMLAxy		& rd, rn, rm, ra	& rd = ra $+$ rn$^{\pm}_{Hx}$ $\smul$ rm$^{\pm}_{Hy}$	& D \\
+SMLaD		& rd, rn, rm, ra	& rd = ra $+$ rn$^{\pm}_{H0}$$\smul$rm$^{\pm}_{H0}$ $\pm$ rn$^{\pm}_{H1}$$\smul$rm$^{\pm}_{H1}$	& 6,D \\
+SMLaDX		& rd, rn, rm, ra	& rd = ra $+$ rn$^{\pm}_{H0}$$\smul$rm$^{\pm}_{H1}$ $\pm$ rn$^{\pm}_{H1}$$\smul$rm$^{\pm}_{H0}$	& D \\
+SMLaLD		& rd, rd2, rn, rm	& rd2:rd $+$= rn$^{\pm}_{H0}$$\smul$rm$^{\pm}_{H0}$ $\pm$ rn$^{\pm}_{H1}$$\smul$rm$^{\pm}_{H1}$	& 6,D \\
+SMLaLDX		& rd, rd2, rn, rm	& rd2:rd $+$= rn$^{\pm}_{H0}$$\smul$rm$^{\pm}_{H1}$ $\pm$ rn$^{\pm}_{H1}$$\smul$rm$^{\pm}_{H0}$	& D \\
+SMLALxy		& rd, rd2, rn, rm	& rd2:rd $+$= rn$^{\pm}_{Hx}$ $\smul$ rm$^{\pm}_{Hy}$	& D \\
+SMLAWy		& rd, rn, rm, ra	& rd = ra $+$ rn $\smul$ rm$^{\pm}_{Hy}$	& D \\
+SMMLa		& rd, rn, rm, ra	& rd = ra $\pm$ ((rn $\smul$ rm) $\asr$ 32)	& 6,D \\
+SMMLaR		& rd, rn, rm, ra	& rd = ra $\pm$ ((rn $\smul$ rm) $\asr^{R}_{ }$ 32)	& D \\
+SMMUL		& rd, rn, rm		& rd = (rn $\smul$ rm) $\asr$ 32		& 6,D \\
+SMMULR		& rd, rn, rm		& rd = (rn $\smul$ rm) $\asr^{R}_{ }$ 32	& D \\
+SMUaD		& rd, rn, rm		& rd = rn$^{\pm}_{H0}$ $\smul$ rm$^{\pm}_{H0}$ $\pm$ rn$^{\pm}_{H1}$ $\smul$ rm$^{\pm}_{H1}$	& 6,D \\
+SMUaDX		& rd, rn, rm		& rd = rn$^{\pm}_{H0}$ $\smul$ rm$^{\pm}_{H1}$ $\pm$ rn$^{\pm}_{H1}$ $\smul$ rm$^{\pm}_{H0}$	& D \\
+SMULxy		& rd, rn, rm		& rd = rn$^{\pm}_{Hx}$ $\smul$ rm$^{\pm}_{Hy}$	& D \\
+SMULWy		& rd, rn, rm		& rd = (rn $\smul$ rm$^{\pm}_{Hy}$) $\asr$ 16	& D \\
+SSAT16		& rd, \#i$^{ }_{4}$, rn	& rd = $\lfloor$rn$^{\pm}_{H1}$$\rceil^{Si \pm}_{ }$:$\lfloor$rn$^{\pm}_{H0}$$\rceil^{Si \pm}_{ }$	& 6,D \\
+UMAAL		& rd, rd2, rn, rm	& rd2:rd = rd2 $+$ rd $+$ rn $\umul$ rm		& D \\
+USAD8		& rd, rn, rm		& rd = $\sum_{n=0}^{3}$($\lvert$rn$^{\emptyset}_{Bn}$ $-$ rm$^{\emptyset}_{Bn}$$\rvert$)	& 6,D \\
+USADA8		& rd, rn, rm, ra	& rd = ra $+$ $\sum_{n=0}^{3}$($\lvert$rn$^{\emptyset}_{Bn}$ $-$ rm$^{\emptyset}_{Bn}$$\rvert$)	& 6,D \\
+USAT16		& rd, \#i$^{ }_{4}$, rn	& rd = $\lfloor$rn$^{\pm}_{H1}$$\rceil^{Ui \emptyset}_{ }$:$\lfloor$rn$^{\pm}_{H0}$$\rceil^{Ui \emptyset}_{ }$	& 6,D \\
 \end{asmtable}
 %
 \begin{asmtable}{Parallel Instructions}
-pADD16		& rx, ry, rz		& for(n=0..1) rx$^{ }_{Hn}$ = p(ry$^{ }_{Hn}$ $+$ rz$^{ }_{Hn}$)	& 6,D \\
-pADD8		& rx, ry, rz		& for(n=0..3) rx$^{ }_{Bn}$ = p(ry$^{ }_{Bn}$ $+$ rz$^{ }_{Bn}$)	& 6,D \\
-pASX		& rx, ry, rz		& rx = p(ry$^{ }_{H1}$ $+$ rz$^{ }_{H0}$):p(ry$^{ }_{H0}$ $-$ rz$^{ }_{H1}$)	& 6,D \\
-pSAX		& rx, ry, rz		& rx = p(ry$^{ }_{H1}$ $-$ rz$^{ }_{H0}$):p(ry$^{ }_{H0}$ $+$ rz$^{ }_{H1}$)	& 6,D \\
-pSUB16		& rx, ry, rz		& for(n=0..1) rx$^{ }_{Hn}$ = p(ry$^{ }_{Hn}$ $-$ rz$^{ }_{Hn}$)	& 6,D \\
-pSUB8		& rx, ry, rz		& for(n=0..3) rx$^{ }_{Bn}$ = p(ry$^{ }_{Bn}$ $-$ rz$^{ }_{Bn}$)	& 6,D \\
-SEL		& rx, ry, rz		& for(n=0..3) rx$^{ }_{Bn}$ = (GEn ? ry : rz)$^{ }_{Bn}$	& 6,D \\
+pADD16		& rd, rn, rm		& rd$^{ }_{H*}$ = p(rn$^{ }_{H*}$ $+$ rm$^{ }_{H*}$)	& 6,D \\
+pADD8		& rd, rn, rm		& rd$^{ }_{B*}$ = p(rn$^{ }_{B*}$ $+$ rm$^{ }_{B*}$)	& 6,D \\
+pASX		& rd, rn, rm		& rd = p(rn$^{ }_{H1}$ $+$ rm$^{ }_{H0}$):p(rn$^{ }_{H0}$ $-$ rm$^{ }_{H1}$)	& 6,D \\
+pSAX		& rd, rn, rm		& rd = p(rn$^{ }_{H1}$ $-$ rm$^{ }_{H0}$):p(rn$^{ }_{H0}$ $+$ rm$^{ }_{H1}$)	& 6,D \\
+pSUB16		& rd, rn, rm		& rd$^{ }_{H*}$ = p(rn$^{ }_{H*}$ $-$ rm$^{ }_{H*}$)	& 6,D \\
+pSUB8		& rd, rn, rm		& rd$^{ }_{B*}$ = p(rn$^{ }_{B*}$ $-$ rm$^{ }_{B*}$)	& 6,D \\
+SEL		& rd, rn, rm		& rd$^{ }_{B*}$ = GE* ? rn$^{ }_{B*}$ : rm$^{ }_{B*}$	& 6,D \\
 \end{asmtable}
 %
-\begin{table-lX}{Parallel Instruction Prefixes}
+\begin{table-lX}{Parallel Instruction Prefixes (p)}
 Q	& Signed operation, Results are saturated \\
 S	& Signed operation, Results are truncated \\
 SH	& Signed operation, Results are right shifted by one \\
@@ -231,75 +237,71 @@ UQ	& Unsigned operation, Results are saturated \\
 \end{table-lX}
 %
 \begin{asmtable}{Packing and Unpacking Instructions}
-PKHBT		& rx, ry, rz\{sl\}	& rx = (rz $\lsl$ sh)$^{ }_{H1}$:ry$^{ }_{H0}$	& 6,D \\
-PKHTB		& rx, ry, rz\{sr\}	& rx = ry$^{ }_{H1}$:(rz $\asr$ sh)$^{ }_{H0}$	& 6,D \\
-SXTAB		& rx, ry, rz\{rb\}	& rx = ry $+$ (rz $\ror$ sh)$^{\pm}_{B0}$	& 6,D \\
-SXTAB16		& rx, ry, rz\{rb\}	& for(n=0..1) rx$^{ }_{Hn}$=ry$^{ }_{Hn}$$+$(rz$\ror$sh)$^{\pm}_{B2n}$	& 6,D \\
-SXTAH		& rx, ry, rz\{rb\}	& rx = ry $+$ (rz $\ror$ sh)$^{\pm}_{H0}$	& 6,D \\
-SXTB		& rx, ry\{rb\}		& rx = (ry $\ror$ sh)$^{\pm}_{B0}$		& 6 \\
-SXTB16		& rx, ry\{rb\}		& for(n=0..1) rx$^{ }_{Hn}$ = (ry $\ror$ sh)$^{\pm}_{B2n}$	& 6,D \\
-SXTH		& rx, ry\{rb\}		& rx = (ry $\ror$ sh)$^{\pm}_{H0}$		& 6 \\
-UXTAB		& rx, ry, rz\{rb\}	& rx = ry $+$ (rz $\ror$ sh)$^{\emptyset}_{B0}$	& 6,D \\
-UXTAB16		& rx, ry, rz\{rb\}	& for(n=0..1) rx$^{ }_{Hn}$=ry$^{ }_{Hn}$$+$(rz$\ror$sh)$^{\emptyset}_{B2n}$	& 6,D \\
-UXTAH		& rx, ry, rz\{rb\}	& rx = ry $+$ (rz $\ror$ sh)$^{\emptyset}_{H0}$	& 6,D \\
-UXTB		& rx, ry\{rb\}		& rx = (ry $\ror$ sh)$^{\emptyset}_{B0}$	& 6 \\
-UXTB16		& rx, ry\{rb\}		& for(n=0..1) rx$^{ }_{Hn}$ = (ry $\ror$ sh)$^{\emptyset}_{B2n}$	& 6,D \\
-UXTH		& rx, ry\{rb\}		& rx = (ry $\ror$ sh)$^{\emptyset}_{H0}$	& 6 \\
+PKHBT		& rd, rn, rm\{, sl\}	& rd = (rm $\lsl$ sh)$^{ }_{H1}$:rn$^{ }_{H0}$	& 6,D \\
+PKHTB		& rd, rn, rm\{, sr\}	& rd = rn$^{ }_{H1}$:(rm $\asr$ sh)$^{ }_{H0}$	& 6,D \\
+SXTAB		& rd, rn, rm\{, rb\}	& rd = rn $+$ (rm $\ror$ sh)$^{\pm}_{B0}$	& 6,D \\
+SXTAB16		& rd, rn, rm\{, rb\}	& rd$^{ }_{H*}$ = rn$^{ }_{H*}$ $+$ (rm $\ror$ sh)$^{\pm}_{B2*}$	& 6,D \\
+SXTAH		& rd, rn, rm\{, rb\}	& rd = rn $+$ (rm $\ror$ sh)$^{\pm}_{H0}$	& 6,D \\
+SXTB16		& rd, rn\{, rb\}	& rd$^{ }_{H*}$ = (rn $\ror$ sh)$^{\pm}_{B2*}$	& 6,D \\
+UXTAB		& rd, rn, rm\{, rb\}	& rd = rn $+$ (rm $\ror$ sh)$^{\emptyset}_{B0}$	& 6,D \\
+UXTAB16		& rd, rn, rm\{, rb\}	& rd$^{ }_{H*}$ = rn$^{ }_{H*}$ $+$ (rm$ \ror$ sh)$^{\emptyset}_{B2*}$	& 6,D \\
+UXTAH		& rd, rn, rm\{, rb\}	& rd = rn $+$ (rm $\ror$ sh)$^{\emptyset}_{H0}$	& 6,D \\
+UXTB16		& rd, rn\{, rb\}	& rd$^{ }_{H*}$ = (rn $\ror$ sh)$^{\emptyset}_{B2*}$	& 6,D \\
 \end{asmtable}
 %
 \begin{asmtable}{Exclusive Load and Store Instructions}
-CLREX		&			& ClearExclusiveLocal()				& I,6k \\
-LDREX		& rx, [ry]		& rx = [ry]; SetExclusiveMonitor		& 6k \\
-LDREX		& rx, [ry, \#i$^{ }_{10}$]	& rx = [ry$+$i$^{\emptyset}_{9:2}$:0$^{ }_{1:0}$]; SetExclusiveMonitor	& T,6k \\
-LDREXB		& rx, [ry]		& rx = [ry]$^{\emptyset}_{8}$; SetExclusiveMonitor	& 6k \\
-LDREXD		& rx, ry, [rz]		& ry:rx = [rz]; SetExclusiveMonitor		& 6k \\
-LDREXH		& rx, [ry]		& rx = [ry]$^{\emptyset}_{16}$; SetExclusiveMonitor	& 6k \\
-STREX		& rx,ry,[rz]		& if(Pass) [rz] = ry; rx = Pass ? 1 : 0		& 6k \\
-STREX		& rx,ry,[rz,\#i$^{ }_{10}$]	& if(Pass) [rz$+$i$^{\emptyset}_{9:2}$:0$^{ }_{1:0}$]=ry; rx=Pass?1:0	& T,6k \\
-STREXB		& rx,ry,[rz]		& if(Pass) [rz]$^{ }_{8}$ = ry$^{ }_{B0}$; rx = Pass?1:0	& 6k \\
-STREXD		& rx,ry,rz,[rw]		& if(Pass) [rw] = rz:ry; rx = Pass?1:0		& 6k \\
-STREXH		& rx,ry,[rz]		& if(Pass) [rz]$^{ }_{16}$ = ry$^{ }_{H0}$; rx = Pass?1:0	& 6k \\
+CLREX		&			& ClearExclusiveLocal()				& 6k,I \\
+LDREX		& rt, [rn]		& rt = [rn]$^{ }_{32}$; SetExclusiveMonitor	& 6k \\
+LDREX		& rt, [rn, \#i$^{ }_{10}$]	& rt = [rn$+$i$^{\emptyset}_{9:2}$:0$^{ }_{2}$]$^{ }_{32}$; SetExclusiveMonitor	& 6k,T \\
+LDREXB		& rt, [rn]		& rt = [rn]$^{\emptyset}_{8}$; SetExclusiveMonitor	& 6k \\
+LDREXD		& rt, rt2, [rm]		& rt2:rt = [rm]$^{ }_{64}$; SetExclusiveMonitor	& 6k \\
+LDREXH		& rt, [rn]		& rt = [rn]$^{\emptyset}_{16}$; SetExclusiveMonitor	& 6k \\
+STREX		& rd, rt, [rn]		& if(Pass) [rn]$^{ }_{32}$ = rt; rd = Pass ? 1 : 0	& 6k \\
+STREX		& rd, rt, [rn,\#i$^{ }_{10}$]	& if(Pass) [rn$+$i$^{\emptyset}_{9:2}$:0$^{ }_{2}$]$^{ }_{32}$=rt; rd=Pass?1:0	& 6k,T \\
+STREXB		& rd, rt, [rn]		& if(Pass) [rn]$^{ }_{8}$ = rt$^{ }_{B0}$; rd = Pass?1:0	& 6k \\
+STREXD		& rd, rt, rt2, [rn]	& if(Pass) [rn]$^{ }_{64}$ = rt2:rt; rd = Pass?1:0	& 6k \\
+STREXH		& rd, rt, [rn]		& if(Pass) [rn]$^{ }_{16}$ = rt$^{ }_{H0}$; rd = Pass?1:0	& 6k \\
 \end{asmtable}
 %
 \begin{asmtable}{System Instructions}
-CPSI\{D,E\}	& \{aif\}\{, \#mode\}	& \{a\}\{i\}\{f\} = (E ? 1: 0); MODE = mode	& 6 \\
 CPS		& \#mode		& MODE = mode					& 6 \\
+CPSI\{D,E\}	& \{aif\}\{, \#mode\}	& \{a\}\{i\}\{f\} = (E ? 1 : 0); MODE = mode	& 6 \\
 ERET		&			& PC = LR; CPSR = SPSR				& 7 \\
 HVC		& \#i$^{ }_{16}$	& CallHypervisor(i)				& 7 \\
-MRS		& rx, xPSR		& rx = \{CPSR,SPSR\}				& \\
-MRS		& rx, Rbanked		& rx = Rbanked					& 7 \\
-MSR		& xPSR, rx		& \{CPSR,SPSR\} = rx				& \\
-MSR		& Rbanked, rx		& Rbanked = rx					& 7 \\
-MSR		& xPSR\_\{cxsf\}, i	& \{CPSR,SPSR\}$^{ }_{f,s,x,c}$ = i$^{ }_{f,s,x,c}$	& A \\
-MSR		& xPSR\_\{cxsf\}, rx	& \{CPSR,SPSR\}$^{ }_{f,s,x,c}$ = rx$^{ }_{f,s,x,c}$	& \\
-RFEdi		& rx\{!\}		& LDMdi rx\{!\}, \{PC, CPSR\}			& \\
-SMC		& \#i$^{ }_{4}$		& CallSecureMonitor(i)				& 6k \\
+MRS		& rd, xPSR		& rd = \{CPSR,SPSR\}				& \\
+MRS		& rd, Rbanked		& rd = Rbanked					& 7 \\
+MSR		& xPSR, rn		& \{CPSR,SPSR\} = rn				& \\
+MSR		& Rbanked, rn		& Rbanked = rn					& 7 \\
+MSR		& xPSR\_\{cxsf\},\#i	& \{CPSR,SPSR\}$^{ }_{f,s,x,c}$ = i$^{ }_{f,s,x,c}$	& A \\
+MSR		& xPSR\_\{cxsf\}, rn	& \{CPSR,SPSR\}$^{ }_{f,s,x,c}$ = rn$^{ }_{f,s,x,c}$	& \\
+RFEdi		& rn\{!\}		& LDMdi rn\{!\}, \{PC, CPSR\}			& \\
+SMC		& \#i$^{ }_{4}$		& CallSecureMonitor(i)				& 6k,A \\
 SRSdi		& SP\{!\}, \#mode	& STMdi SP\_mode\{!\}, \{LR, SPSR\}		& 6 \\
+SVC		& \#i$^{ }_{24}$	& CallSupervisor(i)				& A \\
 \end{asmtable}
 %
 \begin{asmtable}{Special Instructions}
 DBG		& \#i$^{ }_{4}$		& DebugHint(i)					& 7 \\
-DMB		& option		& DataMemoryBarrier(option)			& I,7 \\
-DSB		& option		& DataSynchronizationBarrier(option)		& I,7 \\
-ISB		& SY			& InstructionSynchronizationBarrier(SY)		& I,7 \\
+DMB		& option		& DataMemornBarrier(option)			& 7,I \\
+DSB		& option		& DataSynchronizationBarrier(option)		& 7,I \\
+ISB		& SY			& InstructionSynchronizationBarrier(SY)		& 7,I \\
 NOP		&			&						& 6k \\
 PLD\{W\}	& [addr]		& PreloadData(addr)				& \\
-%PLD\{W\}	& [rx, \#i$^{ }_{12}$]	& PreloadData(rx $+$ i)				& \\
-%PLD\{W\}	& [rx, \#$-$i$^{ }_{8}$]	& PreloadData(rx $-$ i)			& \\
-%PLD\{W\}	& [rx, \#$-$i$^{ }_{12}$]	& PreloadData(rx $-$ i)			& A \\
+%PLD\{W\}	& [rd, \#i$^{ }_{12}$]	& PreloadData(rd $+$ i)				& \\
+%PLD\{W\}	& [rd, \#$-$i$^{ }_{8}$]	& PreloadData(rd $-$ i)			& \\
+%PLD\{W\}	& [rd, \#$-$i$^{ }_{12}$]	& PreloadData(rd $-$ i)			& A \\
 %PLD		& $\pm$rel$^{ }_{12}$	& PreloadData(PC $\pm$ rel)			& \\
-%PLD\{W\}	& [rx, ry\{, LSL \#i$^{ }_{2}$\}]	& PreloadData(rx $+$ ry $\lsl$ i)	& \\
-%PLD\{W\}	& [rx, $\pm$ry\{AS\}]	& PreloadData(rx $\pm$ AS(ry))			& A \\
+%PLD\{W\}	& [rd, rn\{, LSL \#i$^{ }_{2}$\}]	& PreloadData(rd $+$ rn $\lsl$ i)	& \\
+%PLD\{W\}	& [rd, $\pm$rn\{, AS\}]	& PreloadData(rd $\pm$ AS(rn))			& A \\
 PLI		& [addr]		& PreloadInstr(addr)				& 7 \\
-%PLI		& [rx, \#i$^{ }_{12}$]	& PreloadInstr(rx $+$ i)			& 7 \\
-%PLI		& [rx, \#$-$i$^{ }_{8}$]	& PreloadInstr(rx $-$ i)		& 7 \\
-%PLI		& [rx, \#$-$i$^{ }_{12}$]	& PreloadInstr(rx $-$ i)		& A,7 \\
+%PLI		& [rd, \#i$^{ }_{12}$]	& PreloadInstr(rd $+$ i)			& 7 \\
+%PLI		& [rd, \#$-$i$^{ }_{8}$]	& PreloadInstr(rd $-$ i)		& 7 \\
+%PLI		& [rd, \#$-$i$^{ }_{12}$]	& PreloadInstr(rd $-$ i)		& 7,A \\
 %PLI		& $\pm$rel$^{ }_{12}$	& PreloadInstr(PC $\pm$ rel)			& 7\\
-%PLI		& [rx, ry\{, LSL \#i$^{ }_{2}$\}]	& PreloadInstr(rx $+$ ry $\lsl$ i)	& 7 \\
-%PLI		& [rx, $\pm$ry\{AS\}]	& PreloadInstr(rx $\pm$ AS(ry))			& A,7 \\
-SETEND		& \{BE/LE\}		& EndianState = \{BE/LE\}			& I,6 \\
+%PLI		& [rd, rn\{, LSL \#i$^{ }_{2}$\}]	& PreloadInstr(rd $+$ rn $\lsl$ i)	& 7 \\
+%PLI		& [rd, $\pm$rn\{, AS\}]	& PreloadInstr(rd $\pm$ AS(rn))			& A,7 \\
+SETEND		& \{BE,LE\}		& EndianState = \{BE,LE\}			& 6,I \\
 SEV		&			& SendEvent()					& 6k \\
-SVC		& \#i$^{ }_{24}$	& CallSupervisor(i)				& A \\
 UDF		& \#i$^{ }_{16}$	& UndefinedException(i)				& \\
 WFE		&			& WaitForEvent()				& 6k \\
 WFI		&			& WaitForInterrupt()				& 6k \\
@@ -309,41 +311,43 @@ YIELD		&			& HintYield()					& 6k \\
 \begin{table-lX}{Keys}
 \{S\}			& Optional suffix, if present update flags \\
 \{t\}			& Conditional for additional instructions (T or E) \\
-\{T\}			& LDR/STR instruction uses user privileges. \\
-a			& A or S to add or subtract operand. \\
+\{T\}			& LDR/STR instruction uses user privileges \\
+a			& A to add or S to subtract \\
 x, y			& Selects bottom (B) or top (T) half of register(s) \\
-cc			& Condition code (can suffix most ARM instructions) \\
-di			& DA, DB, IA or IB for decrease/increase before/after. \\
-i, j			& Immediate operand, range 0..max / 1..max+1 \\
-rx, ry, rz, rw		& General register \\
-Rbanked			& Banked register \\
-rlist			& Comma separated list of registers within \{ \}. \\
-op2			& Immediate or shifted register \\
+di			& DA, DB, IA or IB for decrease/increase before/after \\
+i			& Immediate operand, range 0..max / 1..max+1 \\
+s			& Operation signess (S or U) \\
+rd, rn, rm, ra		& General register \\
+Rbanked			& Banked register (R\{8,9,10,11,12\}\_\{usr,fiq\}, \{SP,LR\}\_usr, \newline \{SP,LR,SPSR\}\_\{fiq,irq,svc,abt,und,mon,hyp\}) \\
+rlist			& Comma separated list of registers within \{ \} \\
 xPSR			& APSR, CPSR or SPSR \\
-SAT\{S,U\}(x,b)		& Saturated signed/unsigned b bit value \\
 B\{0,1,2,3\}		& Selected byte (bits 7:0, 15:8, 23:16 or 31:24) \\
 H\{0,1\}		& Selected half word (bits 15:0 or 31:16) \\
-\{rb\}			& Optional rotate (ROR 8, ROR 16 or ROR 24) \\
-\{slr\}			& Optional shift (LSL \#\{1..31\} or ASR \#\{1..32\}) \\
-\{sl\}			& Optional left shift (LSL \#\{1..31\}) \\
-\{sr\}			& Optional right shift (ASR \#\{1..32\}) \\
-\{AS\}			& ARM shift or rotate (LSL/ROR \#\{1..31\}, LSR/ASR \#\{1..32\} or RRX) \\
+\{, rb\}		& Optional rotate (ROR 8, ROR 16 or ROR 24) \\
+\{, slr\}		& Optional shift (LSL \#\{1..31\} or ASR \#\{1..32\}) \\
+\{, sl\}		& Optional left shift (LSL \#\{1..31\}) \\
+\{, sr\}		& Optional right shift (ASR \#\{1..32\}) \\
+\{, AS\}		& Optional ARM shift or rotate (LSL/ROR \#\{1..31\}, LSR/ASR \#\{1..32\}, or RRX) \\
 value$^{\pm}_{ }$, value$^{\emptyset}_{ }$	& Value is sign/zero extended\\
 $\smul$ $\sdiv$ $\asr$	& Operation is signed \\
+$\lsr^{R}_{ }$ $\asr^{R}_{ }$	& Shift result is rounded instead of truncated \\
+$\lfloor$x$\rceil^{sz}$	& Value is saturated to z bits of type s \\
 $\lvert$x$\rvert$	& Absolute of value \\
 \end{table-lX}
 %
 \begin{table-llX}{General Registers}
-R0-R3	&	& Arguments and return values (useable by Thumb16) \\
-R4-R7	&	& General purpose (must be preserved, useable by Thumb16) \\
-R8-R11	&	& General purpose registers (must be preserved) \\
-R12	& IP	& Intra-procedure-call scratch register \\
+R0-R3	&	& Arguments and return values (usable by Thumb16) \\
+R4-R7	&	& General purpose (must be preserved, usable by Thumb16) \\
+R8-R9	&	& General purpose (must be preserved) \\
+R10	& SL	& Stack Limit (must be preserved) \\
+R11	& FP	& Frame Pointer (must be preserved) \\
+R12	& IP	& Intra-procedure-call scratch \\
 R13	& SP	& Stack pointer \\
 R14	& LR	& Return address \\
 R15	& PC	& Program counter \\
 \end{table-llX}
 %
-\begin{table-llX}{Condition Codes}
+\begin{table-llX}{Condition Codes (cc)}
 EQ	& Equal					& Z \\
 NE	& Not equal				& !Z \\
 CS/HS	& Carry set, Unsigned higher or same	& C \\
@@ -363,7 +367,7 @@ AL	& Always (default)			& 1 \\
 %
 \begin{table-lX}{DMB and DSB Options}
 SY	& Full system, Read and write \\
-(SY)ST	& Full system, Write only \\
+\{SY\}ST	& Full system, Write only \\
 ISH	& Inner shareable, Read and write \\
 ISHST	& Inner shareable, Write only \\
 NSH	& Non-shareable, Read and write \\
@@ -383,45 +387,45 @@ T & Only available in Thumb mode \\
 \end{table-lX}
 %
 \begin{asmtable}{Thumb16 Bitwise and Move Instructions}
-AND\{S\}	& rx, ry		& rx = rx \& ry					& S \\
-ASR\{S\}	& rx, ry, \#j$^{ }_{5}$	& rx = ry $\asr$ j				& S \\
-ASR\{S\}	& rx, ry		& rx = rx $\asr$ ry				& S \\
-BIC\{S\}	& rx, ry		& rx = rx \& $\sim$ry				& S \\
-EOR\{S\}	& rx, ry		& rx = rx $\oplus$ ry				& S \\
-LSL\{S\}	& rx, ry, \#i$^{ }_{5}$	& rx = ry $\lsl$ i				& S \\
-LSL\{S\}	& rx, ry		& rx = rx $\lsl$ ry				& S \\
-LSR\{S\}	& rx, ry, \#j$^{ }_{5}$	& rx = ry $\lsr$ j				& S \\
-LSR\{S\}	& rx, ry		& rx = rx $\lsr$ ry				& S \\
-MOV		& rx, ry		& rx = ry					& H \\
-MOVS		& rx, ry		& rx = ry					& \\
-MOV\{S\}	& rx, \#i$^{ }_{8}$	& rx = i$^{\emptyset}_{ }$			& S \\
-MVN\{S\}	& rx, ry		& rx = $\sim$ry					& S \\
-ORR\{S\}	& rx, ry		& rx = rx | ry					& S \\
-REV		& rx, ry		& rx = ry$^{ }_{7:0}$:ry$^{ }_{15:8}$:ry$^{ }_{23:16}$:ry$^{ }_{31:24}$	& 6 \\
-REV16		& rx, ry		& rx = ry$^{ }_{23:16}$:ry$^{ }_{31:24}$:ry$^{ }_{7:0}$:ry$^{ }_{15:8}$	& 6 \\
-REVSH		& rx, ry		& rx = ry$^{\pm}_{7:0}$:ry$^{ }_{15:8}$		& 6 \\
-ROR\{S\}	& rx, ry		& rx = rx $\ror$ ry				& S \\
-SXTB		& rx, ry		& rx = ry$^{\pm}_{7:0}$				& \\
-SXTH		& rx, ry		& rx = ry$^{\pm}_{15:0}$			& \\
-TST		& rx, ry		& rx \& ry					& \\
-UXTB		& rx, ry		& rx = ry$^{\emptyset}_{7:0}$			& 6 \\
-UXTH		& rx, ry		& rx = ry$^{\emptyset}_{15:0}$			& 6 \\
+AND\{S\}	& rd, rn		& rd = rd \& rn					& S \\
+ASR\{S\}	& rd, rn, \#i$^{ }_{5}$	& rd = rn $\asr$ i				& S \\
+ASR\{S\}	& rd, rn		& rd = rd $\asr$ rn				& S \\
+BIC\{S\}	& rd, rn		& rd = rd \& $\sim$rn				& S \\
+EOR\{S\}	& rd, rn		& rd = rd $\oplus$ rn				& S \\
+LSL\{S\}	& rd, rn, \#i$^{ }_{5}$	& rd = rn $\lsl$ i				& S \\
+LSL\{S\}	& rd, rn		& rd = rd $\lsl$ rn				& S \\
+LSR\{S\}	& rd, rn, \#i$^{ }_{5}$	& rd = rn $\lsr$ i				& S \\
+LSR\{S\}	& rd, rn		& rd = rd $\lsr$ rn				& S \\
+MOV		& rd, rn		& rd = rn					& H \\
+MOVS		& rd, rn		& rd = rn					& \\
+MOV\{S\}	& rd, \#i$^{ }_{8}$	& rd = i$^{\emptyset}_{ }$			& S \\
+MVN\{S\}	& rd, rn		& rd = $\sim$rn					& S \\
+ORR\{S\}	& rd, rn		& rd = rd | rn					& S \\
+REV		& rd, rn		& rd = rn$^{ }_{B0}$:rn$^{ }_{B1}$:rn$^{ }_{B2}$:rn$^{ }_{B3}$	& 6 \\
+REV16		& rd, rn		& rd = rn$^{ }_{B2}$:rn$^{ }_{B3}$:rn$^{ }_{B0}$:rn$^{ }_{B1}$	& 6 \\
+REVSH		& rd, rn		& rd = rn$^{\pm}_{B0}$:rn$^{ }_{B1}$		& 6 \\
+ROR\{S\}	& rd, rn		& rd = rd $\ror$ rn				& S \\
+SXTB		& rd, rn		& rd = rn$^{\pm}_{B0}$				& \\
+SXTH		& rd, rn		& rd = rn$^{\pm}_{H0}$				& \\
+TST		& rn, rm		& rn \& rm					& \\
+UXTB		& rd, rn		& rd = rn$^{\emptyset}_{B0}$			& 6 \\
+UXTH		& rd, rn		& rd = rn$^{\emptyset}_{H0}$			& 6 \\
 \end{asmtable}
 %
 \begin{asmtable}{Thumb16 Branch and Special Instructions}
-B		& rel$^{ }_{12}$	& PC = PC $+$ rel$^{\pm}_{11:1}$:0		& \\
-Bcc		& rel$^{ }_{9}$		& if(cc) PC = PC $+$ rel$^{\pm}_{8:1}$:0	& I \\
-BKPT		& \#i$^{ }_{8}$		& BreakPoint(i)					& I \\
-BL		& rel$^{ }_{23}$	& LR=PC$^{ }_{31:1}$:1; PC$+$=rel$^{\pm}_{22:1}$:0	& \\
-BLX		& rel$^{ }_{23}$	& LR=PC$^{ }_{31:1}$:1; Set=0; PC$+$=rel$^{\pm}_{22:2}$:0$^{ }_{1:0}$	& \\
-BLX		& rx			& LR=PC$^{ }_{31:1}$:1; Set=rx$^{ }_{0}$; PC=rx$^{ }_{31:1}$:0	& \\
-BX		& rx			& Set=rx$^{ }_{0}$; PC = rx$^{ }_{31:1}$:0	& \\
-CBNZ		& rx, rel$^{ }_{7}$	& if(rx $\ne$ 0) PC $+$= rel$^{\emptyset}_{6:1}$:0	& I,6t \\
-CBZ		& rx, rel$^{ }_{7}$	& if(rx $\eq$ 0) PC $+$= rel$^{\emptyset}_{6:1}$:0	& I,6t \\
+B		& rel$^{ }_{12}$	& PC = PC $+$ rel$^{\pm}_{11:1}$:0$^{ }_{1}$	& \\
+Bcc		& rel$^{ }_{9}$		& if(cc) PC = PC $+$ rel$^{\pm}_{8:1}$:0$^{ }_{1}$	& I \\
+BKPT		& \#i$^{ }_{8}$		& BreakPoint(i$^{\emptyset}_{ }$)		& I \\
+BL		& rel$^{ }_{25}$	& LR=PC$^{ }_{31:1}$:1$^{ }_{1}$; PC $+$= rel$^{\pm}_{24:1}$:0$^{ }_{1}$	& \\
+BLX		& rel$^{ }_{25}$	& LR=PC$^{ }_{31:1}$:1$^{ }_{1}$; Set=0; PC$+$=rel$^{\pm}_{24:2}$:0$^{ }_{2}$	& \\
+BLX		& rn			& LR=PC$^{ }_{31:1}$:1$^{ }_{1}$; Set=rn$^{ }_{0}$; PC=rn$^{ }_{31:1}$:0$^{ }_{1}$	& \\
+BX		& rn			& Set = rn$^{ }_{0}$; PC = rn$^{ }_{31:1}$:0$^{ }_{1}$	& \\
+CBNZ		& rn, rel$^{ }_{7}$	& if(rn $\ne$ 0) PC $+$= rel$^{\emptyset}_{6:1}$:0$^{ }_{1}$	& I,T \\
+CBZ		& rn, rel$^{ }_{7}$	& if(rn $\eq$ 0) PC $+$= rel$^{\emptyset}_{6:1}$:0$^{ }_{1}$	& I,T \\
 CPSI\{D,E\}	& \{aif\}		& \{a\}\{i\}\{f\} = (E ? 1 : 0)			& 6 \\
-IT\{t\{t\{t\}\}\}	& cc		& if(cc) NextInstruction			& I,6t \\
+IT\{t\{t\{t\}\}\}	& cc		& if(cc) NextInstruction			& 6t,I \\
 NOP		&			&						& 6k \\
-SETEND		& \{BE/LE\}		& EndianState = \{BE/LE\}			& I,6 \\
+SETEND		& \{BE,LE\}		& EndianState = \{BE,LE\}			& 6,I \\
 SEV		&			& SendEvent()					& 7 \\
 SVC		& \#i$^{ }_{8}$		& CallSupervisor(i)				& \\
 UDF		& \#i$^{ }_{8}$		& UndefinedException(i)				& \\
@@ -431,50 +435,50 @@ YIELD		&			& HintYield()					& 7 \\
 \end{asmtable}
 %
 \begin{asmtable}{Thumb16 Arithmetic Instructions}
-ADC\{S\}	& rx, ry		& rx = rx $+$ ry $+$ C				& S \\
-ADD\{S\}	& rx, ry, \#i$^{ }_{3}$	& rx = ry $+$ i$^{\emptyset}_{ }$		& S \\
-ADD\{S\}	& rx, \#i$^{ }_{8}$	& rx = rx $+$ i$^{\emptyset}_{ }$		& S \\
-ADD\{S\}	& rx, ry, rz		& rx = ry $+$ rz				& S \\
-ADD		& rx, ry		& rx = rx $+$ ry				& H \\
-ADD		& rx, SP, \#i$^{ }_{8}$	& rx = SP $+$ i$^{\emptyset}_{ }$		& \\
-ADD		& SP, \#i$^{ }_{9}$	& SP = SP $+$ i$^{\emptyset}_{8:2}$:0$^{ }_{1:0}$	& \\
-ADR		& rx, rel$^{ }_{10}$	& rx = PC $+$ rel$^{\emptyset}_{9:2}$:0$^{ }_{1:0}$	& \\
-CMN		& rx, ry		& rx $+$ ry					& \\
-CMP		& rx, \#i$^{ }_{8}$	& rx $-$ i$^{\emptyset}_{ }$			& \\
-CMP		& rx, ry		& rx $-$ ry					& H \\
-MUL\{S\}	& rx, ry		& rx = rx $\umul$ ry				& S \\
-RSB\{S\}	& rx, ry, \#0		& rx = 0 $-$ ry					& S \\
-SBC\{S\}	& rx, ry		& rx = rx $-$ (ry $+$ C)			& S \\
-SUB\{S\}	& rx, ry, \#i$^{ }_{3}$	& rx = ry $-$ i$^{\emptyset}_{ }$		& S \\
-SUB\{S\}	& rx, \#i$^{ }_{8}$	& rx = rx $-$ i$^{\emptyset}_{ }$		& S \\
-SUB\{S\}	& rx, ry, rz		& rx = ry $-$ rz				& S \\
-SUB		& SP, \#i$^{ }_{9}$	& SP = SP $-$ i$^{\emptyset}_{8:2}$:0$^{ }_{1:0}$	& \\
+ADC\{S\}	& rd, rn		& rd = rd $+$ rn $+$ C				& S \\
+ADD\{S\}	& rd, rn, \#i$^{ }_{3}$	& rd = rn $+$ i$^{\emptyset}_{ }$		& S \\
+ADD\{S\}	& rd, \#i$^{ }_{8}$	& rd = rd $+$ i$^{\emptyset}_{ }$		& S \\
+ADD\{S\}	& rd, rn, rm		& rd = rn $+$ rm				& S \\
+ADD		& rd, rn		& rd = rd $+$ rn				& H \\
+ADD		& rd, SP, \#i$^{ }_{10}$	& rd = SP $+$ i$^{\emptyset}_{9:2}$:0$^{ }_{2}$	& \\
+ADD		& SP, \#i$^{ }_{9}$	& SP = SP $+$ i$^{\emptyset}_{8:2}$:0$^{ }_{2}$	& \\
+ADR		& rd, rel$^{ }_{10}$	& rd = PC $+$ rel$^{\emptyset}_{9:2}$:0$^{ }_{2}$	& \\
+CMN		& rn, rm		& rn $+$ rm					& \\
+CMP		& rn, \#i$^{ }_{8}$	& rn $-$ i$^{\emptyset}_{ }$			& \\
+CMP		& rn, rm		& rn $-$ rm					& H \\
+MUL\{S\}	& rd, rn		& rd = rd $\umul$ rn				& S \\
+RSB\{S\}	& rd, rn, \#0		& rd = 0 $-$ rn					& S \\
+SBC\{S\}	& rd, rn		& rd = rd $-$ (rn $+$ C)			& S \\
+SUB\{S\}	& rd, rn, \#i$^{ }_{3}$	& rd = rn $-$ i$^{\emptyset}_{ }$		& S \\
+SUB\{S\}	& rd, \#i$^{ }_{8}$	& rd = rd $-$ i$^{\emptyset}_{ }$		& S \\
+SUB\{S\}	& rd, rn, rm		& rd = rn $-$ rm				& S \\
+SUB		& SP, \#i$^{ }_{9}$	& SP = SP $-$ i$^{\emptyset}_{8:2}$:0$^{ }_{2}$	& \\
 \end{asmtable}
 %
 \begin{asmtable}{Thumb16 Load and Store Instructions}
-LDM\textit{IA}	& rx\{!\}, rlist	& rlist = [rx]; if(!) rx $+$= 4$\times$cnt	& \\
-LDMIA		& SP!, rlist		& rlist = [SP]; SP $+$= 4$\times$cnt		& \\
-LDR		& rx, [ry\{, \#i$^{ }_{7}$\}]	& rx = [ry $+$ i$^{\emptyset}_{6:2}$:0$^{ }_{1:0}$]	& \\
-LDR		& rx, [SP\{, \#i$^{ }_{10}$\}]	& rx = [SP $+$ i$^{\emptyset}_{9:2}$:0$^{ }_{1:0}$]	& \\
-LDR		& rx, rel$^{ }_{10}$	& rx = [PC $+$ rel$^{\emptyset}_{9:2}$:0$^{ }_{1:0}$]	& \\
-LDR		& rx, [ry, rz]		& rx = [ry $+$ rz]				& \\
-LDRB		& rx, [ry\{, \#i$^{ }_{5}$\}]	& rx = [ry $+$ i$^{\emptyset}_{ }$]$^{\emptyset}_{8}$	& \\
-LDRB		& rx, [ry, rz]		& rx = [ry $+$ rz]$^{\emptyset}_{8}$		& \\
-LDRH		& rx, [ry\{, \#i$^{ }_{6}$\}]	& rx = [ry $+$ i$^{\emptyset}_{5:1}$:0]$^{\emptyset}_{16}$	& \\
-LDRH		& rx, [ry, rz]		& rx = [ry $+$ rz]$^{\emptyset}_{16}$		& \\
-LDRSB		& rx, [ry, rz]		& rx = [ry $+$ rz]$^{\pm}_{8}$			& \\
-LDRSH		& rx, [ry, rz]		& rx = [ry $+$ rz]$^{\pm}_{16}$			& \\
-\textit{POP}	& rlist			& rlist = [SP]; SP $+$= 4$\times$cnt		& \\
-\textit{PUSH}	& rlist			& SP $-$= 4$\times$cnt; [SP] = rlist		& \\
-STM\textit{IA}	& rx!, rlist		& [rx] = rlist; rx $+$= 4$\times$cnt		& \\
-STMDB		& SP!, rlist		& SP $-$= 4$\times$cnt; [SP] = rlist		& \\
-STR		& rx, [ry\{, \#i$^{ }_{7}$\}]	& [ry $+$ i$^{\emptyset}_{6:2}$:0$^{ }_{1:0}$] = rx	& \\
-STR		& rx, [SP\{, \#i$^{ }_{10}$\}]	& [SP $+$ i$^{\emptyset}_{9:2}$:0$^{ }_{1:0}$] = rx	& \\
-STR		& rx, [ry, rz]		& [ry $+$ rz] = rx				& \\
-STRB		& rx, [ry\{, \#i$^{ }_{5}$\}]	& [ry $+$ i$^{\emptyset}_{ }$]$^{ }_{8}$ = rx$^{ }_{7:0}$	& \\
-STRB		& rx, [ry, rz]		& [ry $+$ rz]$^{ }_{8}$ = rx$^{ }_{7:0}$	& \\
-STRH		& rx, [ry\{, \#i$^{ }_{6}$\}]	& [ry $+$ i$^{\emptyset}_{5:1}$:0]$^{ }_{16}$ = rx$^{ }_{15:0}$	& \\
-STRH		& rx, [ry, rz]		& [ry $+$ rz]$^{ }_{16}$ = rx$^{ }_{15:0}$	& \\
+LDM\textit{IA}	& rn\{!\}, rlist	& rlist = [rn]$^{ }_{32cnt}$; if(!) rn $+$= 4cnt	& \\
+LDMIA		& SP!, rlist		& rlist = [SP]$^{ }_{32cnt}$; SP $+$= 4cnt	& \\
+LDR		& rt, [rn\{, \#i$^{ }_{7}$\}]	& rt = [rn $+$ i$^{\emptyset}_{6:2}$:0$^{ }_{2}$]$^{ }_{32}$	& \\
+LDR		& rt, [SP\{, \#i$^{ }_{10}$\}]	& rt = [SP $+$ i$^{\emptyset}_{9:2}$:0$^{ }_{2}$]$^{ }_{32}$	& \\
+LDR		& rt, rel$^{ }_{10}$	& rt = [PC $+$ rel$^{\emptyset}_{9:2}$:0$^{ }_{2}$]$^{ }_{32}$	& \\
+LDR		& rt, [rn, rm]		& rt = [rn $+$ rm]$^{ }_{32}$			& \\
+LDRB		& rt, [rn\{, \#i$^{ }_{5}$\}]	& rt = [rn $+$ i$^{\emptyset}_{ }$]$^{\emptyset}_{8}$	& \\
+LDRB		& rt, [rn, rm]		& rt = [rn $+$ rm]$^{\emptyset}_{8}$		& \\
+LDRH		& rt, [rn\{, \#i$^{ }_{6}$\}]	& rt = [rn $+$ i$^{\emptyset}_{5:1}$:0$^{ }_{1}$]$^{\emptyset}_{16}$	& \\
+LDRH		& rt, [rn, rm]		& rt = [rn $+$ rm]$^{\emptyset}_{16}$		& \\
+LDRSB		& rt, [rn, rm]		& rt = [rn $+$ rm]$^{\pm}_{8}$			& \\
+LDRSH		& rt, [rn, rm]		& rt = [rn $+$ rm]$^{\pm}_{16}$			& \\
+\textit{POP}	& rlist			& rlist = [SP]$^{ }_{32cnt}$; SP $+$= 4cnt	& \\
+\textit{PUSH}	& rlist			& SP $-$= 4cnt; [SP]$^{ }_{32cnt}$ = rlist	& \\
+STM\textit{IA}	& rn!, rlist		& [rn]$^{ }_{32cnt}$ = rlist; rn $+$= 4cnt	& \\
+STMDB		& SP!, rlist		& SP $-$= 4cnt; [SP]$^{ }_{32cnt}$ = rlist	& \\
+STR		& rt, [rn\{, \#i$^{ }_{7}$\}]	& [rn $+$ i$^{\emptyset}_{6:2}$:0$^{ }_{2}$]$^{ }_{32}$ = rt	& \\
+STR		& rt, [SP\{, \#i$^{ }_{10}$\}]	& [SP $+$ i$^{\emptyset}_{9:2}$:0$^{ }_{2}$]$^{ }_{32}$ = rt	& \\
+STR		& rt, [rn, rm]		& [rn $+$ rm]$^{ }_{32}$ = rt			& \\
+STRB		& rt, [rn\{, \#i$^{ }_{5}$\}]	& [rn $+$ i$^{\emptyset}_{ }$]$^{ }_{8}$ = rt$^{ }_{B0}$	& \\
+STRB		& rt, [rn, rm]		& [rn $+$ rm]$^{ }_{8}$ = rt$^{ }_{B0}$		& \\
+STRH		& rt, [rn\{, \#i$^{ }_{6}$\}]	& [rn $+$ i$^{\emptyset}_{5:1}$:0$^{ }_{1}$]$^{ }_{16}$ = rt$^{ }_{H0}$	& \\
+STRH		& rt, [rn, rm]		& [rn $+$ rm]$^{ }_{16}$ = rt$^{ }_{H0}$	& \\
 \end{asmtable}
 %
 \newpage
@@ -482,148 +486,85 @@ STRH		& rx, [ry, rz]		& [ry $+$ rz]$^{ }_{16}$ = rx$^{ }_{15:0}$	& \\
 {\Large\bfseries AArch32 Floating-point and \\* Advanced SIMD Extensions}
 \end{center}
 %
-\begin{asmtable}{Load/Store Instructions}
-VLDMDB		& rx\{!\}, flist			& flist = [rx $-$ f$\times$cnt]; if(!) rx$-$=f$\times$cnt	& \\
-VLDMIA		& rx\{!\}, flist			& flist = [rx]; if(!) rx $+$= f$\times$cnt			& \\
-VLDR		& fx,[ry\{,\#$\pm$i$^{ }_{10}$\}]	& fx = [ry $+$ i$^{\pm}_{9:2}$0$^{ }_{1:0}$]$^{ }_{f}$		& \\
-VLDR		& fx, $\pm$rel$^{ }_{10}$		& fx = [PC $+$ rel$^{\pm}_{9:2}$0$^{ }_{1:0}$]$^{ }_{f}$	& \\
-VSTMDB		& rx\{!\}, flist			& [rx $-$ f$\times$cnt] = flist; if(!) rx$-$=f$\times$cnt	& \\
-VSTMIA		& rx\{!\}, flist			& flist = [rx]; if(!) rx $+$= f$\times$cnt      		& \\
-VSTR		& fx,[ry\{,\#$\pm$i$^{ }_{10}$\}]	& [ry $+$ i$^{\pm}_{9:2}$0$^{ }_{1:0}$]$^{ }_{f}$ = fx		& \\
-\end{asmtable}
-%
-\begin{asmtable}{SIMD Load/Store Instructions}
-VLD1.z		& \{dx...\}, [addr]	& ...:dx$^{'}_{ }$:dx = [addr]$^{ }_{64 \umul cnt}$			& \\ % z = 8,16,32,64
-VLD1.z		& \{dx[]...\}, [addr]	& (...:dx$^{'}_{ }$:dx)$^{ }_{z*}$ = [addr]$^{ }_{z}$			& \\ % z = 8,16,32
-VLD1.z		& \{dx[i]\}, [addr]	& dx$^{ }_{zi}$ = [addr]$^{ }_{z}$					& \\ % z = 8,16,32
-VLD2.z		& \{dx...\}, [addr]	& ...:dx$^{ }_{z2}$:dx$^{'}_{z1}$:dx$^{ }_{z1}$:dx$^{'}_{z0}$:dx$^{ }_{z0}$=[addr]$^{ }_{64 \umul cnt}$	& \\ % z = 8,16,32
-VLD2.z		& \{dx[]...\}, [addr]	& dx$^{'}_{z*}$:dx$^{ }_{z*}$ = [addr]$^{ }_{2z}$			& \\ % z = 8,16,32
-VLD2.z		& \{dx[i]...\}, [addr]	& dx$^{'}_{zi}$:dx$^{ }_{zi}$ = [addr]$^{ }_{2z}$			& \\ % z = 8,16,32
-VLD3.z		& \{dx...\}, [addr]	& ...:dx$^{'}_{z1}$:dx$^{ }_{z1}$:dx$^{''}_{z0}$:dx$^{'}_{z0}$:dx$^{ }_{z0}$=[addr]$^{ }_{64 \umul cnt}$	& \\ % z = 8,16,32
-VLD3.z		& \{dx[]...\}, [addr]	& dx$^{''}_{z*}$:dx$^{'}_{z*}$:dx$^{ }_{z*}$ = [addr]$^{ }_{3z}$	& \\ % z = 8,16,32
-VLD3.z		& \{dx[i]...\}, [addr]	& dx$^{''}_{zi}$:dx$^{'}_{zi}$:dx$^{ }_{zi}$ = [addr]$^{ }_{3z}$	& \\ % z = 8,16,32
-VLD4.z		& \{dx...\}, [addr]	& ...:dx$^{ }_{z1}$:dx$^{'''}_{z0}$:dx$^{''}_{z0}$:dx$^{'}_{z0}$:dx$^{ }_{z0}$=[addr]$^{ }_{64 \umul cnt}$	& \\ % z = 8,16,32
-VLD4.z		& \{dx[]...\}, [addr]	& dx$^{'''}_{z*}$:dx$^{''}_{z*}$:dx$^{'}_{z*}$:dx$^{ }_{z*}$ = [addr]$^{ }_{4z}$	& \\ % z = 8,16,32
-VLD4.z		& \{dx[i]...\}, [addr]	& dx$^{'''}_{zi}$:dx$^{''}_{zi}$:dx$^{'}_{zi}$:dx$^{ }_{zi}$ = [addr]$^{ }_{4z}$	& \\ % z = 8,16,32
-VST1.z		& \{dx...\}, [addr]	& [addr]$^{ }_{64 \umul cnt}$ = ...:dx$^{'}_{ }$:dx			& \\ % z = 8,16,32,64
-VST1.z		& \{dx[i]\}, [addr]	& [addr]$^{ }_{z}$ = dx$^{ }_{zi}$					& \\ % z = 8,16,32
-VST2.z		& \{dx...\}, [addr]	& [addr]$^{ }_{64 \umul cnt}$ = ...:dx$^{'}_{z1}$:dx$^{ }_{z1}$:dx$^{'}_{z0}$:dx$^{ }_{z0}$	& \\ % z = 8,16,32
-VST2.z		& \{dx[i]...\}, [addr]	& [addr]$^{ }_{2z}$ = dx$^{'}_{zi}$:dx$^{ }_{zi}$			& \\ % z = 8,16,32
-VST3.z		& \{dx...\}, [addr]	& [addr]$^{ }_{64 \umul cnt}$=...:dx$^{'}_{z1}$:dx$^{ }_{z1}$:dx$^{''}_{z0}$:dx$^{'}_{z0}$:dx$^{ }_{z0}$	& \\ % z = 8,16,32
-VST3.z		& \{dx[i]...\}, [addr]	& [addr]$^{ }_{3z}$ = dx$^{''}_{zi}$:dx$^{'}_{zi}$:dx$^{ }_{zi}$		& \\ % z = 8,16,32
-VST4.z		& \{dx...\}, [addr]	& [addr]$^{ }_{64 \umul cnt}$=...:dx$^{ }_{z1}$:dx$^{'''}_{z0}$:dx$^{''}_{z0}$:dx$^{'}_{z0}$:dx$^{ }_{z0}$	& \\ % z = 8,16,32
-VST4.z		& \{dx[i]...\}, [addr]	& [addr]$^{ }_{4z}$ = dx$^{'''}_{zi}$:dx$^{''}_{zi}$:dx$^{'}_{zi}$:dx$^{ }_{zi}$	& \\ % z = 8,16,32
-\end{asmtable}
-%
-\begin{table-lX}{VLDx/VSTx Addressing Modes}
-rz\{:align\}		& addr = rz \\
-rz\{:align\}!		& addr = rz; rz $+$= (z$\lsr$3) $\times$ cnt \\
-rz\{:align\}, rw	& addr = rz; rz $+$= rw \\
-\end{table-lX}
-%
-\begin{asmtable2}{SIMD Reciprocal Instructions}
-VRECPE.F32	& mx, my		& mx$^{ }_{32*}$=RecipEstimateFloat(my$^{ }_{32*}$)				& \\
-VRECPE.U32	& mx, my		& mx$^{ }_{32*}$=RecipEstimateInt(my$^{ }_{32*}$)				& \\
-VRECPS.F32	& mx, my, mz		& mx$^{ }_{32*}$=RecipStepFloat(my$^{ }_{32*}$, mz$^{ }_{32*}$)			& \\
-VRSQRTE.F32	& mx, my		& mx$^{ }_{32*}$=SqrtEstimateFloat(my$^{ }_{32*}$)				& \\
-VRSQRTE.U32	& mx, my		& mx$^{ }_{32*}$=SqrtEstimateInt(my$^{ }_{32*}$)				& \\
-VRSQRTS.F32	& mx, my, mz		& mx$^{ }_{32*}$=SqrtStepFloat(my$^{ }_{32*}$, mz$^{ }_{32*}$)			& \\
+\begin{asmtable2}{Floating-point Arithmetic Instructions}
+VABS.f		& fd, fn		& fd = $\lvert$fn$\rvert$							& \\
+VADD.f		& fd, fn, fm		& fd = fn $+$ fm								& \\
+VCMP\{E\}.f	& fn, \#0.0		& FPSCR\_nzcv = Compare(fn, 0.0)						& \\
+VCMP\{E\}.f	& fn, fm		& FPSCR\_nzcv = Compare(fn, fm)							& \\
+VDIV.f		& fd, fn, fm		& fd = fn $\udiv$ fm								& \\
+VFMa.f		& fd, fn, fm		& fd = fd $\pm$ fn $\umul$ fm							& V4 \\
+VFMNa.f		& fd, fn, fm		& fd = $-$fd $\pm$ fn $\umul$ fm						& V4 \\
+VMLa.f		& fd, fn, fm		& fd = fd $\pm$ fn $\umul$ fm							& \\
+VMUL.f		& fd, fn, fm		& fd = fn $\umul$ fm								& \\
+VNEG.f		& fd, fn		& fd = 0.0 $-$ fn								& \\
+VNMLa.f		& fd, fn, fm		& fd = $-$fd $\pm$ $-$fn $\umul$ fm						& \\
+VNMUL.f		& fd, fn, fm		& fd = 0.0 $-$ fn $\umul$ fm							& \\
+VSQRT.f		& fd, fn		& fd = SQRT(fn)									& \\
+VSUB.f		& fd, fn, fm		& fd = fn $-$ fm								& \\
 \end{asmtable2}
 %
-\begin{asmtable2}{Floating-point Instructions}
-VABS.f		& fx, fy		& fx = $\lvert$fy$\rvert$			& \\
-VADD.f		& fx, fy, fz		& fx = fy $+$ fz				& \\
-VCMP\{E\}.f	& fd, \#0.0		& FPSCR\_nzcv = Compare(fx, 0)			& \\
-VCMP\{E\}.f	& fx, fy		& FPSCR\_nzcv = Compare(fx, fy)			& \\
-VCVT.F32.F64	& sx, dy		& sx = Float2Float(dy)				& \\
-VCVT.F64.F32	& dx, sy		& dx = Float2Float(sy)				& \\
-VCVT.sz.f	& fx, fy, \#i$^{ }_{5}$	& fx = Float2Fixed(fy, i)$^{s}_{ }$		& V3 \\ % z = 16,32
-VCVT.f.s32	& fx, sy		& fx = Int2Float(sy$^{s}_{ }$)			& \\
-VCVT.f.sz	& fx, fy, \#i$^{ }_{5}$	& fx = Fixed2Float(fy$^{s}_{ }$, i)		& V3 \\ % z = 16,32
-VCVT\{R\}.s32.f	& sx, fy		& sx = Float2Int(fy)$^{s}_{ }$			& \\
-VCVTx.F16.F32	& sx, sy		& sx$^{ }_{Hx}$ = Float2Float(sy)		& V3 \\
-VCVTx.F32.F16	& sx, sy		& sx = Float2Float(sy$^{ }_{Hx}$)		& V3 \\
-VDIV.f		& fx, fy, fz		& fx = fy $\udiv$ dz				& \\
-VFMa.f		& fx, fy, fz		& fx $\pm$= fy $\umul$ fz			& V4 \\
-VFMNa.f		& fx, fy, fz		& fx = $-$fx $\pm$ fy $\umul$ fz		& V4 \\
-VMLa.f		& fx, fy, fz		& fx $\pm$= $\lfloor$fy $\umul$ fz$\rfloor$	& \\
-VMOV.f		& fx, \#$\pm$i$^{ }_{7}$	& fx = $\pm$i				& V3 \\
-VMOV.f		& fx, fy		& fx = fy					& \\
-VMUL.f		& fx, fy, fz		& fx = fy $\umul$ fz				& \\
-VNEG.f		& fx, fy		& fx = $-$fy					& \\
-VNMLa.f		& fx, fy, fz		& fx = $-$fx $\pm$ $-\lfloor$fy $\umul$ fz$\rfloor$	& \\
-VNMUL.f		& fx, fy, fz		& fx = $-\lfloor$fy $\umul$ fz$\rfloor$	& \\
-VSQRT.f		& fx, fy		& fx = SQRT(fy)					& \\
-VSUB.f		& fx, fy, fz		& fx = fy $-$ fz				& \\
+\begin{asmtable2}{Load/Store Instructions}
+VLDMDB\{.z\}	& rn\{!\}, flist		& flist=[rn$-^{z}_{8}$cnt]$^{ }_{z{\times}cnt}$; if(!) rn$-$=$^{z}_{8}$cnt	& \\
+VLDM\textit{IA}\{.z\}	& rn\{!\}, flist	& flist = [rn]$^{ }_{z{\times}cnt}$; if(!) rn $+$= $^{z}_{8}\times$cnt	& \\
+VLDR\{.z\}	& ft,[rn\{,\#i$^{ }_{10}$\}]	& ft = [rn $+$ i$^{\pm}_{9:2}$:0$^{ }_{2}$]$^{ }_{z}$			& \\
+VLDR\{.z\}	& ft, rel$^{ }_{10}$		& ft = [PC $+$ rel$^{\pm}_{9:2}$:0$^{ }_{2}$]$^{ }_{z}$			& \\
+\textit{VPOP\{.z\}}	& flist			& SP $-$= $^{z}_{8}\times$cnt; flist = [SP]$^{ }_{z{\times}cnt}$	& \\
+\textit{VPUSH\{.z\}}	& flist			& [SP]$^{ }_{z{\times}cnt}$ = flist; SP $+$= $^{z}_{8}\times$cnt	& \\
+VSTMDB\{.z\}	& rn\{!\}, flist		& [rn$-^{z}_{8}\times$cnt]$^{ }_{f{\times}cnt}$=flist; if(!)rn$-$=$^{z}_{8}\times$cnt	& \\
+VSTM\textit{IA}\{.z\}	& rn\{!\}, flist	& [rn]$^{ }_{z{\times}cnt}$ = flist; if(!) rn $+$= $^{z}_{8}\times$cnt	& \\
+VSTR\{.z\}	& ft,[rn\{,\#i$^{ }_{10}$\}]	& [rn $+$ i$^{\pm}_{9:2}$:0$^{ }_{2}$]$^{ }_{z}$ = ft			& \\
 \end{asmtable2}
 %
-\begin{asmtable3}{Register Transfer Instructions}
-VMOV\{.32\}	& dx[i], ry		& dx$^{ }_{32i}$ = ry				& \\
-VMOV\{.32\}	& rx, dy[i]		& rx = dy$^{ }_{32i}$				& \\
-VMOV		& sx, ry		& sx = ry					& \\
-VMOV		& rx, sy		& rx = sy					& \\
-VMOV		& sx, sx$^{'}_{ }$, ry, rz	& sx$^{'}_{ }$:sx = rz:ry		& \\
-VMOV		& rx, ry, sz, sz$^{'}_{ }$	& ry:rx = sz$^{'}_{ }$:sz		& \\
-VMOV		& dx, ry, rz		& dx = rz:ry					& \\
-VMOV		& rx, ry, dz		& ry:rx = dz					& \\
-VMRS		& rx, fpreg		& rx = fpreg					& \\
-VMRS		& APSR\_nzcv,FPSCR	& APSR\_nzcv = FPSCR\_nzcv			& \\
-VMSR		& fpreg, rx		& fpreg = rx					& \\
-\end{asmtable3}
+\begin{asmtable2}{Floating-point Convertion Instructions}
+VCVT.F32.F64	& Sd, Dn		& Sd = Float2Float(Dn)								& \\
+VCVT.F64.F32	& Dd, Sn		& Dd = Float2Float(Sn)								& \\
+VCVT.sz.f	& fd, fn, \#i$^{ }_{5}$	& fd = Float2Fixed(fn, i)$^{s}_{ }$						& V3 \\ % z = 16,32
+VCVT.f.s32	& fd, Sn		& fd = Int2Float(Sn$^{s}_{ }$)							& \\
+VCVT.f.sz	& fd, fn, \#i$^{ }_{5}$	& fd = Fixed2Float(fn$^{s}_{ }$, i)						& V3 \\ % z = 16,32
+VCVT\{,R\}.s32.f	& Sd, fn	& Sd = Float2Int(fn)$^{s}_{ }$							& \\
+VCVTx.F16.F32	& Sd, Sn		& Sd$^{ }_{Hx}$ = Float2Float(Sn)						& V3 \\
+VCVTx.F32.F16	& Sd, Sn		& Sd = Float2Float(Sn$^{ }_{Hx}$)						& V3 \\
+\end{asmtable2}
 %
-\begin{asmtable3}{SIMD Register Transfer Instructions}
-VDUP.z		& mx, ry		& mx$^{ }_{z*}$ = ry$^{ }_{z}$			& \\ % z = 8,16,32
-VDUP.z		& mx, dy[i]		& mx$^{ }_{z*}$ = dy$^{ }_{zi}$			& \\ % z = 8,16,32
-VMOV.z		& dx[i], ry		& dx$^{ }_{zi}$ = ry$^{ }_{z}$			& \\ % z = 8,16
-VMOV.sz		& rx, dy[i]		& rx = dy$^{s}_{zi}$				& \\ % z = 8,16
-VMOV		& mx, my		& mx = my					& \\
-\end{asmtable3}
+\begin{asmtable6}{Register Transfer Instructions}
+VMOV\{.32\}	& Dd[i], rn		& Dd$^{ }_{32i}$ = rn								& \\
+VMOV\{.32\}	& rd, Dn[i]		& rd = Dn$^{ }_{32i}$								& \\
+VMOV		& Sd, rn		& Sd = rn									& \\
+VMOV		& rd, Sn		& rd = Sn									& \\
+VMOV		& Sd, Sd$^{'}_{ }$, rn, rm	& Sd$^{'}_{ }$:Sd = rm:rn						& \\
+VMOV		& rd, rd2, Sn, Sn$^{'}_{ }$	& rd2:rd = Sn$^{'}_{ }$:Sn						& \\
+VMOV		& Dd, rn, rm		& Dd = rm:rn									& \\
+VMOV		& rd, rd2, Dn		& rd2:rd = Dn									& \\
+VMOV.f		& fd, \#i		& fd = i									& V3 \\
+VMOV.f		& fd, fn		& fd = fn									& \\
+VMRS		& rd, fpreg		& rd = fpreg									& \\
+VMRS		& APSR\_nzcv,FPSCR	& APSR\_nzcv = FPSCR\_nzcv							& \\
+VMSR		& fpreg, rn		& fpreg = rn									& \\
+\end{asmtable6}
 %
-\begin{table-lX}{Floating-point System Registers}
+\begin{table-lX}{Floating-point System Registers (fpreg)}
 FPEXC	& Floating-point Exception Control \\
 FPSCR	& Floating-point Status and Control \\
 FPSID	& Floating-point System ID \\
 MVFR\{0..1\}	& Media and VFP Feature \{0..1\} \\
 \end{table-lX}
 %
-\begin{table-llX}{Floating-point Status and Control Register (FPSCR)}
-IOC	& 0x00000001	& Invalid Operation cumulative exception	\\
-DZC	& 0x00000002	& Division by Zero cumulative exception		\\
-OFC	& 0x00000004	& Overflow cumulative exception			\\
-UFC	& 0x00000008	& Underflow cumulative exception		\\
-IXC	& 0x00000010	& Inexact cumulative exception			\\
-IDC	& 0x00000080	& Input Denormal cumulative exception		\\
-IOE	& 0x00000100	& Invalid Operation exception trap enable	\\
-DZE	& 0x00000200	& Division by Zero exception trap enable	\\
-OFE	& 0x00000400	& Overflow exception trap enable		\\
-UFE	& 0x00000800	& Underflow exception trap enable		\\
-IXE	& 0x00001000	& Inexact exception trap enable			\\
-IDE	& 0x00008000	& Input Denormal exception trap enable		\\
-%Len	& 0x00070000	& VFP vector length				\\ % Deprecated
-%Stride	& 0x00300000	& VFP vector stride				\\ % Deprecated
-RMode	& 0x00c00000	& Rounding mode (RN,RP,RM,RZ)			\\
-FZ	& 0x01000000	& Flush-to-zero mode				\\
-DN	& 0x02000000	& Default NaN mode				\\
-AHP	& 0x04000000	& Alternative half-precision			\\
-QC	& 0x08000000	& Cumulative saturation				\\
-V	& 0x10000000	& Overflow condition flag			\\
-C	& 0x20000000	& Carry condition flag				\\
-Z	& 0x40000000	& Zero condition flag				\\
-N	& 0x80000000	& Negative condition flag			\\
-\end{table-llX}
-%
-\begin{table-lX}{Floating-point and SIMD Keys}
-s		& Operation signess (S or U) \\
-z		& Data size (8, 16, or 32) \\
-f		& Floating-point size (F32 or F64) \\
-sx, dx, qx	& Singleword/doubleword/quadword register \\
-fx, fy, fz	& Floating-point register (sx or dx depending on data size) \\
-mx, my, mz	& SIMD register (dx or qx) \\
-cm		& SIMD comparison operator (GE, GT, LE, or LT) \\
-$\lfloor$x$\rfloor$	& Value is rounded \\
-x $\lsl\lsr$ y	& (y $\ult$ 0) ? (x $\lsr$ $-$y) : (x $\lsl$ y) \\
-$\max$ $\min$	& Maximum/minimum value \\
-\end{table-lX}
+\begin{table-llXr}{Floating-point Status and Control Register (FPSCR)}
+DOE,IOC	& 0x00000101	& Invalid operation (trap enable, exception)	& \\
+DZE,DZC	& 0x00000202	& Division by zero (trap enable, exception)	& \\
+OFE,OFC	& 0x00000404	& Overflow (trap enable, exception)		& \\
+UFE,UFC	& 0x00000808	& Underflow (trap enable, exception)		& \\
+IXE,IXC	& 0x00001010	& Inexact (trap enable, exception)		& \\
+IDE,IDC	& 0x00008080	& Input denormal (trap enable, exception)	& \\
+%Len	& 0x00070000	& VFP vector length				& \\ % Deprecated
+%Stride	& 0x00300000	& VFP vector stride				& \\ % Deprecated
+RMode	& 0x00c00000	& Rounding mode (RN,RP,RM,RZ)			& \\
+FZ	& 0x01000000	& Flush-to-zero mode				& \\
+DN	& 0x02000000	& Default NaN mode				& \\
+AHP	& 0x04000000	& Alternative half-precision			& \\
+QC	& 0x08000000	& Cumulative saturation				& \\
+N,Z,C,V	& 0xf0000000	& Condition flags (Negative,Zero,Carry,Overflow)	& \\
+\end{table-llXr}
 %
 \begin{table-lX}{Notes for Floating-point and SIMD Instructions}
 V3,V4	& Introduced in VFPv3, VFPv4 \\
@@ -631,143 +572,185 @@ SH,S2	& Introduced in SIMD with half-precision floats, SIMDv2 \\
 F	& Instruction with data type F32 also exists \\
 \end{table-lX}
 %
+\begin{asmtable}{SIMD Load/Store Instructions}
+VLD1.z		& \{Dt...\}, [addr]	& ...:Dt$^{'}_{ }$:Dt = [addr]$^{ }_{64 \umul cnt}$				& \\ % z = 8,16,32,64
+VLD1.z		& \{Dt[]...\}, [addr]	& (...:Dt$^{'}_{ }$:Dt)$^{ }_{z*}$ = [addr]$^{ }_{z}$				& \\ % z = 8,16,32
+VLD1.z		& \{Dt[i]\}, [addr]	& Dt$^{ }_{zi}$ = [addr]$^{ }_{z}$						& \\ % z = 8,16,32
+VLD2.z		& \{Dt...\}, [addr]	& ...:Dt$^{ }_{z2}$:Dt$^{'}_{z1}$:Dt$^{ }_{z1}$:Dt$^{'}_{z0}$:Dt$^{ }_{z0}$=[addr]$^{ }_{64 \umul cnt}$	& \\ % z = 8,16,32
+VLD2.z		& \{Dt[]...\}, [addr]	& Dt$^{'}_{z*}$:Dt$^{ }_{z*}$ = [addr]$^{ }_{2z}$				& \\ % z = 8,16,32
+VLD2.z		& \{Dt[i]...\}, [addr]	& Dt$^{'}_{zi}$:Dt$^{ }_{zi}$ = [addr]$^{ }_{2z}$				& \\ % z = 8,16,32
+VLD3.z		& \{Dt...\}, [addr]	& ...:Dt$^{'}_{z1}$:Dt$^{ }_{z1}$:Dt$^{''}_{z0}$:Dt$^{'}_{z0}$:Dt$^{ }_{z0}$=[addr]$^{ }_{64 \umul cnt}$	& \\ % z = 8,16,32
+VLD3.z		& \{Dt[]...\}, [addr]	& Dt$^{''}_{z*}$:Dt$^{'}_{z*}$:Dt$^{ }_{z*}$ = [addr]$^{ }_{3z}$		& \\ % z = 8,16,32
+VLD3.z		& \{Dt[i]...\}, [addr]	& Dt$^{''}_{zi}$:Dt$^{'}_{zi}$:Dt$^{ }_{zi}$ = [addr]$^{ }_{3z}$		& \\ % z = 8,16,32
+VLD4.z		& \{Dt...\}, [addr]	& ...:Dt$^{ }_{z1}$:Dt$^{'''}_{z0}$:Dt$^{''}_{z0}$:Dt$^{'}_{z0}$:Dt$^{ }_{z0}$=[addr]$^{ }_{64 \umul cnt}$	& \\ % z = 8,16,32
+VLD4.z		& \{Dt[]...\}, [addr]	& Dt$^{'''}_{z*}$:Dt$^{''}_{z*}$:Dt$^{'}_{z*}$:Dt$^{ }_{z*}$ = [addr]$^{ }_{4z}$	& \\ % z = 8,16,32
+VLD4.z		& \{Dt[i]...\}, [addr]	& Dt$^{'''}_{zi}$:Dt$^{''}_{zi}$:Dt$^{'}_{zi}$:Dt$^{ }_{zi}$ = [addr]$^{ }_{4z}$	& \\ % z = 8,16,32
+VST1.z		& \{Dt...\}, [addr]	& [addr]$^{ }_{64 \umul cnt}$ = ...:Dt$^{'}_{ }$:Dt				& \\ % z = 8,16,32,64
+VST1.z		& \{Dt[i]\}, [addr]	& [addr]$^{ }_{z}$ = Dt$^{ }_{zi}$						& \\ % z = 8,16,32
+VST2.z		& \{Dt...\}, [addr]	& [addr]$^{ }_{64 \umul cnt}$ = ...:Dt$^{'}_{z1}$:Dt$^{ }_{z1}$:Dt$^{'}_{z0}$:Dt$^{ }_{z0}$	& \\ % z = 8,16,32
+VST2.z		& \{Dt[i]...\}, [addr]	& [addr]$^{ }_{2z}$ = Dt$^{'}_{zi}$:Dt$^{ }_{zi}$				& \\ % z = 8,16,32
+VST3.z		& \{Dt...\}, [addr]	& [addr]$^{ }_{64 \umul cnt}$=...:Dt$^{'}_{z1}$:Dt$^{ }_{z1}$:Dt$^{''}_{z0}$:Dt$^{'}_{z0}$:Dt$^{ }_{z0}$	& \\ % z = 8,16,32
+VST3.z		& \{Dt[i]...\}, [addr]	& [addr]$^{ }_{3z}$ = Dt$^{''}_{zi}$:Dt$^{'}_{zi}$:Dt$^{ }_{zi}$		& \\ % z = 8,16,32
+VST4.z		& \{Dt...\}, [addr]	& [addr]$^{ }_{64 \umul cnt}$=...:Dt$^{ }_{z1}$:Dt$^{'''}_{z0}$:Dt$^{''}_{z0}$:Dt$^{'}_{z0}$:Dt$^{ }_{z0}$	& \\ % z = 8,16,32
+VST4.z		& \{Dt[i]...\}, [addr]	& [addr]$^{ }_{4z}$ = Dt$^{'''}_{zi}$:Dt$^{''}_{zi}$:Dt$^{'}_{zi}$:Dt$^{ }_{zi}$	& \\ % z = 8,16,32
+\end{asmtable}
+%
+\begin{table-lX}{VLDx/VSTx Addressing Modes}
+rn\{:align\}		& addr = rn \\
+rn\{:align\}!		& addr = rn; rn $+$= (z$\lsr$3) $\times$ cnt \\
+rn\{:align\}, rm	& addr = rn; rn $+$= rm \\
+\end{table-lX}
+%
+\begin{asmtable}{SIMD Register Transfer Instructions}
+VDUP.z		& md, rn		& md$^{ }_{z*}$ = rn$^{ }_{z}$							& \\ % z = 8,16,32
+VDUP.z		& md, Dn[i]		& md$^{ }_{z*}$ = Dn$^{ }_{zi}$							& \\ % z = 8,16,32
+VMOV.z		& Dd[i], rn		& Dd$^{ }_{zi}$ = rn$^{ }_{z}$							& \\ % z = 8,16
+VMOV.sz		& rd, Dn[i]		& rd = Dn$^{s}_{zi}$								& \\ % z = 8,16
+\textit{VMOV}	& md, mn		& md = mn									& \\
+VSWP		& md, mn		& mn:md = md:mn									& \\
+\end{asmtable}
+%
+\begin{table-lX}{Floating-point and SIMD Keys}
+z		& Data size (8, 16, or 32) \\
+f		& Floating-point size (F32 or F64) \\
+Sd, Dn, Qm	& Singleword/doubleword/quadword register \\
+fd, fn, fm	& Floating-point register (Sx or Dx depending on data size) \\
+md, mn, mm	& SIMD register (Dx or Qx) \\
+cm		& SIMD comparison operator (GE, GT, LE, or LT) \\
+x $\lsl\lsr$ y	& (y $\ult$ 0) ? (x $\lsr$ $-$y) : (x $\lsl$ y) \\
+$\max$ $\min$	& Maximum/minimum value \\
+\end{table-lX}
+%
 \begin{asmtable2}{SIMD Addition and Subtraction Instructions}
-VABA.sz		& mx, my, mz		& mx$^{ }_{z*}$ $\pm$= $\lvert$my$^{ }_{z*}$ $-$ mz$^{ }_{z*}$$\rvert$		& \\ % z = 8,16,32
-VABAL.sz	& qx, dy, dz		& qx$^{ }_{2z*}$ $\pm$= $\lvert$dy$^{ }_{z*}$ $-$ dz$^{ }_{z*}$$\rvert$		& \\ % z = 8,16,32
-VABD.sz		& mx, my, mz		& mx$^{ }_{z*}$ = $\lvert$my$^{ }_{z*}$ $-$ mz$^{ }_{z*}$$\rvert$		& F \\ % z = 8,16,32
-VABDL.sz	& qx, dy, dz		& qx$^{ }_{2z*}$ = $\lvert$dy$^{ }_{z*}$ $-$ dz$^{ }_{z*}$$\rvert$		& \\ % z = 8,16,32
-VABS.Sz		& mx, my		& mx$^{ }_{z*}$ = $\lvert$my$^{ }_{z*}$$\rvert$					& F \\ % z = 8,16,32
-VADD.Iz		& mx, my, mz		& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $+$ mz$^{ }_{z*}$				& F \\ % z = 8,16,32,64
-VADDHN.Iz	& dx, qy, qz		& dx$^{ }_{0\text{.}5z*}$ = (qy$^{ }_{z*}$ $+$ qz$^{ }_{z*}$)$\lsr$z		& \\ % z = 16,32,64
-VADDL.sz	& qx, dy, dz		& qx$^{ }_{z*}$ = dy$^{s}_{z*}$ $+$ dz$^{s}_{z*}$				& \\ % z = 8,16,32
-VADDW.sz	& qx, qy, dz		& qx$^{ }_{z*}$ = qy$^{ }_{z*}$ $+$ dz$^{s}_{z*}$				& \\ % z = 8,16,32
-VHADD.sz	& mx, my, mz		& mx$^{ }_{z*}$ = (my$^{s}_{z*}$ $+$ mz$^{s}_{z*}$) $\lsr$ 1			& \\ % z = 8,16,32
-VHSUB.sz	& mx, my, mz		& mx$^{ }_{z*}$ = (my$^{s}_{z*}$ $-$ mz$^{s}_{z*}$) $\lsr$ 1			& \\ % z = 8,16,32
-VNEG.Sz		& mx, my		& mx$^{ }_{z*}$ = 0 $-$ my$^{ }_{z*}$						& F \\ % z = 8,16,32
-VPADAL.sz	& mx, my		& mx$^{ }_{2z*}$ $+$= my$^{ }_{2z*[2z-1:z]}$ $+$ my$^{ }_{2z*[z-1:0]}$		& \\ % z = 8,16,32
-VPADD.Iz	& dx, dy, dz		& dx$^{ }_{z*}$=(dz:dy)$^{ }_{2z*[2z-1:z]}$$+$(dz:dy)$^{ }_{2z*[z-1:0]}$	& F \\ % z = 8,16,32
-VPADDL.sz	& mx, my		& mx$^{ }_{2z*}$ = my$^{ }_{2z*[2z-1:z]}$ $+$ my$^{ }_{2z*[z-1:0]}$		& \\ % z = 8,16,32
-VRADDHN.Iz	& dx, qy, qz		& dx$^{ }_{0\text{.}5z*}$ = $\lfloor$qy$^{ }_{z*}$ $+$ qz$^{ }_{z*}$$\rfloor$ $\lsr$ z	& \\ % z = 16,32,64
-VRHADD.sz	& mx, my, mz		& mx$^{ }_{z*}$ = $\lfloor$(my$^{s}_{z*}$ $+$ mz$^{s}_{z*}$) $\lsr$ 1$\rfloor$	& \\ % z = 8,16,32
-VRSUBHN.Iz	& dx, qy, qz		& dx$^{ }_{0\text{.}5z*}$ = $\lfloor$qy$^{ }_{z*}$ $-$ qz$^{ }_{z*}$$\rfloor$ $\lsr$ z	& \\ % z = 16,32,64
-VQABS.Sz	& mx, my		& mx$^{ }_{z*}$ = SATS($\lvert$my$^{ }_{z*}$$\rvert$, z)			& \\ % z = 8,16,32
-VQADD.sz	& mx, my, mz		& mx$^{ }_{z*}$ = SATs(my$^{ }_{z*}$ $+$ mz$^{ }_{z*}$, z)			& \\ % z = 8,16,32,64
-VQNEG.Sz	& mx, my		& mx$^{ }_{z*}$ = SATS(0 - my$^{ }_{z*}$, z)					& \\ % z = 8,16,32
-VQSUB.sz	& mx, my, mz		& mx$^{ }_{z*}$ = SATs(my$^{ }_{z*}$ $-$ mz$^{ }_{z*}$, z)			& \\ % z = 8,16,32,64
-VSUB.Iz		& mx, my, mz		& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $-$ mz$^{ }_{z*}$				& F \\ % z = 8,16,32,64
-VSUBHN.Iz	& dx, qy, qz		& dx$^{ }_{0\text{.}5z*}$ = (qy$^{ }_{z*}$ $-$ qz$^{ }_{z*}$) $\lsr$ z		& \\ % z = 16,32,64
-VSUBL.sz	& qx, dy, dz		& qx$^{ }_{z*}$ = dy$^{s}_{z*}$ $-$ dz$^{s}_{z*}$				& \\ % z = 8,16,32
-VSUBW.sz	& qx, qy, dz		& qx$^{ }_{z*}$ = qy$^{ }_{z*}$ $-$ dz$^{s}_{z*}$				& \\ % z = 8,16,32
+VABA.sz		& md, mn, mm		& md$^{ }_{z*}$ $+$= $\lvert$mn$^{ }_{z*}$ $-$ mm$^{ }_{z*}$$\rvert$		& \\ % z = 8,16,32
+VABAL.sz	& Qd, Dn, Dm		& Qd$^{ }_{2z*}$ $+$= $\lvert$Dn$^{ }_{z*}$ $-$ Dm$^{ }_{z*}$$\rvert$		& \\ % z = 8,16,32
+VABD.sz		& md, mn, mm		& md$^{ }_{z*}$ = $\lvert$mn$^{ }_{z*}$ $-$ mm$^{ }_{z*}$$\rvert$		& F \\ % z = 8,16,32
+VABDL.sz	& Qd, Dn, Dm		& Qd$^{ }_{2z*}$ = $\lvert$Dn$^{ }_{z*}$ $-$ Dm$^{ }_{z*}$$\rvert$		& \\ % z = 8,16,32
+VABS.Sz		& md, mn		& md$^{ }_{z*}$ = $\lvert$mn$^{ }_{z*}$$\rvert$					& F \\ % z = 8,16,32
+VADD.Iz		& md, mn, mm		& md$^{ }_{z*}$ = mn$^{ }_{z*}$ $+$ mm$^{ }_{z*}$				& F \\ % z = 8,16,32,64
+VADDL.sz	& Qd, Dn, Dm		& Qd$^{ }_{z*}$ = Dn$^{s}_{z*}$ $+$ Dm$^{s}_{z*}$				& \\ % z = 8,16,32
+VADDW.sz	& Qd, Qn, Dm		& Qd$^{ }_{z*}$ = Qn$^{ }_{z*}$ $+$ Dm$^{s}_{z*}$				& \\ % z = 8,16,32
+VHSUB.sz	& md, mn, mm		& md$^{ }_{z*}$ = (mn$^{s}_{z*}$ $-$ mm$^{s}_{z*}$) $\lsr$ 1			& \\ % z = 8,16,32
+VNEG.Sz		& md, mn		& md$^{ }_{z*}$ = 0 $-$ mn$^{ }_{z*}$						& F \\ % z = 8,16,32
+VPADAL.sz	& md, mn		& md$^{ }_{2z*}$ $+$= mn$^{s}_{z2*}$ $+$ mn$^{s}_{z2*+1}$			& \\ % z = 8,16,32
+VPADD.Iz	& Dd, Dn, Dm		& Dd$^{ }_{z*}$ = (Dm:Dn)$^{ }_{z2*}$ $+$ (Dm:Dn)$^{ }_{z2*+1}$			& F \\ % z = 8,16,32
+VPADDL.sz	& md, mn		& md$^{ }_{2z*}$ = mn$^{s}_{z2*}$ $+$ mn$^{s}_{z2*+1}$				& \\ % z = 8,16,32
+V\{R\}ADDHN.Iz	& Dd, Qn, Qm		& Dd$^{ }_{0\text{.}5z*}$ = Qn$^{ }_{z*}$ $+$ Qm$^{ }_{z*}$ $\lsr^{\{R\}}_{ }$ z	& \\ % z = 16,32,64
+V\{R\}HADD.sz	& md, mn, mm		& md$^{ }_{z*}$ = (mn$^{s}_{z*}$ $+$ mm$^{s}_{z*}$) $\lsr^{\{R\}}_{ }$ 1	& \\ % z = 8,16,32
+V\{R\}SUBHN.Iz	& Dd, Qn, Qm		& Dd$^{ }_{0\text{.}5z*}$ = Qn$^{ }_{z*}$ $-$ Qm$^{ }_{z*}$ $\lsr^{\{R\}}_{ }$ z	& \\ % z = 16,32,64
+VQABS.Sz	& md, mn		& md$^{ }_{z*}$ = $\lfloor$ $\lvert$mn$^{ }_{z*}$$\rvert$ $\rceil^{Sz}$		& \\ % z = 8,16,32
+VQADD.sz	& md, mn, mm		& md$^{ }_{z*}$ = $\lfloor$mn$^{ }_{z*}$ $+$ mm$^{ }_{z*}$$\rceil^{sz}$		& \\ % z = 8,16,32,64
+VQNEG.Sz	& md, mn		& md$^{ }_{z*}$ = $\lfloor$0 - mn$^{ }_{z*}$$\rceil^{Sz}$			& \\ % z = 8,16,32
+VQSUB.sz	& md, mn, mm		& md$^{ }_{z*}$ = $\lfloor$mn$^{ }_{z*}$ $-$ mm$^{ }_{z*}$$\rceil^{sz}$		& \\ % z = 8,16,32,64
+VSUB.Iz		& md, mn, mm		& md$^{ }_{z*}$ = mn$^{ }_{z*}$ $-$ mm$^{ }_{z*}$				& F \\ % z = 8,16,32,64
+VSUBL.sz	& Qd, Dn, Dm		& Qd$^{ }_{z*}$ = Dn$^{s}_{z*}$ $-$ Dm$^{s}_{z*}$				& \\ % z = 8,16,32
+VSUBW.sz	& Qd, Qn, Dm		& Qd$^{ }_{z*}$ = Qn$^{ }_{z*}$ $-$ Dm$^{s}_{z*}$				& \\ % z = 8,16,32
 \end{asmtable2}
 %
-\begin{asmtable2}{SIMD Data Convertion Instructions}
-VCVT.F16.F32	& dx, qy		& dx$^{ }_{16*}$ = Float2Float(qy$^{ }_{32*}$)					& SH \\
-VCVT.F32.F16	& qx, dy		& qx$^{ }_{32*}$ = Float2Float(dy$^{ }_{16*}$)					& SH \\
-VCVT.F32.s32	& mx, my		& mx$^{ }_{32*}$ = Int2Float(my$^{s}_{32*}$)					& \\
-VCVT.F32.s32	& mx, my, \#i$^{ }_{6}$	& mx$^{ }_{32*}$ = Fixed2Float(my$^{s}_{32*}$, i)				& \\
-VCVT.s32.F32	& mx, my		& mx$^{ }_{32*}$ = Float2Int(my)$^{s}_{32*}$					& \\
-VCVT.s32.F32	& mx, my, \#i$^{ }_{6}$	& mx$^{ }_{32*}$ = Float2Fixed(my, i)$^{s}_{32*}$				& \\
-VMOVL.sz	& qx, dy		& qx$^{ }_{2z*}$ = dy$^{\pm}_{z*}$						& \\ % z = 8,16,32
-VMOVN.Iz	& dx, qy		& dx$^{ }_{0\text{.}5z*}$ = qy$^{ }_{z*[0\text{.}5z-1:0]}$			& \\ % z = 16,32,64
-VQMOVN.sz	& dx, qy		& dx$^{ }_{0\text{.}5z*}$ = SATs(qy$^{ }_{z*}$, 0.5z)				& \\ % z = 16,32,64
-VQMOVUN.Sz	& dx, qy		& dx$^{ }_{0\text{.}5z*}$ = SATU(qy$^{ }_{z*}$, 0.5z)				& \\ % z = 16,32,64
-VUZP.z		& mx, my		& my = ...:my$^{ }_{z3}$:my$^{ }_{z1}$:...:mx$^{ }_{z3}$:mx$^{ }_{z1}$ \newline mx = ...:my$^{ }_{z2}$:my$^{ }_{z0}$:...:mx$^{ }_{z2}$:mx$^{ }_{z0}$ 	& \\ %z!=64
-VZIP.z		& mx, my		& my:mx = ...:my$^{ }_{z1}$:mx$^{ }_{z1}$:my$^{ }_{z0}$:mx$^{ }_{z0}$		& \\ % z = 8,16,32
-\end{asmtable2}
-%
-\begin{asmtable}{SIMD Bitwise Instructions}
-VAND			& mx, my, mz		& mx = my \& mz				& \\
-\textit{VAND.Iz}	& \{mx, \}mx, \#i	& mx$^{ }_{z*}$ \&= i			& \\ % z = 8,16,32,64
-VBIC			& mx, my, mz		& mx = my \& $\sim$mz			& \\
-VBIC.Iz			& \{mx, \}mx, \#i	& mx$^{ }_{z*}$ \&= $\sim$i		& \\ % z = 16,32 (8,64 as instruction alias)
-VEOR			& mx, my, mz		& mx = my $\oplus$  mz			& \\
-VBIF			& mx, my, mz		& if(mz$^{ }_{1*}$ $=$ 0) mx$^{ }_{1*}$ = my$^{ }_{1*}$	& \\
-VBIT			& mx, my, mz		& if(mz$^{ }_{1*}$ $=$ 1) mx$^{ }_{1*}$ = my$^{ }_{1*}$	& \\
-VBSL			& mx, my, mz		& mx$^{ }_{1*}$ = mx$^{ }_{1*}$ $=$ 1 ? my$^{ }_{1*}$ : mz$^{ }_{1*}$	& \\
-VEXT.z			& mx,my,mz,\#i$^{ }_{4}$	& mx$^{ }_{z*}$ = mz$^{ }_{z*[i-1:0]}$:my$^{ }_{z*[z-1:z-i+1]}$	& \\ % z = 8,16,32,64
-VMOV.Iz			& mx, \#i		& mx$^{ }_{z*}$ = i			& F \\ % z = 8,16,32,64
-VMVN.Iz			& mx, \#i		& mx$^{ }_{z*}$ = $\sim$i		& \\ % z = 16,32
-VMVN			& mx, my		& mx = $\sim$my				& \\
-VORR.Iz			& \{mx, \}mx, \#i	& mx$^{ }_{z*}$ |= i			& \\ % z = 16,32 (8,64 as instruction alias)
-VORR			& mx, my, mz		& mx = my | mz				& \\
-VORN			& mx, my, mz		& mx = my | $\sim$mz			& \\
-\textit{VORN.Iz}	& \{mx, \}mx, \#i	& mx$^{ }_{z*}$ |= $\sim$i		& \\ % z = 8,16,32,64
-\end{asmtable}
-%
-\begin{asmtable}{SIMD Comparision Instructions}
-VACcm.F32	& mx, my, mz		& mx$^{ }_{32*}$=$\lvert$my$^{ }_{32*}$$\rvert$ cm $\lvert$mz$^{ }_{32*}$$\rvert$ ?1$^{ }_{32}$:0$^{ }_{32}$	& \\
-VCEQ.Iz		& mx, my, mz		& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $\eq$ mz$^{ }_{z*}$ ? 1$^{ }_{z}$ : 0$^{ }_{z}$		& F \\ % z = 8,16,32
-VCEQ.Iz		& mx, my, \#0		& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $\eq$ 0 ? 1$^{ }_{z}$ : 0$^{ }_{z}$			& F \\ % z = 8,16,32
-VCcm.sz		& mx, my, mz		& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $cm^{s}_{ }$ mz$^{ }_{z*}$ s 1$^{ }_{z}$ : 0$^{ }_{z}$	& F \\ % z = 8,16,32
-VCcm.Sz		& mx, my, \#0		& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $\bar{cm}$ 0 ? 1$^{ }_{z}$ : 0$^{ }_{z}$		& F \\ % z = 8,16,32
-VMAX.sz		& mx, my, mz		& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $\max^{s}_{ }$ mz$^{ }_{z*}$				& F \\ % z = 8,16,32
-VMIN.sz		& mx, my, mz		& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $\min^{s}_{ }$ mz$^{ }_{z*}$				& F \\ % z = 8,16,32
-VPMAX.sz	& dx, dy, dz		& dx$^{ }_{z*}$=(dz:dy)$^{ }_{2z*[2z-1:z]}$$\max^{s}_{ }$dz:dy$^{ }_{2z*[z-1:0]}$	& F \\ % z = 8,16,32
-VPMIN.sz	& dx, dy, dz		& dx$^{ }_{z*}$=(dz:dy)$^{ }_{2z*[2z-1:z]}$$\min^{s}_{ }$dz:dy$^{ }_{2z*[z-1:0]}$	& F \\ % z = 8,16,32
-VTST.z		& mx, my, mz		& mx$^{ }_{z*}$ = (my$^{ }_{z*}$\&mz$^{ }_{z*}$ $\ne$ 0) ? 1$^{ }_{z}$ : 0$^{ }_{z}$	& \\ % z = 8,16,32
-\end{asmtable}
-%
-\begin{asmtable}{SIMD Misc Processing Instructions}
-VCLS.Sz		& mx, my		& mx$^{ }_{z*}$ = CountLeadingSignBits(my$^{ }_{z*}$)				& \\ % z = 8,16,32
-VCLZ.Iz		& mx, my		& mx$^{ }_{z*}$ = CountLeadingZeros(my$^{ }_{z*}$)				& \\ % z = 8,16,32
-VCNT.8		& mx, my		& mx$^{ }_{8*}$ = CountOneBits(my$^{ }_{8*}$)					& \\
-VREV16.8	& mx, my		& mx$^{ }_{16*}$ = my$^{ }_{16*[7:0]}$:my$^{ }_{16*[15:8]}$			& \\
-VREV32.8	& mx, my		& mx$^{ }_{32*}$ = my$^{ }_{32*[7:0]}$:..:my$^{ }_{32*[31:24]}$			& \\
-VREV32.16	& mx, my		& mx$^{ }_{32*}$ = my$^{ }_{32*[15:0]}$:my$^{ }_{32*[31:16]}$			& \\
-VREV64.8	& mx, my		& mx$^{ }_{64*}$ = my$^{ }_{64*[15:0]}$:...:my$^{ }_{64*[63:48]}$		& \\
-VREV64.16	& mx, my		& mx$^{ }_{64*}$ = my$^{ }_{64*[7:0]}$:...:my$^{ }_{64*[63:56]}$		& \\
-VREV64.32	& mx, my		& mx$^{ }_{64*}$ = my$^{ }_{64*[31:0]}$:my$^{ }_{64*[63:32]}$			& \\
-VSWP		& mx, my		& my:mx = mx:my									& \\
-VTBL.8		& dx, {dy...}, dz	& dx$^{ }_{8*}$ = dz$^{ }_{8*}$ $\ult$ cnt$\umul$8 ? (dy:...)$^{ }_{8dz^{ }_{8*}}$ : 0	& \\
-VTBX.8		& dx, {dy...}, dz	& if(dz$^{ }_{8*}$ $\ult$ cnt$\umul$8) dx$^{ }_{8*}$ = (dy:...)$^{ }_{8dz^{ }_{8*}}$	& \\
-VTRN.z		& mx, my		& if(even) my$^{ }_{z*}$:mx$^{ }_{z*+1}$ = mx$^{ }_{z*+1}$:my$^{ }_{z*}$	& \\ % z = 8,16,32
-\end{asmtable}
-%
-\begin{asmtable2}{SIMD Shift Instructions}
-VQRSHL.sz	& mx, my, mz		& mx$^{ }_{z*}$ = SATs($\lfloor$my$^{ }_{z*}$ $\lsl\lsr^{s}_{ }$ mz$^{ }_{z*}\rfloor$, z)	& \\ % z = 8,16,32,64
-VQRSHRN.sz	& dx, qy, \#i$^{ }_{5}$	& dx$^{ }_{0\text{.}5z*}$ = SATs($\lfloor$qy$^{ }_{z*}$ $\lsr^{s}_{ }$ i$\rfloor$, z)	& \\ % z = 16,32,64
-VQRSHRUN.Sz	& dx, qy, \#i$^{ }_{5}$	& dx$^{ }_{0\text{.}5z*}$ = SATU($\lfloor$qy$^{\pm}_{z*}$ $\asr$ i$\rfloor$, z)	& \\ % z = 16,32,64
-VQSHL.sz	& mx, my, mz		& mx$^{ }_{z*}$ = SATs(my$^{ }_{z*}$ $\lsl\lsr^{s}_{ }$ mz$^{ }_{z*}$, z)	& \\ % z = 8,16,32,64
-VQSHL.sz	& mx, my, \#i$^{ }_{5}$	& mx$^{ }_{z*}$ = SATs(my$^{ }_{z*}$ $\lsl$ i, z)				& \\ % z = 8,16,32,64
-VQSHLU.Sz	& mx, my, \#i$^{ }_{5}$	& mx$^{ }_{z*}$ = SATU(my$^{ }_{z*}$ $\lsl\asr$ i, z)				& \\ % z = 8,16,32,64
-VQSHRN.sz	& dx, qy, \#i$^{ }_{5}$	& dx$^{ }_{0\text{.}5z*}$ = SATs(qy$^{ }_{z*}$ $\lsr^{s}_{ }$ i, z)		& \\ % z = 16,32,64
-VQSHRUN.Sz	& dx, qy, \#i$^{ }_{5}$	& dx$^{ }_{0\text{.}5z*}$ = SATU(qy$^{\pm}_{z*}$ $\asr$ i, z)			& \\ % z = 16,32,64
-VRSHL.sz	& mx, my, mz		& mx$^{ }_{z*}$ = $\lfloor$my$^{ }_{z*}$ $\lsl\lsr^{s}_{ }$ mz$^{ }_{z*}\rfloor$	& \\ % z = 8,16,32,64
-VRSHR.sz	& mx, my, \#i$^{ }_{6}$	& mx$^{ }_{z*}$ = $\lfloor$my$^{ }_{z*}$ $\lsr^{s}_{ }$ i$\rfloor$		& \\ % z = 8,16,32,64
-VRSRA.sz	& mx, my, \#i$^{ }_{6}$	& mx$^{ }_{z*}$ $+$= $\lfloor$my$^{ }_{z*}$ $\lsr^{s}_{ }$ i$\rfloor$		& \\ % z = 8,16,32,64
-VRSHRN.Iz	& dx, qy, \#i$^{ }_{5}$	& dx$^{ }_{0\text{.}5z*}$ = $\lfloor$qy$^{ }_{z*}$ $\lsr$ i$\rfloor$		& \\ % z = 16,32,64
-VSHL.Iz		& mx, my, \#i$^{ }_{6}$	& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $\lsl$ i					& \\ % z = 8,16,32,64
-VSHL.sz		& mx, my, mz		& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $\lsl\lsr^{s}_{ }$ mz$^{ }_{z*}$		& \\ % z = 8,16,32,64
-VSHLL.sz	& qx, dy, \#i$^{ }_{5}$	& qx$^{ }_{0\text{.}5z*}$ = dy$^{ }_{z*}$ $\lsl$ i				& \\ % z = 8,16,32
-VSHLL.Iz	& qx, dy, \#z		& qx$^{ }_{2z*}$ = dy$^{ }_{z*}$ $\lsl$ z					& \\ % z = 8,16,32
-VSHR.sz		& mx, my, \#i$^{ }_{6}$	& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $\lsr^{s}_{ }$ i				& \\ % z = 8,16,32,64
-VSHRN.Iz	& dx, qy, \#i$^{ }_{5}$	& dx$^{ }_{0\text{.}5z*}$ = qy$^{ }_{z*}$ $\lsr$ i				& \\ % z = 16,32,64
-VSLI.z		& mx, my, \#i$^{ }_{6}$	& mx$^{ }_{z*[z-1:i]}$ = my$^{ }_{z*[z-i-1:0]}$					& \\ % z = 8,16,32,64
-VSRA.sz		& mx, my, \#i$^{ }_{6}$	& mx$^{ }_{z*}$ $+$= my$^{ }_{z*}$ $\lsr^{s}_{ }$ i				& \\ % z = 8,16,32,64
-VSRI.z		& mx, my, \#i$^{ }_{6}$	& mx$^{ }_{z*[z-i-1:0]}$ = my$^{ }_{z*[z-1:i]}$					& \\ % z = 8,16,32,64
-\end{asmtable2}
+\begin{asmtable4}{SIMD Bitwise Instructions}
+VAND			& md, mn, mm		& md = mn \& mm								& \\
+\textit{VAND.Iz}	& md, \#i		& md$^{ }_{z*}$ = md$^{ }_{z*}$ \& i					& \\ % z = 8,16,32,64
+VBIC			& md, mn, mm		& md = mn \& $\sim$mm							& \\
+VBIC.Iz			& md, \#i		& md$^{ }_{z*}$ = md$^{ }_{z*}$ \& $\sim$i				& \\ % z = 16,32 (8,64 as instruction alias)
+VBIF			& md, mn, mm		& if(mm$^{ }_{1*}$ $=$ 0) md$^{ }_{1*}$ = mn$^{ }_{1*}$			& \\
+VBIT			& md, mn, mm		& if(mm$^{ }_{1*}$ $=$ 1) md$^{ }_{1*}$ = mn$^{ }_{1*}$			& \\
+VBSL			& md, mn, mm		& md$^{ }_{1*}$ = (md$^{ }_{1*}$ $\eq$ 1) ? mn$^{ }_{1*}$ : mm$^{ }_{1*}$	& \\
+VCLS.Sz			& md, mn		& md$^{ }_{z*}$ = CountLeadingSignBits(mn$^{ }_{z*}$)			& \\ % z = 8,16,32
+VCLZ.Iz			& md, mn		& md$^{ }_{z*}$ = CountLeadingZeros(mn$^{ }_{z*}$)			& \\ % z = 8,16,32
+VCNT.8			& md, mn		& md$^{ }_{8*}$ = CountOneBits(mn$^{ }_{8*}$)				& \\
+VEOR			& md, mn, mm		& md = mn $\oplus$  mm							& \\
+VEXT.z			& md,mn,mm,\#i$^{ }_{4}$	& md$^{ }_{z*}$ = mm$^{ }_{z*[i-1:0]}$:mn$^{ }_{z*[z-1:z-i+1]}$	& \\
+VMOV.Iz			& md, \#i		& md$^{ }_{z*}$ = i							& F \\ % z = 8,16,32,64
+VMVN			& md, mn		& md = $\sim$mn								& \\
+VMVN.Iz			& md, \#i		& md$^{ }_{z*}$ = $\sim$i						& \\ % z = 16,32
+VORR			& md, mn, mm		& md = mn | mm								& \\
+VORR.Iz			& md, \#i		& md$^{ }_{z*}$ = md$^{ }_{z*}$ | i					& \\ % z = 16,32 (8,64 as instruction alias)
+VORN			& md, mn, mm		& md = mn | $\sim$mm							& \\
+\textit{VORN.Iz}	& md, \#i		& md$^{ }_{z*}$ = md$^{ }_{z*}$ | $\sim$i				& \\ % z = 8,16,32,64
+\end{asmtable4}
 %
 \begin{asmtable2}{SIMD Multiply Instructions}
-VFMa.F32	& mx, my, mz		& mx$^{ }_{z*}$ $\pm$= my$^{ }_{z*}$ $\umul$ mz$^{ }_{z*}$			& S2 \\
-VMLa.Iz		& mx, my, mz		& mx$^{ }_{z*}$ $\pm$= my$^{ }_{z*}$ $\umul$ mz$^{ }_{z*}$			& F \\ % z = 8,16,32
-VMLa.Iz		& mx, my, dz[i]		& mx$^{ }_{z*}$ $\pm$= my$^{ }_{z*}$ $\umul$ dz$^{ }_{zi}$			& F \\ % z = 16,32
-VMLaL.sz	& qx, dy, dz		& qx$^{ }_{2z*}$ $\pm$= dy$^{ }_{z*}$ $\umul^{s}_{ }$ dz$^{ }_{z*}$		& \\ % z = 8,16,32
-VMLaL.sz	& qx, dy, dz[i]		& qx$^{ }_{2z*}$ $\pm$= dy$^{ }_{z*}$ $\umul^{s}_{ }$ dz$^{ }_{zi}$		& \\ % z = 16,32
-VMUL.Iz		& mx, my, mz		& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $\umul$ mz$^{ }_{z*}$				& F \\ % z = 8,16,32
-VMUL.Iz		& mx, my, dz[i]		& mx$^{ }_{z*}$ = my$^{ }_{z*}$ $\umul$ dz$^{ }_{zi}$				& F \\ % z = 16,32
-VMUL.P8		& mx, my, mz		& mx$^{ }_{8*}$ = my$^{ }_{8*}$ $\ast$ mz$^{ }_{8*}$				& \\
-VMULL.P8	& qx, dy, dz		& qx$^{ }_{16*}$ = dy$^{ }_{8*}$ $\ast$ dz$^{ }_{8*}$				& \\
-VMULL.sz	& qx, dy, dz		& qx$^{ }_{2z*}$ = dy$^{ }_{z*}$ $\umul^{s}_{ }$ dz$^{ }_{z*}$			& \\ % z = 8,16,32
-VMULL.sz	& qx, dy, dz[i]		& qx$^{ }_{2z*}$ = dy$^{ }_{z*}$ $\umul^{s}_{ }$ dz$^{ }_{zi}$			& \\ % z = 16,32
-VQDMLaL.Sz	& qx, dy, dz		& qx$^{ }_{2z*}$ $\pm$= SATS(2$\smul$dy$^{ }_{z*}$$\smul$dz$^{ }_{z*}$, z)	& \\ % z = 16,32
-VQDMLaL.Sz	& qx, dy, dz[i]		& qx$^{ }_{2z*}$ $\pm$= SATS(2$\smul$dy$^{ }_{z*}$$\smul$dz$^{ }_{zi}$, z)	& \\ % z = 16,32
-VQDMULH.Sz	& mx, my, mz		& mx$^{ }_{z*}$=SATS(2$\smul$my$^{ }_{z*}$$\smul$mz$^{ }_{z*}$, 2z)$\lsr$z	& \\ % z = 16,32
-VQDMULH.Sz	& mx, my, dz[i]		& mx$^{ }_{z*}$=SATS(2$\smul$my$^{ }_{z*}$$\smul$dz$^{ }_{zi}$, 2z)$\lsr$z	& \\ % z = 16,32
-VQDMULL.Sz	& qx, dy, dz		& qx$^{ }_{2z*}$=SATS(2$\smul$dy$^{ }_{z*}$$\smul$dz$^{ }_{z*}$, 2z)		& \\ % z = 16,32
-VQDMULL.Sz	& qx, dy, dz[i]		& qx$^{ }_{2z*}$=SATS(2$\smul$dy$^{ }_{z*}$$\smul$dz$^{ }_{zi}$, 2z)		& \\ % z = 16,32
-VQRDMULH.Sz	& mx, my, mz		& mx$^{ }_{z*}$=SATS($\lfloor$2$\smul$my$^{ }_{z*}$$\smul$mz$^{ }_{z*}$$\rfloor$,2z)$\lsr$z	& \\ % z = 16,32
-VQRDMULH.Sz	& mx, my, dz[i]		& mx$^{ }_{z*}$=SATS($\lfloor$2$\smul$my$^{ }_{z*}$$\smul$dz$^{ }_{zi}$$\rfloor$,2z)$\lsr$z	& \\ % z = 16,32
+VFMa.F32	& md, mn, mm		& md$^{ }_{z*}$ $\pm$= mn$^{ }_{z*}$ $\umul$ mm$^{ }_{z*}$			& S2 \\
+VMLa.Iz		& md, mn, mm		& md$^{ }_{z*}$ $\pm$= mn$^{ }_{z*}$ $\umul$ mm$^{ }_{z*}$			& F \\ % z = 8,16,32
+VMLa.Iz		& md,mn,Dm[i]		& md$^{ }_{z*}$ $\pm$= mn$^{ }_{z*}$ $\umul$ Dm$^{ }_{zi}$			& F \\ % z = 16,32
+VMLaL.sz	& Qd, Dn, Dm		& Qd$^{ }_{2z*}$ $\pm$= Dn$^{ }_{z*}$ $\umul^{s}_{ }$ Dm$^{ }_{z*}$		& \\ % z = 8,16,32
+VMLaL.sz	& Qd,Dn,Dm[i]		& Qd$^{ }_{2z*}$ $\pm$= Dn$^{ }_{z*}$ $\umul^{s}_{ }$ Dm$^{ }_{zi}$		& \\ % z = 16,32
+VMUL.Iz		& md, mn, mm		& md$^{ }_{z*}$ = mn$^{ }_{z*}$ $\umul$ mm$^{ }_{z*}$				& F \\ % z = 8,16,32
+VMUL.Iz		& md,mn,Dm[i]		& md$^{ }_{z*}$ = mn$^{ }_{z*}$ $\umul$ Dm$^{ }_{zi}$				& F \\ % z = 16,32
+VMUL.P8		& md, mn, mm		& md$^{ }_{8*}$ = mn$^{ }_{8*}$ $\ast$ mm$^{ }_{8*}$				& \\
+VMULL.P8	& Qd, Dn, Dm		& Qd$^{ }_{16*}$ = Dn$^{ }_{8*}$ $\ast$ Dm$^{ }_{8*}$				& \\
+VMULL.sz	& Qd, Dn, Dm		& Qd$^{ }_{2z*}$ = Dn$^{ }_{z*}$ $\umul^{s}_{ }$ Dm$^{ }_{z*}$			& \\ % z = 8,16,32
+VMULL.sz	& Qd,Dn,Dm[i]		& Qd$^{ }_{2z*}$ = Dn$^{ }_{z*}$ $\umul^{s}_{ }$ Dm$^{ }_{zi}$			& \\ % z = 16,32
+VQDMLaL.Sz	& Qd, Dn, Dm		& Qd$^{ }_{2z*}$ $\pm$= $\lfloor$2 $\smul$ Dn$^{ }_{z*}$ $\smul$ Dm$^{ }_{z*}$$\rceil^{Sz}$	& \\ % z = 16,32
+VQDMLaL.Sz	& Qd,Dn,Dm[i]		& Qd$^{ }_{2z*}$ $\pm$= $\lfloor$2 $\smul$ Dn$^{ }_{z*}$ $\smul$ Dm$^{ }_{zi}$$\rceil^{Sz}$	& \\ % z = 16,32
+VQDMULH.Sz	& md, mn, mm		& md$^{ }_{z*}$ = $\lfloor$(2 $\smul$ mn$^{ }_{z*}$ $\smul$ mm$^{ }_{z*}$) $\asr$ z$\rceil^{S2z}$	& \\ % z = 16,32
+VQDMULH.Sz	& md,mn,Dm[i]		& md$^{ }_{z*}$ = $\lfloor$(2 $\smul$ mn$^{ }_{z*}$ $\smul$ Dm$^{ }_{zi}$) $\asr$ z$\rceil^{S2z}$	& \\ % z = 16,32
+VQDMULL.Sz	& Qd, Dn, Dm		& Qd$^{ }_{2z*}$ = $\lfloor$2 $\smul$ Dn$^{ }_{z*}$ $\smul$ Dm$^{ }_{z*}$$\rceil^{S2z}$		& \\ % z = 16,32
+VQDMULL.Sz	& Qd,Dn,Dm[i]		& Qd$^{ }_{2z*}$ = $\lfloor$2 $\smul$ Dn$^{ }_{z*}$ $\smul$ Dm$^{ }_{zi}$$\rceil^{S2z}$		& \\ % z = 16,32
+VQRDMULH.Sz	& md, mn, mm		& md$^{ }_{z*}$=$\lfloor$(2 $\smul$ mn$^{ }_{z*}$ $\smul$ mm$^{ }_{z*}$) $\asr^{R}_{ }$ z$\rceil^{S2z}$	& \\ % z = 16,32
+VQRDMULH.Sz	& md,mn,Dm[i]		& md$^{ }_{z*}$=$\lfloor$(2 $\smul$ mn$^{ }_{z*}$ $\smul$ Dm$^{ }_{zi}$) $\asr^{R}_{ }$ z$\rceil^{S2z}$	& \\ % z = 16,32
 \end{asmtable2}
+%
+\begin{asmtable2}{SIMD Misc Processing Instructions}
+VRECPE.U32	& md, mn		& md$^{ }_{32*}$ = RecipEstimate(mn$^{ }_{32*}$)				& F \\
+VRECPS.F32	& md, mn, mm		& md$^{ }_{32*}$ = RecipStep(mn$^{ }_{32*}$, mm$^{ }_{32*}$)			& \\
+VREV16.8	& md, mn		& md$^{ }_{16*}$ = mn$^{ }_{16*[B0]}$:mn$^{ }_{16*[B1]}$			& \\
+VREV32.8	& md, mn		& md$^{ }_{32*}$ = mn$^{ }_{32*[B0]}$:..:mn$^{ }_{32*[B3]}$			& \\
+VREV32.16	& md, mn		& md$^{ }_{32*}$ = mn$^{ }_{32*[H0]}$:mn$^{ }_{32*[H1]}$			& \\
+VREV64.8	& md, mn		& md$^{ }_{64*}$ = mn$^{ }_{64*[B0]}$:...:mn$^{ }_{64*[B7]}$			& \\
+VREV64.16	& md, mn		& md$^{ }_{64*}$ = mn$^{ }_{64*[H0]}$:...:mn$^{ }_{64*[H3]}$			& \\
+VREV64.32	& md, mn		& md$^{ }_{64*}$ = mn$^{ }_{64*[31:0]}$:mn$^{ }_{64*[63:32]}$			& \\
+VRSQRTE.U32	& md, mn		& md$^{ }_{32*}$ = SqrtEstimate(mn$^{ }_{32*}$)					& F \\
+VRSQRTS.F32	& md, mn, mm		& md$^{ }_{32*}$ = SqrtStep(mn$^{ }_{32*}$, mm$^{ }_{32*}$)			& \\
+VTBL.8		& Dd,{Dn...},Dm		& Dd$^{ }_{8*}$= Dm$^{ }_{8*}$$\ult$cnt$\umul$8 ?(Dn:...)$^{ }_{8Dm^{ }_{8*}}$ :0	& \\
+VTBX.8		& Dd,{Dn...},Dm		& if(Dm$^{ }_{8*}$$\ult$cnt$\umul$8) Dd$^{ }_{8*}$=(Dn:...)$^{ }_{8Dm^{ }_{8*}}$	& \\
+VTRN.z		& md, mn		& if(even) mn$^{ }_{z*}$:md$^{ }_{z*+1}$ = md$^{ }_{z*+1}$:mn$^{ }_{z*}$	& \\ % z = 8,16,32
+VUZP.z		& md, mn		& mn = ...:mn$^{ }_{z3}$:mn$^{ }_{z1}$:...:md$^{ }_{z3}$:md$^{ }_{z1}$ \newline md = ...:mn$^{ }_{z2}$:mn$^{ }_{z0}$:...:md$^{ }_{z2}$:md$^{ }_{z0}$ 	& \\ %z!=64
+VZIP.z		& md, mn		& mn:md = ...:mn$^{ }_{z1}$:md$^{ }_{z1}$:mn$^{ }_{z0}$:md$^{ }_{z0}$		& \\ % z = 8,16,32
+\end{asmtable2}
+%
+\begin{asmtable5}{SIMD Shift Instructions}
+VQSHL.sz	& md, mn, \#i$^{ }_{5}$	& md$^{ }_{z*}$ = $\lfloor$mn$^{ }_{z*}$ $\lsl$ i$\rceil^{sz}$			& \\ % z = 8,16,32,64
+VQ\{R\}SHL.sz	& md, mn, mm		& md$^{ }_{z*}$ = $\lfloor$mn$^{ }_{z*}$ $\lsl\lsr^{s \{R\}}_{ }$ mm$^{ }_{z*}\rceil^{sz}$	& \\ % z = 8,16,32,64
+VQSHLU.Sz	& md, mn, \#i$^{ }_{5}$	& md$^{ }_{z*}$ = $\lfloor$mn$^{ }_{z*}$ $\lsl\asr$ i$\rceil^{Uz}$		& \\ % z = 8,16,32,64
+VQ\{R\}SHRN.sz	& Dd, Qn, \#i$^{ }_{5}$	& Dd$^{ }_{0\text{.}5z*}$ = $\lfloor$Qn$^{ }_{z*}$ $\lsr^{s \{R\}}_{ }$ i$\rceil^{sz}$	& \\ % z = 16,32,64
+VQ\{R\}SHRUN.Sz	& Dd, Qn, \#i$^{ }_{5}$	& Dd$^{ }_{0\text{.}5z*}$ = $\lfloor$Qn$^{ }_{z*}$ $\asr^{\{R\}}_{ }$ i$\rceil^{Uz}$	& \\ % z = 16,32,64
+VSHL.Iz		& md, mn, \#i$^{ }_{6}$	& md$^{ }_{z*}$ = mn$^{ }_{z*}$ $\lsl$ i					& \\ % z = 8,16,32,64
+V\{R\}SHL.sz	& md, mn, mm		& md$^{ }_{z*}$ = mn$^{ }_{z*}$ $\lsl\lsr^{s \{R\}}_{ }$ mm$^{ }_{z*}$		& \\ % z = 8,16,32,64
+VSHLL.Iz	& Qd, Dn, \#i$^{ }_{5}$	& Qd$^{ }_{2z*}$ = Dn$^{ }_{z*}$ $\lsl$ i					& \\ % z = 8,16,32
+VSHLL.sz	& Qd, Dn, \#i$^{ }_{5}$	& Qd$^{ }_{0\text{.}5z*}$ = Dn$^{ }_{z*}$ $\lsl$ i				& \\ % z = 8,16,32
+V\{R\}SHR.sz	& md, mn, \#i$^{ }_{6}$	& md$^{ }_{z*}$ = mn$^{ }_{z*}$ $\lsr^{s \{R\}}_{ }$ i				& \\ % z = 8,16,32,64
+V\{R\}SHRN.Iz	& Dd, Qn, \#i$^{ }_{5}$	& Dd$^{ }_{0\text{.}5z*}$ = Qn$^{ }_{z*}$ $\lsr^{\{R\}}_{ }$ i			& \\ % z = 16,32,64
+VSLI.z		& md, mn, \#i$^{ }_{6}$	& md$^{ }_{z*[z-1:i]}$ = mn$^{ }_{z*[z-i-1:0]}$					& \\ % z = 8,16,32,64
+V\{R\}SRA.sz	& md, mn, \#i$^{ }_{6}$	& md$^{ }_{z*}$ $+$= mn$^{ }_{z*}$ $\lsr^{s \{R\}}_{ }$ i			& \\ % z = 8,16,32,64
+VSRI.z		& md, mn, \#i$^{ }_{6}$	& md$^{ }_{z*[z-i-1:0]}$ = mn$^{ }_{z*[z-1:i]}$					& \\ % z = 8,16,32,64
+\end{asmtable5}
+%
+\begin{asmtable5}{SIMD Convertion Instructions}
+VCVT.F16.F32	& Dd, Qn		& Dd$^{ }_{16*}$ = Float2Float(Qn$^{ }_{32*}$)					& SH \\
+VCVT.F32.F16	& Qd, Dn		& Qd$^{ }_{32*}$ = Float2Float(Dn$^{ }_{16*}$)					& SH \\
+VCVT.F32.s32	& md, mn		& md$^{ }_{32*}$ = Int2Float(mn$^{s}_{32*}$)					& \\
+VCVT.F32.s32	& md, mn, \#i$^{ }_{6}$	& md$^{ }_{32*}$ = Fixed2Float(mn$^{s}_{32*}$, i)				& \\
+VCVT.s32.F32	& md, mn		& md$^{ }_{32*}$ = Float2Int(mn)$^{s}_{32*}$					& \\
+VCVT.s32.F32	& md, mn, \#i$^{ }_{6}$	& md$^{ }_{32*}$ = Float2Fixed(mn$^{s}_{32*}$, i)				& \\
+VMOVL.sz	& Qd, Dn		& Qd$^{ }_{2z*}$ = Dn$^{s}_{z*}$						& \\ % z = 8,16,32
+VMOVN.Iz	& Dd, Qn		& Dd$^{ }_{0\text{.}5z*}$ = Qn$^{ }_{z*[0\text{.}5z-1:0]}$			& \\ % z = 16,32,64
+VQMOVN.sz	& Dd, Qn		& Dd$^{ }_{0\text{.}5z*}$ = $\lfloor$Qn$^{ }_{z*}$$\rceil^{s0.5z}$		& \\ % z = 16,32,64
+VQMOVUN.Sz	& Dd, Qn		& Dd$^{ }_{0\text{.}5z*}$ = $\lfloor$Qn$^{ }_{z*}$$\rceil^{U0.5z}$		& \\ % z = 16,32,64
+\end{asmtable5}
+%
+\begin{asmtable7}{SIMD Comparision Instructions}
+VACcm.F32	& md, mn, mm		& md$^{ }_{32*}$= $\lvert$mn$^{ }_{32*}$$\rvert$ cm $\lvert$mm$^{ }_{32*}$$\rvert$ ? 1$^{ }_{32}$: 0$^{ }_{32}$	& \\
+VCEQ.Iz		& md, mn, mm		& md$^{ }_{z*}$ = (mn$^{ }_{z*}$ $\eq$ mm$^{ }_{z*}$) ? 1$^{ }_{z}$ : 0$^{ }_{z}$	& F \\ % z = 8,16,32
+VCEQ.Iz		& md, mn, \#0		& md$^{ }_{z*}$ = (mn$^{ }_{z*}$ $\eq$ 0) ? 1$^{ }_{z}$ : 0$^{ }_{z}$		& F \\ % z = 8,16,32
+VCcm.sz		& md, mn, mm		& md$^{ }_{z*}$ = (mn$^{ }_{z*}$ cm$^{s}_{ }$ mm$^{ }_{z*}$) ? 1$^{ }_{z}$ : 0$^{ }_{z}$	& F \\ % z = 8,16,32
+VCcm.Sz		& md, mn, \#0		& md$^{ }_{z*}$ = (mn$^{ }_{z*}$ $\bar{cm}$ 0) ? 1$^{ }_{z}$ : 0$^{ }_{z}$	& F \\ % z = 8,16,32
+VMAX.sz		& md, mn, mm		& md$^{ }_{z*}$ = mn$^{ }_{z*}$ $\max^{s}_{ }$ mm$^{ }_{z*}$			& F \\ % z = 8,16,32
+VMIN.sz		& md, mn, mm		& md$^{ }_{z*}$ = mn$^{ }_{z*}$ $\min^{s}_{ }$ mm$^{ }_{z*}$			& F \\ % z = 8,16,32
+VPMAX.sz	& Dd, Dn, Dm		& Dd$^{ }_{z*}$ = (Dm:Dn)$^{ }_{z2*}$ $\max^{s}_{ }$ (Dm:Dn)$^{ }_{z2*+1}$	& F \\ % z = 8,16,32
+VPMIN.sz	& Dd, Dn, Dm		& Dd$^{ }_{z*}$ = (Dm:Dn)$^{ }_{z2*}$ $\min^{s}_{ }$ (Dm:Dn)$^{ }_{z2*+1}$	& F \\ % z = 8,16,32
+VTST.z		& md, mn, mm		& md$^{ }_{z*}$ = (mn$^{ }_{z*}$\&mm$^{ }_{z*}$ $\ne$ 0) ? 1$^{ }_{z}$ : 0$^{ }_{z}$	& \\ % z = 8,16,32
+\end{asmtable7}
 %
 \newpage
 \begin{center}
@@ -775,14 +758,14 @@ VQRDMULH.Sz	& mx, my, dz[i]		& mx$^{ }_{z*}$=SATS($\lfloor$2$\smul$my$^{ }_{z*}$
 \end{center}
 %
 \begin{table-llXr}{Current Program Status Register (CPSR)}
-M		& 0x0000001f & Processor Operating Mode		& \\
+M		& 0x0000001f & Processor operating mode		& \\
 T		& 0x00000020 & Instruction set (JT: 00=ARM, 01=Thumb)	& \\
 F		& 0x00000040 & FIQ exception masked		& \\
 I		& 0x00000080 & IRQ exception masked		& \\
 A		& 0x00000100 & Asynchronous abort masked	& 6 \\
 E		& 0x00000200 & Big-endian operation		& 6 \\
 IT		& 0x0600fc00 & IT state bits			& 6t\\
-GE\{3..0\}	& 0x000f0000 & SIMD Greater than or equal to	& 6 \\
+GE\{3..0\}	& 0x000f0000 & SIMD greater than or equal to	& 6 \\
 J		& 0x01000000 & Instr set (JT: 10=Jazelle, 11=ThumbEE)	& 6 \\
 Q		& 0x08000000 & Cumulative saturation bit	& \\
 V		& 0x10000000 & Overflow condition flag		& \\
@@ -806,7 +789,7 @@ sys	& 0x1f	& System			& \\
 \begin{table-lX}{Vectors}
 0x00	& Reset \\
 0x04	& Undefined instruction \\
-0x08	& Supervisor Call / Secure Monitor Call / Hypervisor Call \\
+0x08	& Supervisor call / Secure monitor call / Hypervisor call \\
 0x0c	& Prefetch abort \\
 0x10	& Data abort \\
 0x14	& Hyp trap \\
@@ -817,9 +800,8 @@ sys	& 0x1f	& System			& \\
 \begin{table-lX}{Notes for System Registers and Tables}
 6,6k,6t,7 & Introduced in ARMv6, ARMv6k, ARMv6T2, or ARMv7 \\
 %\sout{7} & Removed in ARMv7 \\
-A & Only present on ARM-A \\
+A,R & Only present on ARM-A, or ARM-R \\
 B & Banked between secure and non-secure usage \\
-R & Only present on ARM-R \\
 S & Only present with security extensions (Implies 6k,A) \\
 V & Only present with virtualization extensions (Implies 7,A) \\
 \end{table-lX}
@@ -830,25 +812,25 @@ A	& 0x00000002 & Alignment check enabled				& B \\
 C	& 0x00000004 & Data and unified caches enabled			& B \\
 %W	& 0x00000008 & Write buffer enabled				& \sout{7} \\
 CP15BEN	& 0x00000020 & CP15 barrier enable				& 7,B \\
-%B	& 0x00000080 & Legacy Big endian BE-32 format			& \sout{7} \\
+%B	& 0x00000080 & Legacy big endian BE-32 format			& \sout{7} \\
 %S	& 0x00000100 & System protection				& \sout{7} \\
 %R	& 0x00000200 & ROM protection					& \sout{7} \\
 SW	& 0x00000400 & Enable SWP and SWPB instructions			& 6,B \\
 Z	& 0x00000800 & Program flow prediction enabled			& B \\
 I	& 0x00001000 & Instruction cache enabled			& B \\
 V	& 0x00002000 & High exception vectors				& B \\
-RR	& 0x00004000 & Round Robin select (Non-Secure RO)		& \\
+RR	& 0x00004000 & Round robin select (Non-Secure RO)		& \\
 %L4	& 0x00008000 & Inhibit thumb interworking			& \sout{7} \\
 HA	& 0x00020000 & Hardware access flag enable			& B,S \\
 BR	& 0x00020000 & Background region enable				& 7,R \\
 WXN	& 0x00080000 & Write force to XN				& V \\
 DZ	& 0x00080000 & Divide by zero causes undefined instruction	& 7,R \\
 UWXN	& 0x00100000 & Unprivileged write forced to XN for PL1		& V \\
-FI	& 0x00200000 & Fast Interrupts (Non-Secure RO)			& 6 \\
+FI	& 0x00200000 & Fast interrupts (Non-Secure RO)			& 6 \\
 %U	& 0x00400000 & Unaligned access support				& 6,\sout{7} \\
 %XP	& 0x00800000 & Select virtual memory support model		& 6,\sout{7} \\
-VE	& 0x01000000 & Interrupt Vectors Enable				& 6,B \\
-EE	& 0x02000000 & Exception Endianess				& 6,B \\
+VE	& 0x01000000 & Interrupt vectors enable				& 6,B \\
+EE	& 0x02000000 & Exception endianess				& 6,B \\
 %L2	& 0x04000000 & Level 2 cache support				& 6,\sout{7} \\
 NMFI	& 0x08000000 & Non-maskable FIQ support (RO)			& 6 \\
 TRE	& 0x10000000 & TEX remap functionality enabled			& B,S \\
@@ -857,149 +839,166 @@ TE	& 0x40000000 & Thumb exception enable 				& 6t,B \\
 IE	& 0x80000000 & Big-endian byte order in instructions		& 7,R \\
 \end{table-llXr}
 %
-\begin{table-llX}{Coprocessor Access Control Register (CPACR)}
-CP\{0..13\}	& 3$\lsl$(2$\umul$\{0..13\}) & CP\{0..13\} access (00=denied, 01=privileged mode only, 11=privileged or user mode) \\
-TRCDIS		& 0x10000000 & Disable CP14 access to trace registers \\
-D32DIS		& 0x40000000 & Disable use of D16-D31 registers \\
-ASEDIS		& 0x80000000 & Disable advanced SIMD functionality \\
-\end{table-llX}
+\begin{table-llXr}{Secure Configuration Register (SCR)}
+NS	& 0x0001 & System state is non-secure unless in monitor mode	& \\
+IRQ	& 0x0002 & IRQs taken to monitor mode				& \\
+FIQ	& 0x0004 & FIQs taken to monitor mode				& \\
+EA	& 0x0008 & External aborts taken to monitor mode		& \\
+FW	& 0x0010 & CPSR.F writeable in non-secure state			& \\
+AW	& 0x0020 & CPSR.A writeable in non-secure state			& \\
+nET	& 0x0040 & Disable early termination				& \\
+SCD	& 0x0080 & Secure monitor call disable				& V \\
+HCE	& 0x0100 & Hyp call enable					& V \\
+SIF	& 0x0200 & Secure instruction fetch				& V \\
+\end{table-llXr}
+%
+%\begin{table-llX}{Non-Secure Access Control Register (NSACR)}
+%CP\{0..13\}	& 1 $\lsl$ \{0..13\} & CP\{0..13\} can be accessed in non-secure state \\
+%NSD32DIS	& 0x00004000 & CPACR.D32DIS is fixed 1 in non-secure state \\
+%NSASEDIS	& 0x00008000 & CPACR.ASEDIS is fixed 1 in non-secure state \\
+%RFR		& 0x00080000 & Reserve FIQ mode for non-secure \\
+%NSTRCDIS	& 0x00100000 & Disable non-secure access to CP14 trace regs \\
+%\end{table-llX}
+%
+%\begin{table-llX}{Coprocessor Access Control Register (CPACR)}
+%CP\{0..13\}	& 3$\lsl$(2$\umul$\{0..13\}) & CP\{0..13\} access (00=denied, 01=privileged mode only, 11=privileged or user mode) \\
+%TRCDIS		& 0x10000000 & Disable CP14 access to trace registers \\
+%D32DIS		& 0x40000000 & Disable use of D16-D31 registers \\
+%ASEDIS		& 0x80000000 & Disable advanced SIMD functionality \\
+%\end{table-llX}
 %
 \begin{table-llXr}{CP15 System Control Registers}
-SCTLR		& c1,0,c0,0	& System Control Register			& \\
-ACTLR		& c1,0,c0,1	& Auxiliary Control Register			& 6,B \\
-CPACR		& c1,0,c0,2	& Coprocessor Access Control Register		& 6 \\
+SCTLR		& c1,0,c0,0	& System Control				& \\
+ACTLR		& c1,0,c0,1	& Auxiliary Control				& 6,B \\
+CPACR		& c1,0,c0,2	& Coprocessor Access Control			& 6 \\
 SCR		& c1,0,c1,0	& Secure Configuration (Secure only)		& S \\
 SDER		& c1,0,c1,1	& Secure Debug Enable (Secure only)		& S \\
 NSACR		& c1,0,c1,2	& Non-Secure Access Control (Non-Secure RO)	& S \\
+VBAR		& c12,0,c0,0	& Vector Base					& A,B \\
+MVBAR		& c12,0,c0,1	& Monitor Vector Base Address (Secure only)	& A,S \\
+ISR		& c12,0,c1,0	& Interrupt Status (RO)				& \\
 \end{table-llXr}
 %
-\begin{table-llXr}{CP15 Security Extension Registers (ARM-A Only)}
-VBAR		& c12,0,c0,0	& Vector Base Register				& B \\
-MVBAR		& c12,0,c0,1	& Monitor Vector Base Address (Secure only)	& \\
-ISR		& c12,0,c1,0	& Interrupt Status Register (RO)		& \\
+\begin{table-llXr}{CP15 Memory System Registers}
+DFSR		& c5,0,c0,0	& Data Fault Status			& B \\
+IFSR		& c5,0,c0,1	& Instruction Fault Status		& 6,B \\
+ADFSR		& c5,0,c1,0	& Auxiliary DFSR			& 7,B \\
+AIFSR		& c5,0,c1,1	& Auxiliary IFSR			& 7,B \\
+DFAR		& c6,0,c0,0	& Data Fault Address			& B \\
+IFAR		& c6,0,c0,2	& Instruction Fault Address		& 6,B \\
+DRBAR		& c6,0,c1,0	& Data Region Base Address		& R \\
+IRBAR		& c6,0,c1,1	& Instruction Region Base Address	& R \\
+DRSR		& c6,0,c1,2	& Data Region Size and Enable		& R \\
+IRSR		& c6,0,c1,3	& Instruction Region Size and Enable	& R \\
+DRACR		& c6,0,c1,4	& Data Region Access Control		& R \\
+IRACR		& c6,0,c1,5	& Instruction Region Access Control	& R \\
+RGNR		& c6,0,c2,0	& MPU Region Number			& R \\
 \end{table-llXr}
 %
-\begin{table-llXr}{Secure Configuration Register (SCR)}
-NS	& 0x001 & System state is non-secure unless in Monitor mode	& \\
-IRQ	& 0x002 & IRQs taken to Monitor mode				& \\
-FIQ	& 0x004 & FIQs taken to Monitor mode				& \\
-EA	& 0x008 & External aborts taken to Monitor mode			& \\
-FW	& 0x010 & CPSR.F writeable in non-secure state			& \\
-AW	& 0x020 & CPSR.A writeable in non-secure state			& \\
-nET	& 0x040 & Disable early termination				& \\
-SCD	& 0x080 & Secure monitor call disable				& V \\
-HCE	& 0x100 & Hyp Call enable					& V \\
-SIF	& 0x200 & Secure instruction fetch				& V \\
+\begin{table-llXr}{CP15 Memory Protection and Control Registers (ARM-A only)}
+TTBR\{0,1\}	& c2,0,c0,\{0,1\}	& Translation Table Base \{0,1\}	& B \\
+TTBCR		& c2,0,c0,2	& Translation Table Base Control		& 6,B \\
+TTBR\{0,1\}	& c2,\{0,1\}	& Translation Table Base \{0,1\} (LPAE)		& 7,B \\
+DACR		& c3,0,c0,0	& Domain Access Control				& B \\
+PRRR		& c10,0,c2,0	& Primary Region Remap				& 6,B \\
+NMRR		& c10,0,c2,1	& Normal Memory Remap				& 6,B \\
+MAIR\{0,1\}	& c10,0,c2,\{0,1\}	& Memory Attr Indirection \{0,1\}	& 7 \\
+AMAIR\{0,1\}	& c10,0,c3,\{0,1\}	& Aux Memory Attribute Indirection \{0,1\}	& 7 \\
 \end{table-llXr}
 %
-\begin{table-llX}{Non-Secure Access Control Register (NSACR)}
-CP\{0..13\}	& 1 $\lsl$ \{0..13\} & CP\{0..13\} can be accessed in non-secure state \\
-NSD32DIS	& 0x00004000 & CPACR.D32DIS is fixed 1 in non-secure state \\
-NSASEDIS	& 0x00008000 & CPACR.ASEDIS is fixed 1 in non-secure state \\
-RFR		& 0x00080000 & Reserve FIQ mode for non-secure \\
-NSTRCDIS	& 0x00100000 & Disable non-secure access to CP14 trace regs \\
-\end{table-llX}
-%
-\begin{table-llXr}{CP15 Memory System Fault Registers}
-DFSR		& c5,0,c0,0	& Data Fault Status Register			& B \\
-IFSR		& c5,0,c0,1	& Instruction Fault Status Register		& 6,B \\
-ADFSR		& c5,0,c1,0	& Auxiliary DFSR				& 7,B \\
-AIFSR		& c5,0,c1,1	& Auxiliary IFSR				& 7,B \\
-DFAR		& c6,0,c0,0	& Data Fault Address Register			& B \\
-IFAR		& c6,0,c0,2	& Instruction Fault Address Register		& 6,B \\
-DRBAR		& c6,0,c1,0	& Data Region Base Address Register		& R \\
-IRBAR		& c6,0,c1,1	& Instruction Region Base Address Register	& R \\
-DRSR		& c6,0,c1,2	& Data Region Size and Enable Register		& R \\
-IRSR		& c6,0,c1,3	& Instruction Region Size and Enable Register	& R \\
-DRACR		& c6,0,c1,4	& Data Region Access Control Register		& R \\
-IRACR		& c6,0,c1,5	& Instruction Region Access Control Register	& R \\
-RGNR		& c6,0,c2,0	& MPU Region Number Register			& R \\
-\end{table-llXr}
-%
-\begin{table-llXr}{CP15 Generic Timer Registers}
-CNTFRQ		& c14,0,c0,0	& Counter Frequency Reg (Non-Secure RO)		& 7 \\
-CNTKCTL		& c14,0,c1,0	& Timer PL1 Control Register			& 7 \\
-CNTP\_TVAL	& c14,0,c2,0	& PL1 Physical TimerValue Register		& 7,B \\
-CNTP\_CTL	& c14,0,c2,1	& PL1 Physical Timer Control Register		& 7,B \\
-CNTV\_TVAL	& c14,0,c3,0	& Virtual TimerValue Register			& 7 \\
-CNTV\_CTL	& c14,0,c3,1	& Virtual TimerControl Register			& 7 \\
-CNTPCT		& c14,0		& Physical Count Register (RO)			& 7 \\
-CNTVCT		& c14,1		& Virtual Count Register (RO)			& 7 \\
-CNTP\_CVAL	& c14,2		& PL1 Physical Timer CompareValue Register	& 7,B \\
-CNTV\_CVAL	& c14,3		& Virtual Timer CompareValue Register		& 7 \\
+\begin{table-llXr}{CP15 Process, Context, and Thread ID Registers}
+FCSEIDR		& c13,0,c0,0	& FSCE PID				& A,B \\
+CONTEXIDR	& c13,0,c0,1	& Context ID				& 6,B \\
+TPIDRURW	& c13,0,c0,2	& User Read/Write Thread ID		& 6,B \\
+TPIDRURO	& c13,0,c0,3	& User Read-only Thread ID		& 6,B \\
+TPIDRPRW	& c13,0,c0,4	& PL1 only Thread ID			& 6,B \\
 \end{table-llXr}
 %
 \begin{table-llXr}{CP15 ID Registers (Read-Only)}
-MIDR		& c0,0,c0,0	& Main ID Register				& \\
-CTR		& c0,0,c0,1	& Cache Type Register				& \\
-TCMTR		& c0,0,c0,2	& TCM Type Register				& \\
-TLBTR		& c0,0,c0,3	& TLB Type Register				& A \\
-MPUIR		& c0,0,c0,4	& MPU Type Register				& R \\
-MPIDR		& c0,0,c0,5	& Multiprocessor Affinity Register		& \\
-REVIDR		& c0,0,c0,6	& Revision ID	 				& \\
-ID\_PFR\{0..1\}	& c0,0,c1,\{0..1\}	& Processor Feature Registers		& 6 \\
-ID\_DFR0	& c0,0,c1,2	& Debug Feature Register 0			& 6 \\
-ID\_AFR0	& c0,0,c1,3	& Auxiliary Feature Register 0			& 6 \\
-ID\_MMFR\{0..3\}	& c0,0,c1,\{4..7\}	& Memory Model Feature Regs	& 6 \\
-ID\_ISAR\{0..5\}	& c0,0,c2,\{0..5\}	& Instruction Set Attribute Regs	& 6 \\
-CCSIDR		& c0,1,c0,0	& Cache Size ID Register			& 7 \\
-CLIDR		& c0,1,c0,1	& Cache Level ID Register			& 7 \\
-AIDR		& c0,1,c0,7	& Auxiliary ID Register				& 7 \\
-CSSELR		& c0,2,c0,0	& Cache Size Selection Register (RW)		& 7,B \\
+MIDR		& c0,0,c0,0	& Main ID				& \\
+CTR		& c0,0,c0,1	& Cache Type				& \\
+TCMTR		& c0,0,c0,2	& TCM Type				& \\
+TLBTR		& c0,0,c0,3	& TLB Type				& A \\
+MPUIR		& c0,0,c0,4	& MPU Type				& R \\
+MPIDR		& c0,0,c0,5	& Multiprocessor Affinity		& \\
+REVIDR		& c0,0,c0,6	& Revision ID	 			& \\
+ID\_PFR\{0..1\}	& c0,0,c1,\{0..1\}	& Processor Features \{0..1\}	& 6 \\
+ID\_DFR0	& c0,0,c1,2	& Debug Feature 0			& 6 \\
+ID\_AFR0	& c0,0,c1,3	& Auxiliary Feature 0			& 6 \\
+ID\_MMFR\{0..3\}	& c0,0,c1,\{4..7\}	& Memory Model Feature \{0..3\}	& 6 \\
+ID\_ISAR\{0..5\}	& c0,0,c2,\{0..5\}	& Instruction Set Attribute \{0..5\}	& 6 \\
+CCSIDR		& c0,1,c0,0	& Cache Size ID				& 7 \\
+CLIDR		& c0,1,c0,1	& Cache Level ID			& 7 \\
+AIDR		& c0,1,c0,7	& Auxiliary ID				& 7 \\
+CSSELR		& c0,2,c0,0	& Cache Size Selection (RW)		& 7,B \\
+\end{table-llXr}
+%
+\begin{table-llXr}{CP15 Performance Monitor Registers}
+PMCR		& c9,0,c12,0	& PM Control				& \\
+PMCNTEN\{SET,CLR\}	& c9,0,c12,\{1,2\}	& PM Count Enab \{Set,Clr\}	& \\
+PMOVSR		& c9,0,c12,3	& PM Overflow Flag Status		& \\
+PMSWINC		& c9,0,c12,4	& PM Software Increment			& \\
+PMSELR		& c9,0,c12,5	& PM Event Counter Select		& \\
+PMCEID\{0,1\}	& c9,0,c12,\{6,7\}	& PM Com Event Id \{0,1\}	& \\
+PMCCNTR		& c9,0,c13,0	& PM Cycle Count			& \\
+PMXEVTYPER	& c9,0,c13,1	& PM Event Type Select			& \\
+PMXEVCNTR	& c9,0,c13,2	& PM Event Count			& \\
+PMUSERENR	& c9,0,c14,0	& PM User Enable			& \\
+PMINTEN\{SET,CLR\}	& c9,0,c14,\{1,2\}	& PM Inter Enab \{Set,Clr\}	& \\
+PMOVSSET	& c9,0,c14,3	& PM Overflow Flag Stat Set		& \\
+\end{table-llXr}
+%
+\begin{table-llXr}{CP15 Generic Timer Registers}
+CNTFRQ		& c14,0,c0,0	& Counter Frequency (Non-Secure RO)	& 7 \\
+CNTKCTL		& c14,0,c1,0	& Timer PL1 Control			& 7 \\
+CNTP\_TVAL	& c14,0,c2,0	& PL1 Physical TimerValue		& 7,B \\
+CNTP\_CTL	& c14,0,c2,1	& PL1 Physical Timer Control		& 7,B \\
+CNTV\_TVAL	& c14,0,c3,0	& Virtual TimerValue			& 7 \\
+CNTV\_CTL	& c14,0,c3,1	& Virtual TimerControl			& 7 \\
+CNT\{P,V\}CT	& c14,\{0,1\}	& \{Physical,Virtual\} Count (RO)	& 7 \\
+CNTP\_CVAL	& c14,2		& PL1 Physical Timer CompareValue	& 7,B \\
+CNTV\_CVAL	& c14,3		& Virtual Timer CompareValue		& 7 \\
 \end{table-llXr}
 %
 \begin{table-llXr}{CP15 Cache Maintenance Registers (Write Only)}
 CP15WFI		& c7,0,c0,4	& Wait for interrupt operation				& \\
-ICIALLUIS	& c7,0,c1,0	& Inv all instr caches to PoU Inner Sharable		& 7 \\
-BPIALLIS	& c7,0,c1,6	& Inv all branche predictors Inner Sharable		& 7 \\
-PAR		& c7,0,c4,0	& Physical Address Register (RW)			& 7,A,B \\
-ICIALLU		& c7,0,c5,0	& Invalidate all instruction caches to PoU		& \\
-ICIMVAU		& c7,0,c5,1	& Inv instruction caches by MVA to PoU			& \\
+ICIALLUIS	& c7,0,c1,0	& Inv all instr caches to PoU IS			& 7 \\
+BPIALLIS	& c7,0,c1,6	& Inv all branche predictors IS				& 7 \\
+PAR		& c7,0,c4,0	& Physical Address (RW)					& 7,A,B \\
+ICIALLU		& c7,0,c5,0	& Inv all instruction caches to PoU			& \\
+ICIMVAU		& c7,0,c5,1	& Inv instr caches by MVA to PoU			& \\
 %		& c7,0,c5,2	& Invalidate instruction cache line by set/way		& \sout{7} \\
-CP15ISB		& c7,0,c5,4	& Instruction Sync Barrier operation			& 7 \\
-BPIALL		& c7,0,c5,6	& Invalidate all branch predictors			& \\
-BPIMVA		& c7,0,c5,7	& Invalidate MVA from branch predictors			& \\
+CP15ISB		& c7,0,c5,4	& Instruction Sync Barrier oper				& 7 \\
+BPIALL		& c7,0,c5,6	& Inv all branch predictors				& \\
+BPIMVA		& c7,0,c5,7	& Inv MVA from branch predictors			& \\
 %		& c7,0,c6,0	& Invalidate data cache					& \sout{7} \\
-DCIMVAC		& c7,0,c6,1	& Inv data cache line my MVA to PoC			& \\
-DCISW		& c7,0,c6,2	& Invalidate data cache line by set/way			& \\
+DCIMVAC		& c7,0,c6,1	& Inv data c-line my MVA to PoC				& \\
+DCISW		& c7,0,c6,2	& Inv data c-line by set/way				& \\
 %		& c7,0,c7,0	& Invalidate unified cache				& \sout{7} \\
 %		& c7,0,c7,1	& Invalidate unified cache line by MVA			& \sout{7} \\
 %		& c7,0,c7,2	& Invalidate unified cache line by set/way		& \sout{7} \\
-ATS1CPR		& c7,0,c8,0	& PL1 read translation (Current state)			& 7,A \\
-ATS1CPW		& c7,0,c8,1	& PL1 write translation (Current state)			& 7,A \\
-ATS1CUR		& c7,0,c8,2	& Unpriv read translation (Current state)		& 7,A \\
-ATS1CUW		& c7,0,c8,3	& Unpriv write translation (Current state)		& 7,A \\
-ATS12NSOPR	& c7,0,c8,4	& PL1 read translation (NS state)			& 7,S \\
-ATS12NSOPW	& c7,0,c8,5	& PL1 write translation (NS state)			& 7,S \\
-ATS12NSOUR	& c7,0,c8,6	& Unprivileged read translation (NS state)		& 7,S \\
-ATS12NSOUW	& c7,0,c8,7	& Unprivileged write translation (NS state)		& 7,S \\
+ATS1CP\{R,W\}	& c7,0,c8,\{0,1\}	& PL1 \{R,W\} trans (Cur state)			& 7,A \\
+ATS1CU\{R,W\}	& c7,0,c8,\{2,3\}	& Unpriv \{R,W\} trans (Cur state)		& 7,A \\
+ATS12NSOP\{R,W\}	& c7,0,c8,\{4,5\}	& PL1 \{R,W\} trans (NS state)		& 7,S \\
+ATS12NSOU\{R,W\}	& c7,0,c8,\{6,7\}	& Unpriv \{R,W\} trans (NS state)	& 7,S \\
 %		& c7,0,c10,0	& Clean data cache					& 6,\sout{7} \\
-DCCMVAC		& c7,0,c10,1	& Clean data cache line my MVA to PoC			& \\
-DCCSW		& c7,0,c10,2	& Clean data cache line by set/way			& \\
+DCCMVAC		& c7,0,c10,1	& Clean data c-line by MVA to PoC			& \\
+DCCSW		& c7,0,c10,2	& Clean data c-line by set/way				& \\
 %		& c7,0,c10,3	& Test and clean data cache				& \sout{7} \\
-CP15DSB		& c7,0,c10,4	& Data Synchronization Barrier operation		& 7 \\
+CP15DSB		& c7,0,c10,4	& Data Sync Barrier operation				& 7 \\
 CP15DMB		& c7,0,c10,5	& Data Memory Barrier operation				& 7 \\
-%		& c7,0,c10,6	& Cache Dirty Status Register				& 6,\sout{7} \\
+%		& c7,0,c10,6	& Cache Dirty Status 					& 6,\sout{7} \\
 %		& c7,0,c11,0	& Clean entire unified cache				& \sout{7} \\
-DCCMVAU		& c7,0,c11,1	& Clean data cache line by MVA to PoU			& \\
+DCCMVAU		& c7,0,c11,1	& Clean data c-line by MVA to PoU			& \\
 %		& c7,0,c11,2	& Clean unified cache line by set/way			& \sout{7} \\
 %		& c7,0,c13,1	& Prefetch instruction cache line by MVA		& \sout{7} \\
-%		& c7,0,c14,0	& Clean and invalidate data cache			& 6,\sout{7} \\
-DCCIMVAC	& c7,0,c14,1	& Clean and inv data c-line by MVA to PoC		& \\
-DCCISW		& c7,0,c14,2	& Clean and inv data c-line by set/way			& \\
+%		& c7,0,c14,0	& Clean \& invalidate data cache			& 6,\sout{7} \\
+DCCIMVAC	& c7,0,c14,1	& C\&I data c-line by MVA to PoC			& \\
+DCCISW		& c7,0,c14,2	& C\&I data c-line by set/way				& \\
 %		& c7,0,c14,3	& Test and clean and invalidate data cache		& \sout{7} \\
 %		& c7,0,c15,1	& Clean and invalidate unified cache line by MVA	& \sout{7} \\
 %		& c7,0,c15,2	& Clean and invalidate unified cache line by set/way	& \sout{7} \\
-PAR		& c7,0		& Physical Address Register (RW)			& 7,A,B \\
-\end{table-llXr}
-%
-\begin{table-llXr}{CP15 Memory Protection and Control Registers (ARM-A only)}
-TTBR0		& c2,0,c0,0	& Translation Table Base 0			& B \\
-TTBR1		& c2,0,c0,1	& Translation Table Base 1			& 6,B \\
-TTBCR		& c2,0,c0,2	& Translation Table Base Control		& 6,B \\
-TTBR0		& c2,0		& Translation Table Base 0 (LPAE only)		& 7,B \\
-TTBR1		& c2,1		& Translation Table Base 1 (LPAE only)		& 7,B \\
-DACR		& c3,0,c0,0	& Domain Access Control Register		& B \\
+PAR		& c7,0		& Physical Address (RW)					& 7,A,B \\
 \end{table-llXr}
 %
 \begin{table-llXr}{CP15 TLB Maintenance Operation Regs (Write Only, ARM-A Only)}
@@ -1007,111 +1006,77 @@ TLBIALLIS	& c8,0,c3,0	& Invalidate entire TLB IS			& 7 \\
 TLBIMVAIS	& c8,0,c3,1	& Invalidate unified TLB by MVA and ASID IS	& 7 \\
 TLBIASIDIS	& c8,0,c3,2	& Invalidate unified TLB by ASID match IS	& 7 \\
 TLBIMVAAIS	& c8,0,c3,3	& Inv unified TLB entry by MVA all ASID IS	& 7 \\
-ITLIALL		& c8,0,c5,0	& Invalidate instruction TLB			& \\
-ITLIMVA		& c8,0,c5,1	& Inv instr TLB entry by MVA all ASID IS	& \\
-ITLIASID	& c8,0,c5,2	& Invalidate instruction TLB by ASID match	& 6 \\
+ITLBIALL	& c8,0,c5,0	& Invalidate instruction TLB			& \\
+ITLBIMVA	& c8,0,c5,1	& Inv instr TLB entry by MVA all ASID IS	& \\
+ITLBIASID	& c8,0,c5,2	& Invalidate instruction TLB by ASID match	& 6 \\
 DTLBIALL	& c8,0,c6,0	& Invalidate data TLB				& \\
 DTLBIMVA	& c8,0,c6,1	& Invalidate data TLB entry by MVA and ASID	& \\
 DTLBIASID	& c8,0,c6,2	& Invalidate data TLB by ASID match		& 6 \\
 TLBIALL		& c8,0,c7,0	& Invalidate unified TLB			& \\
 TLBIMVA		& c8,0,c7,1	& Inv unified TLB entry by MVA and ASID		& \\
 TLBIASID	& c8,0,c7,2	& Invalidate unified TLB by ASID match		& 6 \\
-TLBIMVAA	& c8,0,c7,3	& Inval unified TLB entries by MVA all ASID	& 6 \\
+TLBIMVAA	& c8,0,c7,3	& Inv unified TLB entries by MVA all ASID	& 6 \\
 \end{table-llXr}
 %
-\begin{table-llXr}{CP15 Performance Monitor Registers (ARM-R Only)}
-PMCR		& c9,0,c12,0	& PM Control Register				& \\
-PMCNTENSET	& c9,0,c12,1	& PM Count Enable Set Register			& \\
-PMCNTENCLR	& c9,0,c12,2	& PM Count Enable Clear Register		& \\
-PMOVSR		& c9,0,c12,3	& PM Overflow Flag Status Register		& \\
-PMSWINC		& c9,0,c12,4	& PM Software Increment Register		& \\
-PMSELR		& c9,0,c12,5	& PM Event Counter Selection Register		& \\
-PMCEID0		& c9,0,c12,6	& PM Common Event Identification Register 0	& \\
-PMCEID1		& c9,0,c12,7	& PM Common Event Identification Register 1	& \\
-PMCCNTR		& c9,0,c13,0	& PM Cycle Count Register			& \\
-PMXEVTYPER	& c9,0,c13,1	& PM Event Type Select Register			& \\
-PMXEVCNTR	& c9,0,c13,2	& PM Event Count Register			& \\
-PMUSERENR	& c9,0,c14,0	& PM User Enable Register			& \\
-PMINTENSET	& c9,0,c14,1	& PM Interrupt Enable Set Register		& \\
-PMINTENCLR	& c9,0,c14,2	& PM Interrupt Enable Clear Register		& \\
+\begin{table-llXr}{CP15 Virtualization Extension Registers (ARM-A Only)}
+VPIDR		& c0,4,c0,0	& Virtualization Processor ID		& \\
+VMPIDR		& c0,4,c0,5	& Virtualization Multiproc ID		& \\
+HSCTLR		& c1,4,c0,0	& Hyp System Control			& \\
+HACTLR		& c1,4,c0,1	& Hyp Auxiliary Control			& \\
+HCR		& c1,4,c1,0	& Hyp Configuration			& \\
+HDCR		& c1,4,c1,1	& Hyp Debug Configuration		& \\
+HCPTR		& c1,4,c1,2	& Hyp Coprocessor Trap			& \\
+HSTR		& c1,4,c1,3	& Hyp System Trap			& \\
+HACR		& c1,4,c1,7	& Hyp Auxiliary Configuration		& \\
+HTCR		& c2,4,c0,2	& Hyp Translation Control		& \\
+VTCR		& c2,4,c1,2	& Virtualization Translation Control	& \\
+HTTBR		& c2,4		& Hyp Translation Table Base		& \\
+VTTBR		& c2,6		& Virt Translation Table Base		& \\
+HADFSR		& c5,4,c1,0	& Hyp Auxiliary DFSR			& \\
+HAIFSR		& c5,4,c1,1	& Hyp Auxiliary IFSR			& \\
+HSR		& c5,4,c2,0	& Hyp Syndrome				& \\
+HDFAR		& c6,4,c0,0	& Hyp Data Fault Address		& \\
+HIFAR		& c6,4,c0,2	& Hyp Instruction Fault Address		& \\
+HPFAR		& c6,4,c0,4	& Hyp IPA Fault Address			& \\
+ATS1H\{R,W\}	& c7,4,c8,\{0,1\}	& Addr Tran Stage 1 Hyp mode \{R,W\}	& \\
+TLBIALLHIS	& c8,4,c3,0	& Inv entry hyp unif TLB IS		& \\
+TLBIMVAHIS	& c8,4,c3,1	& Inv hyp unif TLB entry by MVA IS	& \\
+TLBIALLNSNHIS	& c8,4,c3,4	& Inv non-sec/hyp uni TLB IS		& \\
+TLBIALLH	& c8,4,c7,0	& Inv hyp unified			& \\
+TLBIMVAH	& c8,4,c7,1	& Inv hyp unif TLB by MVA		& \\
+TLBIALLNSNH	& c8,4,c7,4	& Inv non-sec/hyp unif TLB		& \\
+HMAIR\{0,1\}	& c10,4,c2,\{0,1\}	& Hyp Mem Attribute Indirection \{0,1\}	& \\
+HAMAIR\{0,1\}	& c10,4,c3,\{0,1\}	& Hyp Aux Mem Attr Indirection \{0,1\}	& \\
+HVBAR		& c12,4,c0,0	& Hyp Vector Base Address		& \\
+HTPIDR		& c13,4,c0,2	& Hyp Read/Write Thread ID		& \\
+CNTHCTL		& c14,4,c1,0	& Timer PL2 Control			& \\
+CNTHP\_TVAL	& c14,4,c2,0	& PL2 Physical TimerValue		& \\
+CNTHP\_CTL	& c14,4,c2,1	& PL2 Physical Timer Control		& \\
+CNTVOFF		& c14,4		& Virtual Offset			& \\
+CNTHP\_CVAL	& c14,6		& PL2 Physical Timer CompareValue	& \\
 \end{table-llXr}
 %
-\begin{table-llXr}{CP15 Memory Mapping Registers (ARM-A Only)}
-PRRR		& c10,0,c2,0	& Primary Region Remap Register			& 6,B \\
-NMRR		& c10,0,c2,1	& Normal Memory Remap Register			& 6,B \\
-AMAIR0		& c10,0,c3,0	& Aux Memory Attribute Indirection Reg 0	& 7 \\
-AMAIR1		& c10,0,c3,1	& Aux Memory Attribute Indirection Reg 1	& 7 \\
-\end{table-llXr}
-%
-\begin{table-llXr}{CP15 Process, Context, and Thread ID Registers}
-FCSEIDR		& c13,0,c0,0	& FSCE PID Register				& A,B \\
-CONTEXIDR	& c13,0,c0,1	& Context ID Register				& 6,B \\
-TPIDRURW	& c13,0,c0,2	& User Read/Write Thread ID			& 6,B \\
-TPIDRURO	& c13,0,c0,3	& User Read-only Thread ID			& 6,B \\
-TPIDRPRW	& c13,0,c0,4	& PL1 only Thread ID				& 6,B \\
-\end{table-llXr}
-%
-\begin{table-llX}{CP15 Virtualization Extension Registers (ARM-A Only)}
-VPIDR		& c0,4,c0,0	& Virtualization Processor ID Register \\
-VMPIDR		& c0,4,c0,5	& Virtualization Multiproc ID Register \\
-HSCTLR		& c1,4,c0,0	& Hyp System Control Register \\
-HACTLR		& c1,4,c0,1	& Hyp Auxiliary Control Register \\
-HCR		& c1,4,c1,0	& Hyp Configuration Register \\
-HDCR		& c1,4,c1,1	& Hyp Debug Configuration Register \\
-HCPTR		& c1,4,c1,2	& Hyp Coprocessor Trap Register \\
-HSTR		& c1,4,c1,3	& Hyp System Trap Register \\
-HACR		& c1,4,c1,7	& Hyp Auxiliary Configuration Register \\
-HTCR		& c2,4,c0,2	& Hyp Translation Control Register \\
-VTCR		& c2,4,c1,2	& Virtualization Translation Control Reg \\
-HTTBR		& c2,4		& Hyp Translation Table Base Reg \\
-VTTBR		& c2,6		& Virt Translation Table Base Reg \\
-HADFSR		& c5,4,c1,0	& Hyp Auxiliary DFSR \\
-HAIFSR		& c5,4,c1,1	& Hyp Auxiliary IFSR \\
-HSR		& c5,4,c2,0	& Hyp Syndrome Register \\
-HDFAR		& c6,4,c0,0	& Hyp Data Fault Address Register \\
-HIFAR		& c6,4,c0,2	& Hyp Instruction Fault Address Register \\
-HPFAR		& c6,4,c0,4	& Hyp IPA Fault Address Register \\
-ATS1HR		& c7,4,c8,0	& Addr Tran Stage 1 Hyp mode Read (WO) \\
-ATS1HW		& c7,4,c8,1	& Addr Tran Stage 1 Hyp mode Write (WO) \\
-TLBIALLHIS	& c8,4,c3,0	& Inv entry hyp unif TLB IS (WO) \\
-TLBIMVAHIS	& c8,4,c3,1	& Inv hyp unif TLB entry by MVA IS (WO) \\
-TLBIALLNSNHIS	& c8,4,c3,4	& Inv non-sec/hyp uni TLB IS (WO) \\
-TLBIALLH	& c8,4,c7,0	& Inv hyp unified (WO) \\
-TLBIMVAH	& c8,4,c7,1	& Inv hyp unif TLB by MVA (WO) \\
-TLBIALLNSNH	& c8,4,c7,4	& Inv non-sec/hyp unif TLB (WO) \\
-HMAIR0		& c10,4,c2,0	& Hyp Mem Attribute Indirection Reg 0 \\
-HMAIR1		& c10,4,c2,1	& Hyp Mem Attribute Indirection Reg 1 \\
-HAMAIR0		& c10,4,c3,0	& Hyp Aux Mem Attr Indirection Reg 0 \\
-HAMAIR1		& c10,4,c3,1	& Hyp Aux Mem Attr Indirection Reg 1 \\
-HVBAR		& c12,4,c0,0	& Hyp Vector Base Address Register \\
-HTPIDR		& c13,4,c0,2	& Hyp Read/Write Thread ID \\
-CNTHCTL		& c14,4,c1,0	& Timer PL2 Control Register \\
-CNTHP\_TVAL	& c14,4,c2,0	& PL2 Physical TimerValue Register \\
-CNTHP\_CTL	& c14,4,c2,1	& PL2 Physical Timer Control Register \\
-CNTVOFF		& c14,4		& Virtual Offset Register \\
-CNTHP\_CVAL	& c14,6		& PL2 Physical Timer CompareValue Register \\
-\end{table-llX}
-%
+\newpage
 \begin{center}
 {\Large\bfseries ARMv7-M System}
 \end{center}
 %
 \begin{table-lX}{Special Registers}
-\{I\}\{E\}\{A\}PSR	& Program Status Registers \\
+\{I\}\{E\}\{A\}PSR	& Program Status \\
 XPSR		& Alias for IEAPSR \\
 MSP		& Main Stack Pointer \\
 PSP		& Process Stack Pointer \\
-PRIMASK		& Exceptions Mask Register \\
-BASEPRI		& Base Priority Register \\
+PRIMASK		& Exceptions Mask \\
+BASEPRI		& Base Priority \\
 BASEPRI\_MAX	& Alias for BASEPRI that ignores writes of lower value \\
 FAULTMASK	& Raise exception priority to HardFloat \\
-CONTROL		& Special-Purpose Control Register \\
+CONTROL		& Special-Purpose Control \\
 \end{table-lX}
 %
 \begin{table-llX}{Program Status Register (xPSR)}
 		& 0x000001ff & Exception number (RO) \\
 IT		& 0x0600fc00 & IT state bits \\
-GE\{3..0\}	& 0x000f0000 & SIMD Greater than or equal to (DSP extension only) \\
+GE\{3..0\}	& 0x000f0000 & SIMD greater than or equal to (DSP extension only) \\
 Q		& 0x08000000 & Cumulative saturation bit \\
 V		& 0x10000000 & Overflow condition flag \\
 C		& 0x20000000 & Carry condition flag \\
@@ -1166,67 +1131,67 @@ COUNTFLAG	& 0x00010000 & Timer has reached zero since last read (RO) \\
 \end{table-llX}
 %
 \begin{table-llX}{System Control Registers}
-ICTR		& 0xe000e004	& Interrupt Controller Type Register \\
-ACTLR		& 0xe000e008	& Auxiliary Control Register \\
-ICSR		& 0xe000ed04	& Interrupt Control and State Register \\
-VTOR		& 0xe000ed08	& Vector Table Offset Register \\
-AIRCR		& 0xe000ed0c	& App Interrupt and Reset Ctrl Reg \\
-SCR		& 0xe000ed10	& System Control Register \\
-CCR		& 0xe000ed14	& Configuration and Control Register \\
-SHPR\{1..3\}	& 0xe000ed\{18..20\}	& System Handler Priority Registers \\
-SHCSR		& 0xe000ed24	& System Handler Control and State Reg \\
-CFSR		& 0xe000ed28	& Configurable Fault Status Register \\
-HFSR		& 0xe000ed2c	& HardFault Status Register \\
-DFSR		& 0xe000ed30	& Debug Fault Status Register \\
-MMFAR		& 0xe000ed34	& MemManage Fault Address Registers \\
-BFAR		& 0xe000ed38	& BusFault Address Register \\
-AFAR		& 0xe000ed3c	& Auxiliary Fault Status Register \\
-CPACR		& 0xe000ed88	& Coprocessor Access Control Register \\
+ICTR		& 0xe000e004	& Interrupt Controller Type \\
+ACTLR		& 0xe000e008	& Auxiliary Control \\
+ICSR		& 0xe000ed04	& Interrupt Control and State \\
+VTOR		& 0xe000ed08	& Vector Table Offset \\
+AIRCR		& 0xe000ed0c	& App Interrupt and Reset Ctrl \\
+SCR		& 0xe000ed10	& System Control \\
+CCR		& 0xe000ed14	& Configuration and Control \\
+SHPR\{1..3\}	& 0xe000ed\{18..20\}	& System Handler Priority  \\
+SHCSR		& 0xe000ed24	& System Handler Control and State \\
+CFSR		& 0xe000ed28	& Configurable Fault Status \\
+HFSR		& 0xe000ed2c	& HardFault Status \\
+DFSR		& 0xe000ed30	& Debug Fault Status \\
+MMFAR		& 0xe000ed34	& MemManage Fault Address  \\
+BFAR		& 0xe000ed38	& BusFault Address \\
+AFAR		& 0xe000ed3c	& Auxiliary Fault Status \\
+CPACR		& 0xe000ed88	& Coprocessor Access Control \\
 \end{table-llX}
 %
 \begin{table-llX}{CPUID Registers (Read Only)}
-CPUID		& 0xe000ed00	& CPUID Base Register \\
-ID\_PFR\{0..1\}	& 0xe000ed4\{0..4\}	& Processor Feature Registers \\
-ID\_DFR0	& 0xe000ed48	& Debug Feature Register \\
-ID\_AFR0	& 0xe000ed4c	& Auxiliary Feature Register \\
-ID\_MMFR\{0..3\}	& 0xe000ed5\{0..c\}	& Memory Model Feature Registers \\
-ID\_ISAR\{0..4\}	& 0xe000ed\{60..70\}	& Instruction Set Attribute Regs \\
-ID\_CLIDR	& 0xe000ed78	& Cache Level ID Register \\
-ID\_CTR		& 0xe000ed7c	& Cache Type Register \\
-ID\_CCSIDR	& 0xe000ed80	& Cache Size ID Register \\
-ID\_CSSELR	& 0xe000ed84	& Cache Size Selection Register \\
+CPUID		& 0xe000ed00	& CPUID Base \\
+ID\_PFR\{0..1\}	& 0xe000ed4\{0..4\}	& Processor Feature  \\
+ID\_DFR0	& 0xe000ed48	& Debug Feature \\
+ID\_AFR0	& 0xe000ed4c	& Auxiliary Feature \\
+ID\_MMFR\{0..3\}	& 0xe000ed5\{0..c\}	& Memory Model Feature  \\
+ID\_ISAR\{0..4\}	& 0xe000ed\{60..70\}	& Instruction Set Attribute \\
+ID\_CLIDR	& 0xe000ed78	& Cache Level ID \\
+ID\_CTR		& 0xe000ed7c	& Cache Type \\
+ID\_CCSIDR	& 0xe000ed80	& Cache Size ID \\
+ID\_CSSELR	& 0xe000ed84	& Cache Size Selection \\
 \end{table-llX}
 %
 \begin{table-llX}{System Timer Registers}
-SYST\_CSR	& 0xe000e010	& SysTick Control and Status Register \\
-SYST\_RVR	& 0xe000e014	& SysTick Reload Value Register \\
-SYST\_CVR	& 0xe000e018	& SysTick Current Value Register \\
-SYST\_CALIB	& 0xe000e01c	& SysTick Calibration Value Register \\
+SYST\_CSR	& 0xe000e010	& SysTick Control and Status \\
+SYST\_RVR	& 0xe000e014	& SysTick Reload Value \\
+SYST\_CVR	& 0xe000e018	& SysTick Current Value \\
+SYST\_CALIB	& 0xe000e01c	& SysTick Calibration Value \\
 \end{table-llX}
 %
 \begin{table-llX}{External Interrupt Controller Registers}
-NVIC\_ISER\{0..15\}	& 0xe000e1\{00..3c\}	& Interrupt Set-Enable Registers \\
-NVIC\_ICER\{0..15\}	& 0xe000e1\{80..bc\}	& Interrupt Clear-Enable Registers \\
-NVIC\_ISPR\{0..15\}	& 0xe000e2\{00..3c\}	& Interrupt Set-Pending Registers \\
-NVIC\_ICPR\{0..15\}	& 0xe000e2\{80..bc\}	& Interrupt Clear-Pending Registers \\
-NVIC\_IABR\{0..15\}	& 0xe000e3\{00..3c\}	& Interrupt Active Bit Registers \\
-NVIC\_IPR\{0..123\}	& 0xe000e\{400..5ec\}	& Interrupt Priority Registers \\
+NVIC\_ISER\{0..15\}	& 0xe000e1\{00..3c\}	& Interrupt Set-Enable \\
+NVIC\_ICER\{0..15\}	& 0xe000e1\{80..bc\}	& Interrupt Clear-Enable \\
+NVIC\_ISPR\{0..15\}	& 0xe000e2\{00..3c\}	& Interrupt Set-Pending \\
+NVIC\_ICPR\{0..15\}	& 0xe000e2\{80..bc\}	& Interrupt Clear-Pending \\
+NVIC\_IABR\{0..15\}	& 0xe000e3\{00..3c\}	& Interrupt Active Bit \\
+NVIC\_IPR\{0..123\}	& 0xe000e\{400..5ec\}	& Interrupt Priority \\
 \end{table-llX}
 %
 \begin{table-llX}{Memory Protection Unit Registers}
-MPU\_TYPE	& 0xe000ed90	& MPU Type Register (RO) \\
-MPU\_CTRL	& 0xe000ed94	& MPU Control Register \\
-MPU\_RNR	& 0xe000ed98	& MPU Region Number Register \\
-MPU\_RBAR	& 0xe000ed9c	& MPU Region Base Address Register \\
-MPU\_RASR	& 0xe000eda0	& MPU Region Attribute and Size Register \\
+MPU\_TYPE	& 0xe000ed90	& MPU Type (RO) \\
+MPU\_CTRL	& 0xe000ed94	& MPU Control \\
+MPU\_RNR	& 0xe000ed98	& MPU Region Number \\
+MPU\_RBAR	& 0xe000ed9c	& MPU Region Base Address \\
+MPU\_RASR	& 0xe000eda0	& MPU Region Attribute and Size \\
 \end{table-llX}
 %
 \begin{table-llX}{SW Trigger Interrupt Registers}
-STIR		& 0xe000ef00	& Software Triggered Interrupt Register (WO) \\
-FPCCR		& 0xe000ef34	& Floating Point Context Control Register \\
-FPCAR		& 0xe000ef38	& Floating Point Context Address Register \\
-FPDSCR		& 0xe000ef3c	& Floating Point Default Status Control Reg \\
-MVFR\{0..2\}	& 0xe000ef4\{0..8\}	& Medial and FP Feature Registers (RO) \\
+STIR		& 0xe000ef00	& Software Triggered Interrupt (WO) \\
+FPCCR		& 0xe000ef34	& Floating Point Context Control \\
+FPCAR		& 0xe000ef38	& Floating Point Context Address \\
+FPDSCR		& 0xe000ef3c	& Floating Point Default Status Control \\
+MVFR\{0..2\}	& 0xe000ef4\{0..8\}	& Medial and FP Feature (RO) \\
 \end{table-llX}
 %
 \begin{table-llX}{Cache and Branch Predictior Maintenance (Write-Only)}
@@ -1243,9 +1208,9 @@ BPIALL		& 0xe000ef78	& Branch predictor invalidate all \\
 \end{table-llX}
 %
 \begin{table-llX}{Microcontroller-specific ID Registers}
-PID\{4..7\}	& 0xe000efd\{0..c\}	& Peripheral Identification Registers \\
-PID\{0..3\}	& 0xe000efe\{0..c\}	& Peripheral Identification Registers \\
-CID\{0..3\}	& 0xe000eff\{0..c\}	& Component Identification Registers \\
+PID\{4..7\}	& 0xe000efd\{0..c\}	& Peripheral Identification \\
+PID\{0..3\}	& 0xe000efe\{0..c\}	& Peripheral Identification \\
+CID\{0..3\}	& 0xe000eff\{0..c\}	& Component Identification \\
 \end{table-llX}
 %
 \end{multicols}
