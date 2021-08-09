@@ -37,7 +37,7 @@
 \defsheet{table-llX}{3}{|l l X|}
 \defsheet{table-llXr}{4}{|l l X r|}
 
-\pagefooter{ARM AArch32 version 10 page \thepage}
+\pagefooter{ARM AArch32 version 11 page \thepage}
 
 \begin{document}
 \begin{multicols}{3}
@@ -147,6 +147,8 @@ TST		& rn, op2		& rn \& op2					& \\
 BFC		& rd, \#p, \#n		& rd$^{ }_{p+n-1:p}$ = 0$^{ }_{n}$		& 6t \\
 BFI		& rd, rn, \#p, \#n	& rd$^{ }_{p+n-1:p}$ = rn$^{ }_{n-1:0}$		& 6t \\
 CLZ		& rd, rn		& rd = CountLeadingZeros(rn)			& \\
+\multicolumn{2}{|l|}{CRC32\{B,H,W\} rd, rn, rm}		& rd = CRC32(rn, 0x04c11db7, rm$^{ }_{N0}$)	& 8 \\
+\multicolumn{2}{|l|}{CRC32C\{B,H,W\} rd, rn, rm}	& rd = CRC32(rn, 0x1edc6f41, rm$^{ }_{N0}$)	& 8 \\
 RBIT		& rd, rn		& rd = ReverseBits(rn)				& 6t \\
 REV		& rd, rn		& rd = rn$^{ }_{B0}$:rn$^{ }_{B1}$:rn$^{ }_{B2}$:rn$^{ }_{B3}$	& 6 \\
 REV16		& rd, rn		& rd = rn$^{ }_{B2}$:rn$^{ }_{B3}$:rn$^{ }_{B0}$:rn$^{ }_{B1}$	& 6 \\
@@ -266,7 +268,9 @@ STREXH		& rd, rt, [rn]		& if(Pass) [rn]$^{ }_{16}$ = rt$^{ }_{H0}$; rd = Pass?1:
 \begin{asmtable}{System Instructions}
 CPS		& \#mode		& MODE = mode					& 6 \\
 CPSI\{D,E\}	& \{aif\}\{, \#mode\}	& \{a\}\{i\}\{f\} = (E ? 1 : 0); MODE = mode	& 6 \\
+%DCPS\{123\}	& \{\#i$^{ }_{16}$\}	& DebugChangePE\{123\}(i)			& 8,T \\
 ERET		&			& PC = LR; CPSR = SPSR				& 7 \\
+%HLT		& \#i$^{ }_{16}$	& DebugHalt(i)					& 8 \\
 HVC		& \#i$^{ }_{16}$	& CallHypervisor(i)				& 7 \\
 MRS		& rd, xPSR		& rd = \{CPSR,SPSR\}				& \\
 MRS		& rd, Rbanked		& rd = Rbanked					& 7 \\
@@ -275,6 +279,7 @@ MSR		& Rbanked, rn		& Rbanked = rn					& 7 \\
 MSR		& xPSR\_\{cxsf\},\#i	& \{CPSR,SPSR\}$^{ }_{f,s,x,c}$ = i$^{ }_{f,s,x,c}$	& A \\
 MSR		& xPSR\_\{cxsf\}, rn	& \{CPSR,SPSR\}$^{ }_{f,s,x,c}$ = rn$^{ }_{f,s,x,c}$	& \\
 RFEdi		& rn\{!\}		& LDMdi rn\{!\}, \{PC, CPSR\}			& \\
+SETPAN		& \#i$^{ }_{1}$		& PSTATE.PAN = i				& 8{\tiny 1},I \\
 SMC		& \#i$^{ }_{4}$		& CallSecureMonitor(i)				& 6k,A \\
 SRSdi		& SP\{!\}, \#mode	& STMdi SP\_mode\{!\}, \{LR, SPSR\}		& 6 \\
 SVC		& \#i$^{ }_{24}$	& CallSupervisor(i)				& A \\
@@ -282,8 +287,10 @@ SVC		& \#i$^{ }_{24}$	& CallSupervisor(i)				& A \\
 %
 \begin{asmtable}{Special Instructions}
 DBG		& \#i$^{ }_{4}$		& DebugHint(i)					& 7 \\
+%DFB		&			& DataFullBarrier()				& 8,R \\
 DMB		& option		& DataMemornBarrier(option)			& 7,I \\
 DSB		& option		& DataSynchronizationBarrier(option)		& 7,I \\
+ESB		&			& ErrorSyncBarrier()				& 8{\tiny 2},I \\
 ISB		& SY			& InstructionSynchronizationBarrier(SY)		& 7,I \\
 NOP		&			&						& 6k \\
 PLD\{W\}	& [addr]		& PreloadData(addr)				& \\
@@ -302,6 +309,7 @@ PLI		& [addr]		& PreloadInstr(addr)				& 7 \\
 %PLI		& [rd, $\pm$rn\{, AS\}]	& PreloadInstr(rd $\pm$ AS(rn))			& A,7 \\
 SETEND		& \{BE,LE\}		& EndianState = \{BE,LE\}			& 6,I \\
 SEV		&			& SendEvent()					& 6k \\
+SEVL		&			& EventRegisterSet()				& 8 \\
 UDF		& \#i$^{ }_{16}$	& UndefinedException(i)				& \\
 WFE		&			& WaitForEvent()				& 6k \\
 WFI		&			& WaitForInterrupt()				& 6k \\
@@ -378,6 +386,7 @@ OSHST	& Outer sharable, Write only \\
 %
 \begin{table-lX}{Notes for Instruction Set}
 6,6k,6t,7 & Introduced in ARMv6, ARMv6k, ARMv6T2, or ARMv7 \\
+8,8{\tiny 1},8{\tiny 2}	& Introduced in ARMv8, ARMv8.1, or ARMv8.2 \\
 A & Only available in ARM mode \\
 D & Not available on ARM-M without DSP extension \\
 H & Thumb16 instruction can use high registers \\
@@ -423,10 +432,13 @@ BX		& rn			& Set = rn$^{ }_{0}$; PC = rn$^{ }_{31:1}$:0$^{ }_{1}$	& \\
 CBNZ		& rn, rel$^{ }_{7}$	& if(rn $\ne$ 0) PC $+$= rel$^{\emptyset}_{6:1}$:0$^{ }_{1}$	& I,T \\
 CBZ		& rn, rel$^{ }_{7}$	& if(rn $\eq$ 0) PC $+$= rel$^{\emptyset}_{6:1}$:0$^{ }_{1}$	& I,T \\
 CPSI\{D,E\}	& \{aif\}		& \{a\}\{i\}\{f\} = (E ? 1 : 0)			& 6 \\
+%HLT		& \#i$^{ }_{6}$		& DebugHalt(i)					& 8 \\
 IT\{t\{t\{t\}\}\}	& cc		& if(cc) NextInstruction			& 6t,I \\
 NOP		&			&						& 6k \\
 SETEND		& \{BE,LE\}		& EndianState = \{BE,LE\}			& 6,I \\
+SETPAN		& \#i$^{ }_{1}$		& PSTATE.PAN = i				& 8{\tiny 1},I \\
 SEV		&			& SendEvent()					& 7 \\
+SEVL		&			& EventRegisterSet()				& 8 \\
 SVC		& \#i$^{ }_{8}$		& CallSupervisor(i)				& \\
 UDF		& \#i$^{ }_{8}$		& UndefinedException(i)				& \\
 WFE		&			& WaitForEvent()				& 7 \\
@@ -494,6 +506,8 @@ VCMP\{E\}.f	& fn, fm		& FPSCR\_nzcv = Compare(fn, fm)							& \\
 VDIV.f		& fd, fn, fm		& fd = fn $\udiv$ fm								& \\
 VFMa.f		& fd, fn, fm		& fd = fd $\pm$ fn $\umul$ fm							& V4 \\
 VFMNa.f		& fd, fn, fm		& fd = $-$fd $\pm$ fn $\umul$ fm						& V4 \\
+VMAXNM.f	& fd, fn, fm		& fd = fn $\max$ fm								& 8,I \\
+VMINNM.f	& fd, fn, fm		& fd = fn $\min$ fm								& 8,I \\
 VMLa.f		& fd, fn, fm		& fd = fd $\pm$ fn $\umul$ fm							& \\
 VMUL.f		& fd, fn, fm		& fd = fn $\umul$ fm								& \\
 VNEG.f		& fd, fn		& fd = 0.0 $-$ fn								& \\
@@ -506,12 +520,15 @@ VSUB.f		& fd, fn, fm		& fd = fn $-$ fm								& \\
 \begin{asmtable2}{Load/Store Instructions}
 VLDMDB\{.z\}	& rn\{!\}, flist		& flist=[rn$-^{z}_{8}$cnt]$^{ }_{z{\times}cnt}$; if(!) rn$-$=$^{z}_{8}$cnt	& \\
 VLDM\textit{IA}\{.z\}	& rn\{!\}, flist	& flist = [rn]$^{ }_{z{\times}cnt}$; if(!) rn $+$= $^{z}_{8}\times$cnt	& \\
+VLDR.16		& St,[rn\{,\#i$^{ }_{9}$\}]	& St = [rn $+$ i$^{\pm}_{8:1}$:0$^{ }_{1}$]$^{\emptyset}_{16}$	& 8{\tiny 2} \\
 VLDR\{.z\}	& ft,[rn\{,\#i$^{ }_{10}$\}]	& ft = [rn $+$ i$^{\pm}_{9:2}$:0$^{ }_{2}$]$^{ }_{z}$			& \\
+VLDR.16		& St, rel$^{ }_{9}$		& St = [PC $+$ rel$^{\pm}_{8:1}$:0$^{ }_{1}$]$^{\emptyset}_{16}$	& 8{\tiny 2} \\
 VLDR\{.z\}	& ft, rel$^{ }_{10}$		& ft = [PC $+$ rel$^{\pm}_{9:2}$:0$^{ }_{2}$]$^{ }_{z}$			& \\
 \textit{VPOP\{.z\}}	& flist			& SP $-$= $^{z}_{8}\times$cnt; flist = [SP]$^{ }_{z{\times}cnt}$	& \\
 \textit{VPUSH\{.z\}}	& flist			& [SP]$^{ }_{z{\times}cnt}$ = flist; SP $+$= $^{z}_{8}\times$cnt	& \\
 VSTMDB\{.z\}	& rn\{!\}, flist		& [rn$-^{z}_{8}\times$cnt]$^{ }_{f{\times}cnt}$=flist; if(!)rn$-$=$^{z}_{8}\times$cnt	& \\
 VSTM\textit{IA}\{.z\}	& rn\{!\}, flist	& [rn]$^{ }_{z{\times}cnt}$ = flist; if(!) rn $+$= $^{z}_{8}\times$cnt	& \\
+VSTR.16		& St,[rn\{,\#i$^{ }_{9}$\}]	& [rn $+$ i$^{\pm}_{8:1}$:0$^{ }_{1}$]$^{ }_{16}$ = St$^{ }_{H0}$	& 8{\tiny 2} \\
 VSTR\{.z\}	& ft,[rn\{,\#i$^{ }_{10}$\}]	& [rn $+$ i$^{\pm}_{9:2}$:0$^{ }_{2}$]$^{ }_{z}$ = ft			& \\
 \end{asmtable2}
 %
@@ -524,9 +541,12 @@ VCVT.f.sz	& fd, fn, \#i$^{ }_{5}$	& fd = Fixed2Float(fn$^{s}_{ }$, i)						& V3 
 VCVT\{,R\}.s32.f	& Sd, fn	& Sd = Float2Int(fn)$^{s}_{ }$							& \\
 VCVTx.F16.F32	& Sd, Sn		& Sd$^{ }_{Hx}$ = Float2Float(Sn)						& V3 \\
 VCVTx.F32.F16	& Sd, Sn		& Sd = Float2Float(Sn$^{ }_{Hx}$)						& V3 \\
+VRINT\{r,R,Z\}.f	& fd, fn	& fd = Rount2Int(fn, \{r,R,Z\})							& 8,I \\
+VRINTX.f	& fd, fn		& fd = Rount2IntExact(fn, FPSCR)						& 8,I \\
 \end{asmtable2}
 %
 \begin{asmtable6}{Register Transfer Instructions}
+VINS.F16	& Sd, Sn		& Sd = Sn$^{ }_{H0}$:Sd$^{ }_{H0}$						& 8{\tiny 2},I \\
 VMOV\{.32\}	& Dd[i], rn		& Dd$^{ }_{32i}$ = rn								& \\
 VMOV\{.32\}	& rd, Dn[i]		& rd = Dn$^{ }_{32i}$								& \\
 VMOV		& Sd, rn		& Sd = rn									& \\
@@ -537,16 +557,20 @@ VMOV		& Dd, rn, rm		& Dd = rm:rn									& \\
 VMOV		& rd, rd2, Dn		& rd2:rd = Dn									& \\
 VMOV.f		& fd, \#i		& fd = i									& V3 \\
 VMOV.f		& fd, fn		& fd = fn									& \\
+VMOV.F16	& Sd, rn		& Sd = rn$^{\emptyset}_{H0}$							& 8{\tiny 2},I \\
+VMOV.F16	& rd, Sn		& rd = Sn$^{\emptyset}_{H0}$							& 8{\tiny 2},I \\
+VMOVX.F16	& Sd, Sn		& Sd = Sn$^{\emptyset}_{H1}$							& 8{\tiny 2},I \\
 VMRS		& rd, fpreg		& rd = fpreg									& \\
 VMRS		& APSR\_nzcv,FPSCR	& APSR\_nzcv = FPSCR\_nzcv							& \\
 VMSR		& fpreg, rn		& fpreg = rn									& \\
+VSELcs		& fd, fn, fm		& fd = (cs) ? fn : fm								& 8,I \\
 \end{asmtable6}
 %
 \begin{table-lX}{Floating-point System Registers (fpreg)}
 FPEXC	& Floating-point Exception Control \\
 FPSCR	& Floating-point Status and Control \\
 FPSID	& Floating-point System ID \\
-MVFR\{0..1\}	& Media and VFP Feature \{0..1\} \\
+MVFR\{0..2\}	& Media and VFP Feature \{0..2\} \\
 \end{table-lX}
 %
 \begin{table-llXr}{Floating-point Status and Control Register (FPSCR)}
@@ -557,6 +581,7 @@ UFE,UFC	& 0x00000808	& Underflow (trap enable, exception)		& \\
 IXE,IXC	& 0x00001010	& Inexact (trap enable, exception)		& \\
 IDE,IDC	& 0x00008080	& Input denormal (trap enable, exception)	& \\
 %Len	& 0x00070000	& VFP vector length				& \\ % Deprecated
+FZ16	& 0x00080000	& Flush-to-zero mode for half-precision		& 8{\tiny 2} \\
 %Stride	& 0x00300000	& VFP vector stride				& \\ % Deprecated
 RMode	& 0x00c00000	& Rounding mode (RN,RP,RM,RZ)			& \\
 FZ	& 0x01000000	& Flush-to-zero mode				& \\
@@ -569,7 +594,9 @@ N,Z,C,V	& 0xf0000000	& Condition flags (Negative,Zero,Carry,Overflow)	& \\
 \begin{table-lX}{Notes for Floating-point and SIMD Instructions}
 V3,V4	& Introduced in VFPv3, VFPv4 \\
 SH,S2	& Introduced in SIMD with half-precision floats, SIMDv2 \\
-F	& Instruction with data type F32 also exists \\
+8,8{\tiny 1},8{\tiny 2}	& Introduced in ARMv8, ARMv8.1, or ARMv8.2 \\
+F	& Data type F16 (8{\tiny 2} only), F32, and sometimes F64 also allowed \\
+I	& Can't be conditional \\
 \end{table-lX}
 %
 \begin{asmtable}{SIMD Load/Store Instructions}
@@ -611,12 +638,14 @@ VSWP		& md, mn		& mn:md = md:mn									& \\
 \end{asmtable}
 %
 \begin{table-lX}{Floating-point and SIMD Keys}
-z		& Data size (8, 16, or 32) \\
-f		& Floating-point size (F32 or F64) \\
+z		& Data size (8, 16, 32, or (sometimes) 64) \\
+f		& Floating-point size (F16 (8{\tiny 2} only), F32, or F64) \\
 Sd, Dn, Qm	& Singleword/doubleword/quadword register \\
 fd, fn, fm	& Floating-point register (Sx or Dx depending on data size) \\
 md, mn, mm	& SIMD register (Dx or Qx) \\
 cm		& SIMD comparison operator (GE, GT, LE, or LT) \\
+cs		& Floating-point comparison operator (EQ, GE, GT, or VS) \\
+r		& Rounding (A, M, N, or P) \\
 x $\lsl\lsr$ y	& (y $\ult$ 0) ? (x $\lsr$ $-$y) : (x $\lsl$ y) \\
 $\max$ $\min$	& Maximum/minimum value \\
 \end{table-lX}
@@ -679,6 +708,7 @@ VMUL.Iz		& md, mn, mm		& md$^{ }_{z*}$ = mn$^{ }_{z*}$ $\umul$ mm$^{ }_{z*}$				
 VMUL.Iz		& md,mn,Dm[i]		& md$^{ }_{z*}$ = mn$^{ }_{z*}$ $\umul$ Dm$^{ }_{zi}$				& F \\ % z = 16,32
 VMUL.P8		& md, mn, mm		& md$^{ }_{8*}$ = mn$^{ }_{8*}$ $\ast$ mm$^{ }_{8*}$				& \\
 VMULL.P8	& Qd, Dn, Dm		& Qd$^{ }_{16*}$ = Dn$^{ }_{8*}$ $\ast$ Dm$^{ }_{8*}$				& \\
+VMULL.P64	& Qd, Dn, Dm		& Qd = Dn $\ast$ Dm								& 8,I \\
 VMULL.sz	& Qd, Dn, Dm		& Qd$^{ }_{2z*}$ = Dn$^{ }_{z*}$ $\umul^{s}_{ }$ Dm$^{ }_{z*}$			& \\ % z = 8,16,32
 VMULL.sz	& Qd,Dn,Dm[i]		& Qd$^{ }_{2z*}$ = Dn$^{ }_{z*}$ $\umul^{s}_{ }$ Dm$^{ }_{zi}$			& \\ % z = 16,32
 VQDMLaL.Sz	& Qd, Dn, Dm		& Qd$^{ }_{2z*}$ $\pm$= $\lfloor$2 $\smul$ Dn$^{ }_{z*}$ $\smul$ Dm$^{ }_{z*}$$\rceil^{Sz}$	& \\ % z = 16,32
@@ -687,6 +717,8 @@ VQDMULH.Sz	& md, mn, mm		& md$^{ }_{z*}$ = $\lfloor$(2 $\smul$ mn$^{ }_{z*}$ $\s
 VQDMULH.Sz	& md,mn,Dm[i]		& md$^{ }_{z*}$ = $\lfloor$(2 $\smul$ mn$^{ }_{z*}$ $\smul$ Dm$^{ }_{zi}$) $\asr$ z$\rceil^{S2z}$	& \\ % z = 16,32
 VQDMULL.Sz	& Qd, Dn, Dm		& Qd$^{ }_{2z*}$ = $\lfloor$2 $\smul$ Dn$^{ }_{z*}$ $\smul$ Dm$^{ }_{z*}$$\rceil^{S2z}$		& \\ % z = 16,32
 VQDMULL.Sz	& Qd,Dn,Dm[i]		& Qd$^{ }_{2z*}$ = $\lfloor$2 $\smul$ Dn$^{ }_{z*}$ $\smul$ Dm$^{ }_{zi}$$\rceil^{S2z}$		& \\ % z = 16,32
+VQRDMLaH.Sz	& md, mn, mm		& md$^{ }_{z*}$=$\lfloor$md$^{ }_{z*}$$\lsl$z$\pm$2$\smul$mn$^{ }_{z*}$$\smul$mm$^{ }_{z*}$$\asr^{R}_{ }$z$\rceil^{Sz}$	& 8{\tiny 1},I \\ % z = 16,32
+VQRDMLaH.Sz	& md,mn,Dm[i]		& md$^{ }_{z*}$=$\lfloor$md$^{ }_{z*}$$\lsl$z$\pm$2$\smul$mn$^{ }_{z*}$$\smul$Dm$^{ }_{zi}$$\asr^{R}_{ }$z$\rceil^{Sz}$)	& 8{\tiny 1},I \\ % z = 16,32
 VQRDMULH.Sz	& md, mn, mm		& md$^{ }_{z*}$=$\lfloor$(2 $\smul$ mn$^{ }_{z*}$ $\smul$ mm$^{ }_{z*}$) $\asr^{R}_{ }$ z$\rceil^{S2z}$	& \\ % z = 16,32
 VQRDMULH.Sz	& md,mn,Dm[i]		& md$^{ }_{z*}$=$\lfloor$(2 $\smul$ mn$^{ }_{z*}$ $\smul$ Dm$^{ }_{zi}$) $\asr^{R}_{ }$ z$\rceil^{S2z}$	& \\ % z = 16,32
 \end{asmtable2}
@@ -733,10 +765,13 @@ VCVT.F32.s32	& md, mn		& md$^{ }_{32*}$ = Int2Float(mn$^{s}_{32*}$)					& \\
 VCVT.F32.s32	& md, mn, \#i$^{ }_{6}$	& md$^{ }_{32*}$ = Fixed2Float(mn$^{s}_{32*}$, i)				& \\
 VCVT.s32.F32	& md, mn		& md$^{ }_{32*}$ = Float2Int(mn)$^{s}_{32*}$					& \\
 VCVT.s32.F32	& md, mn, \#i$^{ }_{6}$	& md$^{ }_{32*}$ = Float2Fixed(mn$^{s}_{32*}$, i)				& \\
+VCVTr.s32.F32	& md, mn		& md$^{ }_{32*}$ = Float2Int(mn$^{ }_{32*}$, r)$^{s}_{ }$			& 8,I \\
 VMOVL.sz	& Qd, Dn		& Qd$^{ }_{2z*}$ = Dn$^{s}_{z*}$						& \\ % z = 8,16,32
 VMOVN.Iz	& Dd, Qn		& Dd$^{ }_{0\text{.}5z*}$ = Qn$^{ }_{z*[0\text{.}5z-1:0]}$			& \\ % z = 16,32,64
 VQMOVN.sz	& Dd, Qn		& Dd$^{ }_{0\text{.}5z*}$ = $\lfloor$Qn$^{ }_{z*}$$\rceil^{s0.5z}$		& \\ % z = 16,32,64
 VQMOVUN.Sz	& Dd, Qn		& Dd$^{ }_{0\text{.}5z*}$ = $\lfloor$Qn$^{ }_{z*}$$\rceil^{U0.5z}$		& \\ % z = 16,32,64
+VRINT\{r,Z\}.F32	& md, mn	& md$^{ }_{32*}$ = Round2Int(mn$^{ }_{32*}$, \{r,Z\})				& 8,I \\
+VRINTX.F32	& md, mn		& md$^{ }_{32*}$ = Round2Int(mn$^{ }_{32*}$, FPSCR)				& 8,I \\
 \end{asmtable5}
 %
 \begin{asmtable7}{SIMD Comparision Instructions}
@@ -746,7 +781,9 @@ VCEQ.Iz		& md, mn, \#0		& md$^{ }_{z*}$ = (mn$^{ }_{z*}$ $\eq$ 0) ? 1$^{ }_{z}$ 
 VCcm.sz		& md, mn, mm		& md$^{ }_{z*}$ = (mn$^{ }_{z*}$ cm$^{s}_{ }$ mm$^{ }_{z*}$) ? 1$^{ }_{z}$ : 0$^{ }_{z}$	& F \\ % z = 8,16,32
 VCcm.Sz		& md, mn, \#0		& md$^{ }_{z*}$ = (mn$^{ }_{z*}$ $\bar{cm}$ 0) ? 1$^{ }_{z}$ : 0$^{ }_{z}$	& F \\ % z = 8,16,32
 VMAX.sz		& md, mn, mm		& md$^{ }_{z*}$ = mn$^{ }_{z*}$ $\max^{s}_{ }$ mm$^{ }_{z*}$			& F \\ % z = 8,16,32
+VMAXNM.sz	& md, mn, mm		& md$^{ }_{z*}$ = mn$^{ }_{z*}$ $\max^{s}_{ }$ mm$^{ }_{z*}$				& 8,F,I \\ % z = 16,32
 VMIN.sz		& md, mn, mm		& md$^{ }_{z*}$ = mn$^{ }_{z*}$ $\min^{s}_{ }$ mm$^{ }_{z*}$			& F \\ % z = 8,16,32
+VMINNM.sz	& md, mn, mm		& md$^{ }_{z*}$ = mn$^{ }_{z*}$ $\min^{s}_{ }$ mm$^{ }_{z*}$				& 8,F,I \\ % z = 16,32
 VPMAX.sz	& Dd, Dn, Dm		& Dd$^{ }_{z*}$ = (Dm:Dn)$^{ }_{z2*}$ $\max^{s}_{ }$ (Dm:Dn)$^{ }_{z2*+1}$	& F \\ % z = 8,16,32
 VPMIN.sz	& Dd, Dn, Dm		& Dd$^{ }_{z*}$ = (Dm:Dn)$^{ }_{z2*}$ $\min^{s}_{ }$ (Dm:Dn)$^{ }_{z2*+1}$	& F \\ % z = 8,16,32
 VTST.z		& md, mn, mm		& md$^{ }_{z*}$ = (mn$^{ }_{z*}$\&mm$^{ }_{z*}$ $\ne$ 0) ? 1$^{ }_{z}$ : 0$^{ }_{z}$	& \\ % z = 8,16,32
@@ -754,7 +791,7 @@ VTST.z		& md, mn, mm		& md$^{ }_{z*}$ = (mn$^{ }_{z*}$\&mm$^{ }_{z*}$ $\ne$ 0) ?
 %
 \newpage
 \begin{center}
-{\Large\bfseries ARMv7-A \& ARMv7-R System}
+{\Large\bfseries ARMv8-A \& ARMv7-R System}
 \end{center}
 %
 \begin{table-llXr}{Current Program Status Register (CPSR)}
@@ -766,6 +803,7 @@ A		& 0x00000100 & Asynchronous abort masked	& 6 \\
 E		& 0x00000200 & Big-endian operation		& 6 \\
 IT		& 0x0600fc00 & IT state bits			& 6t\\
 GE\{3..0\}	& 0x000f0000 & SIMD greater than or equal to	& 6 \\
+PAN		& 0x00400000	& Disable privileged access at PL0	& 8{\tiny 1},A \\
 J		& 0x01000000 & Instr set (JT: 10=Jazelle, 11=ThumbEE)	& 6 \\
 Q		& 0x08000000 & Cumulative saturation bit	& \\
 V		& 0x10000000 & Overflow condition flag		& \\
@@ -799,6 +837,7 @@ sys	& 0x1f	& System			& \\
 %
 \begin{table-lX}{Notes for System Registers and Tables}
 6,6k,6t,7 & Introduced in ARMv6, ARMv6k, ARMv6T2, or ARMv7 \\
+8,8{\tiny 1},8{\tiny 2}	& Introduced in ARMv8, ARMv8.1, or ARMv8.2 \\
 %\sout{7} & Removed in ARMv7 \\
 A,R & Only present on ARM-A, or ARM-R \\
 B & Banked between secure and non-secure usage \\
@@ -811,9 +850,13 @@ M	& 0x00000001 & MMU enabled					& B \\
 A	& 0x00000002 & Alignment check enabled				& B \\
 C	& 0x00000004 & Data and unified caches enabled			& B \\
 %W	& 0x00000008 & Write buffer enabled				& \sout{7} \\
+nTLSMD	& 0x00000008 & Don't trap load/store multiple to device		& 8{\tiny 2},A \\
+LSMAOE	& 0x00000010 & Don't interrupt load/store multiple		& 8{\tiny 2},A \\
 CP15BEN	& 0x00000020 & CP15 barrier enable				& 7,B \\
 %B	& 0x00000080 & Legacy big endian BE-32 format			& \sout{7} \\
+ITD	& 0x00000080 & Disable deprecated IT usage at PL1 and PL0	& 8 \\
 %S	& 0x00000100 & System protection				& \sout{7} \\
+SED	& 0x00000100 & Disable SETEND instructions			& 8 \\
 %R	& 0x00000200 & ROM protection					& \sout{7} \\
 SW	& 0x00000400 & Enable SWP and SWPB instructions			& 6,B \\
 Z	& 0x00000800 & Program flow prediction enabled			& B \\
@@ -821,14 +864,17 @@ I	& 0x00001000 & Instruction cache enabled			& B \\
 V	& 0x00002000 & High exception vectors				& B \\
 RR	& 0x00004000 & Round robin select (Non-Secure RO)		& \\
 %L4	& 0x00008000 & Inhibit thumb interworking			& \sout{7} \\
+nTWI	& 0x00010000 & Don't trap WFI from PL0 to undefined mode	& 8 \\
 HA	& 0x00020000 & Hardware access flag enable			& B,S \\
 BR	& 0x00020000 & Background region enable				& 7,R \\
+nTWE	& 0x00040000 & Don't trap WFE from PL0 to undefined mode		& 8 \\
 WXN	& 0x00080000 & Write force to XN				& V \\
 DZ	& 0x00080000 & Divide by zero causes undefined instruction	& 7,R \\
 UWXN	& 0x00100000 & Unprivileged write forced to XN for PL1		& V \\
 FI	& 0x00200000 & Fast interrupts (Non-Secure RO)			& 6 \\
 %U	& 0x00400000 & Unaligned access support				& 6,\sout{7} \\
 %XP	& 0x00800000 & Select virtual memory support model		& 6,\sout{7} \\
+PAN	& 0x00800000 & Don't set CPSR.PAN on exception to PL1		& 8{\tiny 1},A \\
 VE	& 0x01000000 & Interrupt vectors enable				& 6,B \\
 EE	& 0x02000000 & Exception endianess				& 6,B \\
 %L2	& 0x04000000 & Level 2 cache support				& 6,\sout{7} \\
@@ -850,6 +896,9 @@ nET	& 0x0040 & Disable early termination				& \\
 SCD	& 0x0080 & Secure monitor call disable				& V \\
 HCE	& 0x0100 & Hyp call enable					& V \\
 SIF	& 0x0200 & Secure instruction fetch				& V \\
+TWI	& 0x1000 & Trap WFI instruction to monitor mode			& 8 \\
+TWE	& 0x2000 & Trap WFE instruction to monitor mode			& 8 \\
+TERR	& 0x8000 & Trap ER* access to monitor mode			& 8 \\
 \end{table-llXr}
 %
 %\begin{table-llX}{Non-Secure Access Control Register (NSACR)}
@@ -871,11 +920,13 @@ SIF	& 0x0200 & Secure instruction fetch				& V \\
 SCTLR		& c1,0,c0,0	& System Control				& \\
 ACTLR		& c1,0,c0,1	& Auxiliary Control				& 6,B \\
 CPACR		& c1,0,c0,2	& Coprocessor Access Control			& 6 \\
+ACTLR2		& c1,0,c0,3	& Auxiliary Control bits 32-63			& 8{\tiny 2},B \\
 SCR		& c1,0,c1,0	& Secure Configuration (Secure only)		& S \\
 SDER		& c1,0,c1,1	& Secure Debug Enable (Secure only)		& S \\
 NSACR		& c1,0,c1,2	& Non-Secure Access Control (Non-Secure RO)	& S \\
 VBAR		& c12,0,c0,0	& Vector Base					& A,B \\
 MVBAR		& c12,0,c0,1	& Monitor Vector Base Address (Secure only)	& A,S \\
+RMR		& c12,0,c0,2	& Reset Management				& 8,A \\
 ISR		& c12,0,c1,0	& Interrupt Status (RO)				& \\
 \end{table-llXr}
 %
@@ -898,6 +949,7 @@ RGNR		& c6,0,c2,0	& MPU Region Number			& R \\
 \begin{table-llXr}{CP15 Memory Protection and Control Registers (ARM-A only)}
 TTBR\{0,1\}	& c2,0,c0,\{0,1\}	& Translation Table Base \{0,1\}	& B \\
 TTBCR		& c2,0,c0,2	& Translation Table Base Control		& 6,B \\
+TTBCR2		& c2,0,c0,3	& Trans Table Base Control bits 32-63		& 8{\tiny 2},B \\
 TTBR\{0,1\}	& c2,\{0,1\}	& Translation Table Base \{0,1\} (LPAE)		& 7,B \\
 DACR		& c3,0,c0,0	& Domain Access Control				& B \\
 PRRR		& c10,0,c2,0	& Primary Region Remap				& 6,B \\
@@ -927,6 +979,7 @@ ID\_DFR0	& c0,0,c1,2	& Debug Feature 0			& 6 \\
 ID\_AFR0	& c0,0,c1,3	& Auxiliary Feature 0			& 6 \\
 ID\_MMFR\{0..3\}	& c0,0,c1,\{4..7\}	& Memory Model Feature \{0..3\}	& 6 \\
 ID\_ISAR\{0..5\}	& c0,0,c2,\{0..5\}	& Instruction Set Attribute \{0..5\}	& 6 \\
+ID\_MMFR4	& c0,0,c2,6	& Memory Model Feature 4		& 8 \\
 CCSIDR		& c0,1,c0,0	& Cache Size ID				& 7 \\
 CLIDR		& c0,1,c0,1	& Cache Level ID			& 7 \\
 AIDR		& c0,1,c0,7	& Auxiliary ID				& 7 \\
@@ -946,6 +999,10 @@ PMXEVCNTR	& c9,0,c13,2	& PM Event Count			& \\
 PMUSERENR	& c9,0,c14,0	& PM User Enable			& \\
 PMINTEN\{SET,CLR\}	& c9,0,c14,\{1,2\}	& PM Inter Enab \{Set,Clr\}	& \\
 PMOVSSET	& c9,0,c14,3	& PM Overflow Flag Stat Set		& \\
+PMCEID\{2,3\}	& c9,0,c14,\{4,5\}	& PM Com Event Id \{2,3\}	& 8{\tiny 1},A \\
+PMEVCNTR\{0..30\}	& c14,0,c\{8..11\},x	& PM Event Count \{0..30\}	& 8 \\
+PMEVTYPER\{0..30\}	& c14,0,c\{12..15\},x	& PM Event Type \{0..30\}	& 8 \\
+PMCCFILTR	& c14,0,c15,7	& PM Cycle Count Filter			& 8 \\
 \end{table-llXr}
 %
 \begin{table-llXr}{CP15 Generic Timer Registers}
@@ -981,6 +1038,7 @@ ATS1CP\{R,W\}	& c7,0,c8,\{0,1\}	& PL1 \{R,W\} trans (Cur state)			& 7,A \\
 ATS1CU\{R,W\}	& c7,0,c8,\{2,3\}	& Unpriv \{R,W\} trans (Cur state)		& 7,A \\
 ATS12NSOP\{R,W\}	& c7,0,c8,\{4,5\}	& PL1 \{R,W\} trans (NS state)		& 7,S \\
 ATS12NSOU\{R,W\}	& c7,0,c8,\{6,7\}	& Unpriv \{R,W\} trans (NS state)	& 7,S \\
+ATS1CP\{R,W\}P	& c7,0,c9,\{0,1\}	& PL1 \{R,W\} trans PAN (Cur st)		& 8{\tiny 2},S \\
 %		& c7,0,c10,0	& Clean data cache					& 6,\sout{7} \\
 DCCMVAC		& c7,0,c10,1	& Clean data c-line by MVA to PoC			& \\
 DCCSW		& c7,0,c10,2	& Clean data c-line by set/way				& \\
@@ -1006,6 +1064,8 @@ TLBIALLIS	& c8,0,c3,0	& Invalidate entire TLB IS			& 7 \\
 TLBIMVAIS	& c8,0,c3,1	& Invalidate unified TLB by MVA and ASID IS	& 7 \\
 TLBIASIDIS	& c8,0,c3,2	& Invalidate unified TLB by ASID match IS	& 7 \\
 TLBIMVAAIS	& c8,0,c3,3	& Inv unified TLB entry by MVA all ASID IS	& 7 \\
+TLBIMVALIS	& c8,0,c3,5	& Inv uni TLB entry by MVA and ASID, IS LL	& 8 \\
+TLBIMVAALIS	& c8,0,c3,7	& Inv unified TLB entry by MVA all ASID, LL	& 8 \\
 ITLBIALL	& c8,0,c5,0	& Invalidate instruction TLB			& \\
 ITLBIMVA	& c8,0,c5,1	& Inv instr TLB entry by MVA all ASID IS	& \\
 ITLBIASID	& c8,0,c5,2	& Invalidate instruction TLB by ASID match	& 6 \\
@@ -1016,6 +1076,8 @@ TLBIALL		& c8,0,c7,0	& Invalidate unified TLB			& \\
 TLBIMVA		& c8,0,c7,1	& Inv unified TLB entry by MVA and ASID		& \\
 TLBIASID	& c8,0,c7,2	& Invalidate unified TLB by ASID match		& 6 \\
 TLBIMVAA	& c8,0,c7,3	& Inv unified TLB entries by MVA all ASID	& 6 \\
+TLBIMVAL	& c8,0,c7,5	& Inv unified TLB entry by MVA and ASID, LL	& 8 \\
+TLBIMVAAL	& c8,0,c7,7	& Inv unified TLB entry by MVA all ASID, LL	& 8 \\
 \end{table-llXr}
 %
 \begin{table-llXr}{CP15 Virtualization Extension Registers (ARM-A Only)}
@@ -1023,10 +1085,12 @@ VPIDR		& c0,4,c0,0	& Virtualization Processor ID		& \\
 VMPIDR		& c0,4,c0,5	& Virtualization Multiproc ID		& \\
 HSCTLR		& c1,4,c0,0	& Hyp System Control			& \\
 HACTLR		& c1,4,c0,1	& Hyp Auxiliary Control			& \\
+HACTLR2		& c1,4,c0,3	& Hyp Auxiliary Control bits 32-63	& 8{\tiny 2} \\
 HCR		& c1,4,c1,0	& Hyp Configuration			& \\
 HDCR		& c1,4,c1,1	& Hyp Debug Configuration		& \\
 HCPTR		& c1,4,c1,2	& Hyp Coprocessor Trap			& \\
 HSTR		& c1,4,c1,3	& Hyp System Trap			& \\
+HCR2		& c1,4,c1,4	& Hyp Configuration bits 32-63		& 8 \\
 HACR		& c1,4,c1,7	& Hyp Auxiliary Configuration		& \\
 HTCR		& c2,4,c0,2	& Hyp Translation Control		& \\
 VTCR		& c2,4,c1,2	& Virtualization Translation Control	& \\
@@ -1039,15 +1103,21 @@ HDFAR		& c6,4,c0,0	& Hyp Data Fault Address		& \\
 HIFAR		& c6,4,c0,2	& Hyp Instruction Fault Address		& \\
 HPFAR		& c6,4,c0,4	& Hyp IPA Fault Address			& \\
 ATS1H\{R,W\}	& c7,4,c8,\{0,1\}	& Addr Tran Stage 1 Hyp mode \{R,W\}	& \\
+TLBIIPAS2IS	& c8,4,c0,1	& Inv unified TLB by IPA S2, IS		& 8 \\
+TLBIIPAS2LIS	& c8,4,c0,5	& Inv unified TLB by IPA S2, IS LL	& 8 \\
 TLBIALLHIS	& c8,4,c3,0	& Inv entry hyp unif TLB IS		& \\
 TLBIMVAHIS	& c8,4,c3,1	& Inv hyp unif TLB entry by MVA IS	& \\
 TLBIALLNSNHIS	& c8,4,c3,4	& Inv non-sec/hyp uni TLB IS		& \\
+TLBIMVALHIS	& c8,4,c3,5	& Inv hyp uni TLB ent by MVA, IS LL	& 8 \\
+TLBIIPAS2	& c8,4,c4,1	& Inv unified TLB by IPA S2		& 8 \\
+TLBIIPAS2L	& c8,4,c4,5	& Inv unified TLB by IPA S2, LL		& 8 \\
 TLBIALLH	& c8,4,c7,0	& Inv hyp unified			& \\
 TLBIMVAH	& c8,4,c7,1	& Inv hyp unif TLB by MVA		& \\
 TLBIALLNSNH	& c8,4,c7,4	& Inv non-sec/hyp unif TLB		& \\
 HMAIR\{0,1\}	& c10,4,c2,\{0,1\}	& Hyp Mem Attribute Indirection \{0,1\}	& \\
 HAMAIR\{0,1\}	& c10,4,c3,\{0,1\}	& Hyp Aux Mem Attr Indirection \{0,1\}	& \\
 HVBAR		& c12,4,c0,0	& Hyp Vector Base Address		& \\
+HRMR		& c12,4,c0,2	& Hyp Reset Management			& 8 \\
 HTPIDR		& c13,4,c0,2	& Hyp Read/Write Thread ID		& \\
 CNTHCTL		& c14,4,c1,0	& Timer PL2 Control			& \\
 CNTHP\_TVAL	& c14,4,c2,0	& PL2 Physical TimerValue		& \\
