@@ -78,6 +78,7 @@
 \mathversion{nmath}
 
 % Math symbols
+\def\cmp{\text{<=>}}
 \def\smul{\bar{\times}}
 \def\umul{\times}
 \def\sdiv{\bar{\div}}

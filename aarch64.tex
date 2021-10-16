@@ -1,5 +1,5 @@
 %
-% Copyright (C) 2017-2020 Anders Sonmark
+% Copyright (C) 2017-2021 Anders Sonmark
 %
 % Copying and distribution of this file, with or without modification,
 % are permitted in any medium without royalty provided the copyright
@@ -22,20 +22,26 @@
 \def\sheetrowcolor{black!5}
 
 \newcolumntype{N}{>{\raggedleft\arraybackslash}m{0.6em}}
-\newcolumntype{M}{>{\raggedleft\arraybackslash}m{1.5em}}
+\newcolumntype{M}{>{\raggedleft\arraybackslash}m{2.0em}}
 \def\tabcolsep{2pt}
 \def\arraystretch{1.3}
 \defsheet{asmtable}{4}{|m{6.3em} m{7.2em}|X|N|}
 \defsheet{asmtable2}{4}{|m{3.0em} m{10.5em}|X|N|}
 \defsheet{asmtable3}{4}{|m{6.3em} m{7.2em}|X|M|}
+\defsheet{asmtables1}{3}{|m{4.3em} m{9.2em}|X|}
+\defsheet{asmtables2}{3}{|m{4.7em} m{9.6em}|X|}
+\defsheet{asmtables3}{4}{|m{3.5em} m{7.2em}|X|M|}
+\defsheet{asmtables4}{4}{|m{7.4em} m{7.2em}|X|M|}
+\defsheet{asmtables5}{4}{|m{4.3em} m{9.2em}|X|M|}
+\defsheet{asmtables6}{4}{|m{5.7em} m{7.8em}|X|M|}
 \defsheet{table-lX}{2}{|l X|}
-\defsheet{table-lXN}{3}{|l|X|N|}
+\defsheet{table-lXM}{3}{|l X|M|}
 \defsheet{table-llX}{3}{|l l X|}
 \defsheet{table-lXr}{3}{|l X r|}
 \defsheet{table-llXr}{4}{|l l X r|}
 \defsheet{table2-lX}{4}{|l X|l X|}
 
-\pagefooter{ARM AArch64 version 3 page \thepage}
+\pagefooter{ARM AArch64 version 4 page \thepage}
 
 \begin{document}
 \begin{multicols}{3}
@@ -79,7 +85,7 @@ UMULH		& Xd, Xn, Xm		& Xd = (Xn $\umul$ Xm)$^{ }_{127:64}$		& \\
 BFI		& rd, rn, \#p, \#n	& rd$^{ }_{p+n-1:p}$ = rn$^{ }_{n-1:0}$		& \\
 %BFM		& rd, rn, \#ir, \#is	& Meta instruction for BFI,BFXIL		& \\
 BFXIL		& rd, rn, \#p, \#n	& rd$^{ }_{n-1:0}$ = rn$^{ }_{p+n-1:p}$		& \\
-CLS		& rd, rn		& rd = CountLeadingOnes(rn)			& \\
+CLS		& rd, rn		& rd = CountLeadingSigns(rn)			& \\
 CLZ		& rd, rn		& rd = CountLeadingZeros(rn)			& \\
 EXTR		& rd, rn, rm, \#p	& rd = rn$^{ }_{p-1:0}$:rm$^{ }_{N0}$		& \\
 RBIT		& rd, rn		& rd = ReverseBits(rn)				& \\
@@ -310,13 +316,13 @@ ADDG		& Xd,Xn,\#i$^{ }_{10}$,\#j$^{ }_{4}$	& Xd = Xn $+$ i$^{\emptyset}_{9:4}$:0
 GMI		& Xd, Xn, Xm		& Xd = Xm$^{ }_{63:60}$:Xn$^{ }_{59:56}$:Xm$^{ }_{55:0}$	& S,O \\
 IRG		& Xd, Xn\{, Xm\}	& Xd = Xn$^{ }_{63:60}$:RndTag(Xm):Xn$^{ }_{55:0}$	& S \\
 LDG		& Xt, [addr]		& Xt$^{ }_{59:56}$ = GetTag(addr)		& \\
-LDGM		& Xt, [Xn]		& Xt=0; for(n=0..((1$\lsl$(BS$-$2))$-$1)\newline Xt$^{ }_{4n+3:4n}$=GetTag(Xn$+$16n)	& O \\
+LDGM		& Xt, [Xn]		& Xt=0;for(n=0..((1$\lsl$(BS$-$2))$-$1)\newline Xt$^{ }_{4n+3:4n}$=GetTag(Xn$+$16n)	& O \\
 SUBG		& Xd,Xn,\#i$^{ }_{10}$,\#j$^{ }_{4}$	& Xd = Xn $-$ i$^{\emptyset}_{9:4}$:0$^{ }_{4}$;\newline Xd$^{ }_{59:56}$ = ChooseTag(Xn$^{ }_{59:56}$, j)	& S \\
 SUBP\{S\}	& Xd, Xn, Xm		& Xd = Xn$^{\pm}_{55:0}$ - Xm$^{\pm}_{55:0}$	& S,O \\
 STG		& Xt, [addr]		& SetTag(addr, Xt$^{ }_{59:56}$) 		& \\
 STZG		& Xt, [addr]		& [addr]$^{ }_{128}$=0; SetTag(addr,Xt$^{ }_{59:56}$) & \\
 ST2G		& Xt, [addr]		& SetTag(addr, Xt$^{ }_{59:56}$);\newline SetTag(addr$+$16, Xt$^{ }_{59:56}$)	& \\
-STZ2G		& Xt, [addr]		& [addr]$^{ }_{256}$=0; SetTag(addr, Xt$^{ }_{59:56}$);\newline SetTag(addr+16, Xt$^{ }_{59:56}$)	& \\
+STZ2G		& Xt, [addr]		& [addr]$^{ }_{256}$=0;SetTag(addr,Xt$^{ }_{59:56}$);\newline SetTag(addr+16, Xt$^{ }_{59:56}$)	& \\
 STG\{Z\}M	& Xt, [Xn]		& for(n = 0..((1$\lsl$(BS$-$2))$-$1)\newline SetTag(Xn$+$16n, Xt$^{ }_{4n+3:4n}$)	& O \\
 STGP		& Xt, Xt2, [addr]	& [addr]$^{ }_{128}$ = Xt2:Xt;\newline SetTag(addr, addr$^{ }_{59:56}$) & \\
 \end{asmtable3}
@@ -519,6 +525,338 @@ FPSR			& Floating-point status					& \\
 %DRPS		&			& DebugRestoreState()				& \\
 %HLT		& \#i$^{ }_{16}$	& DebugHalt(i)					& \\
 %\end{asmtable}
+%
+\newpage
+\begin{center}
+{\Large\bfseries AArch64 Floating-point and \\* Advanced SIMD Extensions}
+\end{center}
+%
+\begin{asmtables2}{SIMD Load/Store Instructions}
+LD1		& \{vt$^{ }_{BHSD}$\}, [addr]		& Vt = [addr]$^{ }_{nz}$								\\ % 8B,16B,4H,8H,2S,4S,1D,2D
+LD1		& \{vt$^{ }_{BHSD}$, ...\}, [addr]	& \{\{Vt''':\}Vt'':\}Vt':Vt = [addr]$^{ }_{\{2,3,4\}nz}$				\\ % 8B,16B,4H,8H,2S,4S,1D,2D
+LD1		& \{Vt.t$^{ }_{BHSD}$[i]\}, [addr]	& Vt$^{ }_{ti}$ = [addr]$^{ }_{z}$							\\ % B,H,S,D
+LD1R		& \{Vt$^{ }_{BHSD}$\}, [addr]		& Vt$^{ }_{t*}$ = [addr]$^{ }_{z}$							\\ % 8B,16B,4H,8H,2S,4S,1D,2D
+LD\{2,3,4\}	& \{vt$^{ }_{BHSD}$, ...\}, [addr]	& \{\{Vt'''$^{ }_{te}$:Vt''$^{ }_{te}$:...Vt'$^{ }_{t0}$:Vt$^{ }_{t0}$ = [addr]$^{ }_{nz}$	\\ % 8B,16B,4H,8H,2S,4S,1D,2D
+LD\{2,3,4\}	& \{Vt.t$^{ }_{BHSD}$[i],...\},[addr]	& \{\{Vt'''$^{ }_{ti}$:\}Vt''$^{ }_{ti}$:\}Vt'$^{ }_{ti}$:Vt$^{ }_{ti}$ = [addr]$^{ }_{nz}$	\\ % B,H,S,D
+LD\{2,3,4\}R	& \{vt$^{ }_{BHSD}$, ...\}, [addr]	& \{\{Vt'''$^{ }_{t*}$:\}Vt''$^{ }_{t*}$:\}Vt'$^{ }_{t*}$:Vt$^{ }_{t*}$=[addr]$^{ }_{nz}$	\\ % 8B,16B,4H,8H,2S,4S,1D,2D
+LD\{N\}P	& qt$^{ }_{SDQ}$, qt2$^{ }_{d}$, [addr]	& Vt2$^{ }_{t0}$:Vt$^{ }_{t0}$ = [addr]$^{ }_{2z}$					\\ % S,D,Q
+LD\{U\}R	& qt$^{ }_{BHSDQ}$, [addr]		& Vt$^{ }_{t0}$ = [addr]$^{ }_{z}$							\\ % B,H,S,D,Q
+ST1		& \{vt$^{ }_{BHSD}$\}, [addr]		& [addr]$^{ }_{nz}$ = Vt								\\ % 8B,16B,4H,8H,2S,4S,1D,2D
+ST1		& \{vt$^{ }_{BHSD}$, ...\}, [addr]	& [addr]$^{ }_{\{2,3,4\}nz}$=\{\{Vt''':\}Vt'':\}Vt':Vt					\\ % 8B,16B,4H,8H,2S,4S,1D,2D
+ST1		& \{Vt.t$^{ }_{BHSD}$[i]\}, [addr]	& [addr]$^{ }_{z}$ = Vt$^{ }_{ti}$							\\ % B,H,S,D
+ST\{2,3,4\}	& \{vt$^{ }_{BHSD}$, ...\}, [addr]	& [addr]$^{ }_{nz}$ = \{\{Vt'''$^{ }_{te}$:Vt''$^{ }_{te}$:...Vt'$^{ }_{t0}$:Vt$^{ }_{t0}$	\\ % 8B,16B,4H,8H,2S,4S,1D,2D
+ST\{2,3,4\}	& \{Vt.t$^{ }_{BHSD}$[i],...\},[addr]	& [addr]$^{ }_{nz}$ = \{\{Vt'''$^{ }_{ti}$:\}Vt''$^{ }_{ti}$:\}Vt'$^{ }_{ti}$:Vt$^{ }_{ti}$	\\ % B,H,S,D
+ST\{N\}P	& qt$^{ }_{SDQ}$, qt2$^{ }_{d}$, [addr]	& [addr]$^{ }_{2z}$ = Vt2$^{ }_{t0}$:Vt$^{ }_{t0}$					\\ % S,D,Q
+ST\{U\}R	& qt$^{ }_{BHSDQ}$, [addr]		& [addr]$^{ }_{z}$ = Vt$^{ }_{t0}$							\\ % B,H,S,D,Q
+\end{asmtables2}
+%
+\begin{table-llX}{SIMD Load/Store Addressing Modes}
+xx\{1,2,3,4\}\{R\}	& [Xn]			& addr = Xn \\
+xx\{1,2,3,4\}\{R\}	& [Xn], \#i		& addr = Xn; Xn $+$= nz $\udiv$ 8 \\
+xx\{1,2,3,4\}\{R\}	& [Xn], Xm		& addr = Xn; Xn $+$= Xm \\
+xxNP		& [Xn\{, \#i$^{ }_{7+s}$\}]	& addr = Xn $+$ i$^{\pm}_{6+s:s}$:0$^{ }_{s}$ \\
+xxP		& [Xn, \#i$^{ }_{7+s}$]!	& Xn =$+$ i$^{\pm}_{6+s:s}$:0$^{ }_{s}$; addr = Xn \\
+xxP		& [Xn], \#i$^{ }_{7+s}$		& addr = Xn; Xn =$+$ i$^{\pm}_{6+s:s}$:0$^{ }_{s}$ \\
+xxR		& [Xn], \#i$^{ }_{9}$		& addr = Xn; Xn =$+$ i$^{\pm}_{ }$ \\
+xxR		& [Xn, \#i$^{ }_{9}$]!		& Xn =$+$ i$^{\pm}_{ }$; addr = Xn \\
+xxR		& [Xn\{, \#i$^{ }_{12+s}$\}]	& addr = Xn $+$ i$^{\emptyset}_{12+s:s}$:0$^{ }_{s}$ \\
+xxR		& [Xn, Xm\{, LSL \#\{0,s\}\}]	& addr = Xn $+$ Xm $\lsl$ \{0,s\} \\
+xxR		& [Xn, Wm\{, sXTW\{ \#0,s\}\}]	& addr = Xn $+$ rm$^{s}_{ }$ $\lsl$ \{0,s\} \\
+xxR		& [Xn, Xm\{, SXTX\{ \#0,s\}\}]	& addr = Xn $+$ rm$^{\pm}_{ }$ $\lsl$ \{0,s\} \\
+xxUR		& [Xn\{, \#i$^{ }_{9}$\}]	& addr = Xn $+$ i$^{\pm}_{ }$ \\
+LDR		& $\pm$rel${ }_{21}$		& addr = PC $+$ rel$^{\pm}_{20:2}$:0$^{ }_{2}$ \\
+\end{table-llX}
+%
+\begin{asmtables5}{SIMD Misc Instructions}
+PMUL		& vd$^{ }_{B}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{B*}$ = Vn$^{ }_{B*}$ $\ast$ Vm$^{ }_{B*}$				& \\ % 8B,16B
+PMULL\{2\}	& vd$^{ }_{HQ}$, vn$^{ }_{BD}$, vm$^{ }_{n}$	& Vd$^{ }_{t*}$ = Vn$^{ }_{t'*}$ $\ast$ Vm$^{ }_{t'*}$				& \\ % 8H+8B/16B, 1Q+1D/2D
+sDOT		& vd$^{ }_{S}$, vn$^{ }_{B}$, vm$^{ }_{n}$	& Vd$^{ }_{S*}$=$\sum_{k=0}^{3}$(Vn$^{ }_{B4*+k}$$\umul^{s}_{ }$Vm$^{ }_{B4*+k}$)	& 2,I,O \\ % 2S+8B, 4S+16B
+sMMLA		& Vd.4S,Vn.16B,Vm.16B				& Vd$^{ }_{S[2,2]}$ $+$= Vn$^{ }_{B[2,8]}$ $\umul^{s}_{ }$ Vm$^{ }_{B[8,2]}$ 	& 2,O \\ % 4S+16B
+SUDOT		& vd$^{ }_{S}$, vn$^{ }_{B}$, Vm.4B[i]		& Vd$^{ }_{S*}$=$\sum_{k=0}^{3}$(Vn$^{\pm}_{B4*+k}$ $\smul$ Vm$^{\emptyset}_{Bi+k}$)	& 2,O \\ % 2S+8B, 4S+16B
+URECPE		& vd$^{ }_{S}$, vn$^{ }_{d}$			& Vd$^{ }_{S*}$ = RecipEstimate(Vn$^{ }_{S*}$)					& \\ % 2S,4S
+URSQRTE		& vd$^{ }_{S}$, vn$^{ }_{d}$			& Vd$^{ }_{S*}$ = RecipSqrtEstimate(Vn$^{ }_{S*}$)				& \\ % 2S,4S
+USDOT		& vd$^{ }_{S}$, vn$^{ }_{B}$, vm$^{ }_{n}$	& Vd$^{ }_{S*}$=$\sum_{k=0}^{3}$(Vn$^{\emptyset}_{B4*+k}$$\smul$Vm$^{\pm}_{B4*+k}$)	& 2,I,O \\ % 2S+8B, 4S+16B
+USMMLA		& Vd.4S,Vn.16B,Vm.16B				& Vd$^{ }_{S[2,2]}$ $+$= Vn$^{\emptyset}_{B[2,8]}$ $\umul$ Vm$^{\pm}_{B[8,2]}$ 	& 2,O \\ % 4S+16B
+\end{asmtables5}
+%
+\begin{asmtables6}{Floating Point Arithmetic Instructions}
+FABD		& vd$^{ }_{HSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = $\lvert$Vn$^{ }_{t*}$ $-$ Vm$^{ }_{t*}$$\rvert$		& M \\ % a = 4H,8H,2S,4S,2D
+FABS		& vd$^{ }_{HSD}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = $\lvert$Vn$^{ }_{t*}$$\rvert$					& M \\ % a = 4H,8H,2S,4S,2D
+FACGE		& vd$^{ }_{HSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$=($\lvert$Vn$^{ }_{t*}$$\rvert$$\uge$$\lvert$Vm$^{ }_{t*}$$\rvert$) ? 1$^{ }_{z}$ : 0$^{ }_{z}$	& M \\ % a = 4H,8H,2S,4S,2D
+FACGT		& vd$^{ }_{HSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$=($\lvert$Vn$^{ }_{t*}$$\rvert$$\ugt$$\lvert$Vm$^{ }_{t*}$$\rvert$) ? 1$^{ }_{z}$ : 0$^{ }_{z}$	& M \\ % a = 4H,8H,2S,4S,2D
+FADD		& vd$^{ }_{HSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = Vn$^{ }_{t*}$ $+$ Vm$^{ }_{t*}$				& M \\ % 4H,8H,2S,4S,2D
+FADDP		& vd$^{ }_{HSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$=(Vm:Vn)$^{ }_{t2*}$$+$(Vm:Vn)$^{ }_{t2*+1}$			& M \\ % 4H,8H,2S,4S,2D
+FDIV		& vd$^{ }_{HSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = Vn$^{ }_{t*}$ $\udiv$ Vm$^{ }_{t*}$				& M \\ % 4H,8H,2S,4S,2D
+FMLa		& vd$^{ }_{HSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ $\pm$= Vn$^{ }_{t*}$ $\umul$ Vm$^{ }_{t*}$			& I,M \\ % 4H,8H,2S,4S,2D
+FMLaL\{2\}	& vd$^{ }_{S}$, vn$^{ }_{H}$, vm$^{ }_{H}$	& Vd$^{ }_{S*}$ $\pm$= Vn$^{ }_{H*}$ $\umul$ Vm$^{ }_{H*}$			& 2,I,O \\ % 2S+2H, 4S+4H
+FM\{N\}ADD	& qd$^{ }_{HSD}$,qn$^{ }_{d}$,qm$^{ }_{d}$,qa$^{ }_{d}$	& Vd$^{ }_{t0}$ = $\pm$Va$^{ }_{t0}$ $+$ Vn$^{ }_{t0}$ $\umul$ Vm$^{ }_{t0}$	& \\ % H,S,D
+FM\{N\}SUB	& qd$^{ }_{HSD}$,qn$^{ }_{d}$,qm$^{ }_{d}$,qa$^{ }_{d}$	& Vd$^{ }_{t0}$ = $\pm$Va$^{ }_{t0}$ $-$ Vn$^{ }_{t0}$ $\umul$ Vm$^{ }_{t0}$	& \\ % H,S,D
+FNEG		& vd$^{ }_{HSD}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = $-$Vn$^{ }_{t*}$						& M \\ % 4H,8H,2S,4S,2D
+F\{N\}MUL\{X\}	& qd$^{ }_{HSD}$, qn$^{ }_{d}$, qm$^{ }_{d}$	& Vd$^{ }_{t0}$ = $\pm$Vn$^{ }_{t0}$ $\umul$ Vm$^{ }_{t0}$			& \\ % H,S,D
+FSQRT		& vd$^{ }_{HSD}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = Sqrt(Vn$^{ }_{t*}$)						& M \\ % 4H,8H,2S,4S,2D
+FSUB		& vd$^{ }_{HSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = Vn$^{ }_{t*}$ $-$ Vm$^{ }_{t*}$				& M \\ % 4H,8H,2S,4S,2D
+\end{asmtables6}
+%
+\begin{asmtables5}{Floating Point Move Instructions}
+FCSEL		& qd$^{ }_{HSD}$, qn$^{ }_{d}$, qm$^{ }_{d}$, cc	& Vd$^{ }_{t0}$ = cc ? Vn$^{ }_{t0}$ : Vm$^{ }_{t0}$			& \\ % H,S,D
+FMOV		& qd$^{ }_{HSD}$, qn$^{ }_{d}$			& Vd$^{ }_{t0}$ = Vn$^{ }_{t0}$							& \\ % H,S,D
+FMOV		& rd, qn$^{ }_{HSD}$				& rd = Vn$^{\emptyset}_{t0}$							& \\ % H,S,D
+FMOV		& Xd, Dn[1]					& Xd = Vn$^{ }_{D1}$								& \\
+FMOV		& qd$^{ }_{HSD}$, rn$^{ }_{d}$			& Vd$^{ }_{t0}$ = rn$^{ }_{t0}$							& \\ % H,S,D
+FMOV		& Dd[1], Xn					& Vd$^{ }_{D1}$ = Xn								& \\
+FMOV		& vd$^{ }_{HS}$, \#i				& Vd$^{ }_{t*}$ = i								& M$^{ }_{HSD}$ \\ % 4H,8H,2S,4S
+\end{asmtables5}
+%
+\begin{table-llXr}{Floating-point Control Registers (FPCR)}
+IOE		& 0x00000100 & Invalid operation exception trap enable		& \\
+DZE		& 0x00000200 & Divide by zero exception trap enable		& \\
+OFE		& 0x00000400 & Overflow exception trap enable			& \\
+UFE		& 0x00000800 & Underflow exception trap enable			& \\
+IXE		& 0x00001000 & Inexact exception trap enable			& \\
+IDE		& 0x00008000 & Input denormal exception trap enable		& \\
+%Len		& 0x00070000 & 							& \\
+FZ16		& 0x00080000 & Flush-to-zero mode on half-precision		& 2 \\
+%Stride		& 0x00300000 & 							& \\
+RMode		& 0x00c00000 & Rounding mode (nearest, plus inf, minus inf, zero)	& \\
+FZ		& 0x01000000 & Flush-to-zero mode				& \\
+DN		& 0x02000000 & Default NaN mode					& \\
+AHP		& 0x04000000 & Alternate half-precision format			& 2 \\
+\end{table-llXr}
+%
+\begin{table-llXr}{Floating-point Status Registers (FPSR)}
+IOC		& 0x00000001 & Invalid operation cumulative exception		& \\
+DZC		& 0x00000002 & Divide by zero cumulative exception		& \\
+OFC		& 0x00000004 & Overflow cumulative exception			& \\
+UFC		& 0x00000008 & Underflow cumulative exception			& \\
+IXC		& 0x00000010 & Inexact cumulative exception			& \\
+IDC		& 0x00000080 & Input denormal cumulative exception		& \\
+QC		& 0x08000000 & Cumulative saturation				& \\
+%V		& 0x10000000 & Overflow condition				& \\
+%C		& 0x20000000 & Carry condition					& \\
+%Z		& 0x40000000 & Zero condition					& \\
+%N		& 0x80000000 & Negative condition				& \\
+\end{table-llXr}
+%
+\begin{asmtable3}{Floating Point Conversion Instructions}
+BFCVT\{2\}	& vd$^{ }_{H}$, vn$^{ }_{S}$			& Vd$^{ }_{H*}$ = Float2BFloat16(Vn$^{ }_{S*}$)					& 6,M \\ % 4H/8H+4S
+FCVT		& qd$^{ }_{HSD}$, qn$^{ }_{HSD}$		& Vd$^{ }_{t0}$ = Float2Float(Vn$^{ }_{t'0}$)					& \\ % H+S, H+D, S+H, S+D, D+H, D+S
+FCVTrs		& vd$^{ }_{HSD}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = Float2Int(Vn$^{ }_{t*}$, s)					& M,R$^{ }_{d}$ \\ % 4H,8H,2S,4S,2D
+FCVTL\{2\}	& vd$^{ }_{SD}$, vn$^{ }_{HS}$			& Vd$^{ }_{t*}$ = Float2Float(Vn$^{ }_{t'*}$)					& \\ % 4S+4H/8H, 2D+2S/4S
+FCVTN\{2\}	& vd$^{ }_{HS}$, vn$^{ }_{SD}$			& Vd$^{ }_{t*}$ = Float2Float(Vn$^{ }_{t'*}$)					& \\ % 4H/8H+4S, 2S/4S+2D
+FCVTXN\{2\}	& vd$^{ }_{S}$, vn$^{ }_{D}$			& Vd$^{ }_{S*}$ = Float2Float(Vn$^{ }_{D*}$)					& M \\ % 2S/4S+2D
+FCVTZs		& vd$^{ }_{HSD}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = Float2Int(Vn$^{ }_{t*}$, s)					& M,R$^{ }_{d}$ \\ % 4H,8H,2S,4S,2D
+FCVTZs		& vd$^{ }_{HSD}$, vn$^{ }_{d}$, \#i		& Vd$^{ }_{t*}$ = Float2Fixed(Vn$^{ }_{t*}$, i, s)				& M,R$^{ }_{d}$ \\ % 4H,8H,2S,4S,2D
+FJCVTZS		& Wd, Dn					& Wd = Float2FixedJS(Vn$^{ }_{D0}$)						& 3 \\ % D
+FRINT32X	& vd$^{ }_{SD}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = Round2Int32(Vn$^{ }_{t*}$,FPCR)				& 5,M \\ % 2S,4S,2D
+FRINT32Z	& vd$^{ }_{SD}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = Round2Int32(Vn$^{ }_{t*}$, Z)					& 5,M \\ % 2S,4S,2D
+FRINT64X	& vd$^{ }_{SD}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = Round2Int64(Vn$^{ }_{t*}$,FPCR)				& 5,M \\ % 2S,4S,2D
+FRINT64Z	& vd$^{ }_{SD}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = Round2Int64(Vn$^{ }_{t*}$, Z)					& 5,M \\ % 2S,4S,2D
+FRINTr		& vd$^{ }_{HSD}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = Round2Int(Vn$^{ }_{t*}$, r)					& M \\ % 4H,8H,2S,4S,2D
+FRINTI		& vd$^{ }_{HSD}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = Round2Int(Vn$^{ }_{t*}$, FPCR)				& M \\ % 4H,8H,2S,4S,2D
+FRINTX		& vd$^{ }_{HSD}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = Round2IntEx(Vn$^{ }_{t*}$,FPCR)				& M \\ % 4H,8H,2S,4S,2D
+sCVTF		& vd$^{ }_{HSD}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = Int2Float(Vn$^{ }_{t*}$, s)					& M,R$^{ }_{n}$ \\ % 4H,8H,2S,4S,2D
+sCVTF		& vd$^{ }_{HSD}$, vn$^{ }_{d}$, \#i		& Vd$^{ }_{t*}$ = Fixed2Float(Vn$^{ }_{t*}$, i, s)				& M,R$^{ }_{n}$ \\ % 4H,8H,2S,4S,2D
+\end{asmtable3}
+%
+\begin{asmtable3}{Floating Point Comparison Instructions}
+FCCMP\{E\}	& qn$^{ }_{HSD}$,qm$^{ }_{d}$,\#i,cc		& NZCV= cc ?(Vn$^{ }_{t0}$$\cmp$Vm$^{ }_{t0}$) : i				& \\ % H,S,D
+FCMP\{E\}	& qn$^{ }_{HSD}$, qm$^{ }_{d}$			& NZCV = (Vn$^{ }_{t0}$ $\cmp$ Vm$^{ }_{t0}$)					& \\ % H,S,D
+FCMP\{E\}	& qn$^{ }_{HSD}$, \#0.0				& NZCV = (Vn$^{ }_{t0}$ $\cmp$ 0.0)						& \\ % H,S,D
+FCMcf		& vd$^{ }_{HSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = (Vn$^{ }_{t*}$ cf Vm$^{ }_{t*}$) ? 1$^{ }_{z}$ : 0$^{ }_{z}$	& M \\ % 4H,8H,2S,4S,2D
+FCMcz		& vd$^{ }_{HSD}$, vn$^{ }_{d}$, \#0.0		& Vd$^{ }_{t*}$ = (Vn$^{ }_{t*}$ cz 0.0) ? 1$^{ }_{z}$ : 0$^{ }_{z}$		& M \\ % 4H,8H,2S,4S,2D
+FMAX\{NM\}	& vd$^{ }_{HSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = Vn$^{ }_{t*}$ $\max$ Vm$^{ }_{t*}$				& M \\ % 4H,8H,2S,4S,2D
+FMAX\{NM\}P	& vd$^{ }_{HSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$=(Vm:Vn)$^{ }_{t2*}$$\max$(Vm:Vn)$^{ }_{t2*+1}$			& M \\ % 4H,8H,2S,4S,2D
+FMAX\{NM\}V	& qd$^{ }_{HS}$, vn$^{ }_{HS}$			& Vd$^{ }_{t0}$= Vn$^{ }_{t0}$ $\max$ Vn$^{ }_{t1}$ $\max$ ... $\max$ Vn$^{ }_{te}$	& \\ % 4H,8H,4S
+FMIN\{NM\}	& vd$^{ }_{HSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = Vn$^{ }_{t*}$ $\min$ Vm$^{ }_{t*}$				& M \\ % 4H,8H,2S,4S,2D
+FMIN\{NM\}P	& vd$^{ }_{HSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$=(Vm:Vn)$^{ }_{t2*}$$\min$(Vm:Vn)$^{ }_{t2*+1}$			& M \\ % 4H,8H,2S,4S,2D
+FMIN\{NM\}V	& qd$^{ }_{HS}$, vn$^{ }_{HS}$			& Vd$^{ }_{t0}$= Vn$^{ }_{t0}$ $\min$ Vn$^{ }_{t1}$ $\min$ ... $\min$ Vn$^{ }_{te}$	& \\ % 4H,8H,4S
+\end{asmtable3}
+%
+\begin{asmtables5}{Floating Point Misc Instructions}
+BFDOT		& vd$^{ }_{S}$,vn$^{ }_{H}$,vm$^{ }_{n}$	& Vd$^{ }_{S*}$= Vn$^{ }_{H2*}$$\umul$Vm$^{ }_{H2*}$ $+$$\newline$ Vn$^{ }_{H2*+1}$$\umul$Vm$^{ }_{H2*+1}$	& 6,I \\ % 2S+4H, 4S+8H
+BFMLALB		& Vd.4S,Vn.8H,Vm.8H				& Vd$^{ }_{S*}$ $+$= Vn$^{ }_{H2*}$ $\umul$ Vm$^{ }_{H2*}$			& 6,I \\ % 4S+8H
+BFMLALT		& Vd.4S,Vn.8H,Vm.8H				& Vd$^{ }_{S*}$ $+$= Vn$^{ }_{H2*+1}$ $\umul$ Vm$^{ }_{H2*+1}$			& 6,I \\ % 4S+8H
+BFMMLA		& Vd.4S,Vn.8H,Vm.8H				& Vd$^{ }_{S[2,2]}$ $+$= Vn$^{ }_{H[2,4]}$ $\umul$ Vm$^{ }_{H[4,2]}$ 		& 6 \\ % 4S+8H
+FCADD		& vd$^{ }_{HSD}$,vn$^{ }_{d}$,vm$^{ }_{d}$,\#r	& Vd$^{ }_{t*}$ = Vn$^{ }_{t*}$ $+$ CpRot(Vm$^{ }_{t*\oplus1}$,r)			& 3 \\ % 4H,8H,2S,4S,2D
+FCMLA		& vd$^{ }_{HSD}$,vn$^{ }_{d}$,vm$^{ }_{d}$,\#r	& Vd$^{ }_{t[2]*}$$+$=CpMul(Vn$^{ }_{t[2]*}$,Vm$^{ }_{t[2]*}$,r)		& 3,I \\ % 4H,8H,2S,4S,2D
+FRECPE		& vd$^{ }_{HSD}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = RecipEstimate(Vn$^{ }_{t*}$)					& M \\ % 4H,8H,2S,4S,2D
+FRECPS		& vd$^{ }_{HSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = RecipStep(Vn$^{ }_{t*}$,Vm$^{ }_{t*}$)			& M \\ % 4H,8H,2S,4S,2D
+FRECPX		& qd$^{ }_{HSD}$, qn$^{ }_{d}$			& Vd$^{ }_{t0}$ = RecipExponent(Vn$^{ }_{t0}$)					& \\ % H,S,D
+FRSQRTE		& vd$^{ }_{HSD}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = RecipSqrtEstimate(Vn$^{ }_{t*}$)				& M \\ % 4H,8H,2S,4S,2D
+FRSQRTS		& vd$^{ }_{HSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$=RecipSqrtStep(Vn$^{ }_{t*}$,Vm$^{ }_{t*}$)			& M \\ % 4H,8H,2S,4S,2D
+\end{asmtables5}
+%
+\begin{asmtable3}{SIMD Arithmetic Instructions}
+ABS		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = $\lvert$Vn$^{ }_{t*}$$\rvert$					& M$^{ }_{D}$ \\ % 8B,16B,4H,8H,2S,4S,2D
+ADD		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = Vn$^{ }_{t*}$ $+$ Vm$^{ }_{t*}$				& M$^{ }_{D}$ \\ % 8B,16B,4H,8H,2S,4S,2D
+ADDP		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$=(Vm:Vn)$^{ }_{t2*}$$+$(Vm:Vn)$^{ }_{t2*+1}$			& M$^{ }_{D}$ \\ % 8B,16B,4H,8H,2S,4S,2D
+ADDV		& qd$^{ }_{BHS}$, vn$^{ }_{d}$			& Vd$^{ }_{t0}$ = Vn$^{ }_{t0}$ $+$ Vn$^{ }_{t1}$ $+$ ... $+$ Vn$^{ }_{te}$	& \\ % B+8B, B+16B, H+4H, H+8H, S+4S
+NEG		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = $-$Vn$^{ }_{t*}$						& M$^{ }_{D}$ \\ % 8B,16B,4H,8H,2S,4S,2D
+\{R\}ADDHN\{2\}	& vd$^{ }_{BHS}$,vn$^{ }_{BHS}$,vm$^{ }_{n}$	& Vd$^{ }_{t*}$ = (Vn$^{ }_{t'*}$ $+$ Vm$^{ }_{t'*}$) $\lsr^{\{R\}}_{ }$ z	& \\ % 8B/16B+8H, 4H/8H+4S, 2S/4S+2D
+\{R\}SUBHN\{2\}	& vd$^{ }_{BHS}$,vn$^{ }_{BHS}$,vm$^{ }_{n}$	& Vd$^{ }_{t*}$ = (Vn$^{ }_{t'*}$ $-$ Vm$^{ }_{t'*}$) $\lsr^{\{R\}}_{ }$ z	& \\ % 8B/16B+8H, 4H/8H+4S, 2S/4S+2D
+sABA		& vd$^{ }_{BHS}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ $+$= $\lvert$Vn$^{s}_{t*}$ $-$ Vm$^{s}_{t*}$$\rvert$		& \\ % 8B,16B,4H,8H,2S,4S
+sABAL\{2\}	& vd$^{ }_{HSD}$,vn$^{ }_{BHS}$,vm$^{ }_{n}$	& Vd$^{ }_{t*}$ $+$= $\lvert$Vn$^{s}_{t'*}$ $-$ Vm$^{s}_{t'*}$$\rvert$		& \\ % 8H+8B/16B, 4S+4H/8H, 2D+2S/4S
+sABD		& vd$^{ }_{BHS}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = $\lvert$Vn$^{s}_{t*}$ $-$ Vm$^{s}_{t*}$$\rvert$		& \\ % 8B,16B,4H,8H,2S,4S
+sABDL\{2\}	& vd$^{ }_{HSD}$,vn$^{ }_{BHS}$,vm$^{ }_{n}$	& Vd$^{ }_{t*}$ = $\lvert$Vn$^{s}_{t'*}$ $-$ Vm$^{s}_{t'*}$$\rvert$		& \\ % 8H+8B/16B, 4S+4H/8H, 2D+2S/4S
+sADALP		& vd$^{ }_{HSD}$, vn$^{ }_{BHS}$		& Vd$^{ }_{t*}$ $+$= Vn$^{s}_{t2*}$ $+$ Vn$^{s}_{t'2*+1}$			& \\ % 4H+8B, 8H+16B, 2S+4H, 4S+8H, 1D+2S, 2D+4S
+sADDL\{2\}	& vd$^{ }_{HSD}$,vn$^{ }_{BHS}$,vm$^{ }_{n}$	& Vd$^{ }_{t*}$ = Vn$^{s}_{t'*}$ $+$ Vm$^{s}_{t'*}$				& \\ % 8H+8B/16B, 4S+4H/8H, 2D+2S/4S
+sADDLP		& vd$^{ }_{HSD}$, vn$^{ }_{BHS}$		& Vd$^{ }_{t*}$ = Vn$^{s}_{t'2*}$ $+$ Vn$^{s}_{t'2*+1}$				& \\ % 4H+8B, 8H+16B, 2S+4H, 4S+8H, 1D+2S, 2D+4S
+sADDLV		& qd$^{ }_{HSD}$, vn$^{ }_{BHS}$		& Vd$^{ }_{t0}$ = Vn$^{s}_{t'0}$ $+$ Vn$^{s}_{t'1}$ $+$... $+$ Vn$^{s}_{t'e}$	& \\ % H+8B, H+16B, S+4H, S+8H, D+4S
+sADDW\{2\}	& vd$^{ }_{HSD}$,vn$^{ }_{d}$,vm$^{ }_{BHS}$	& Vd$^{ }_{t*}$ = Vn$^{ }_{t*}$ $+$ Vm$^{s}_{t'*}$				& \\ % 8H+8B/16B, 4S+4H/8H, 2D+2S/4S
+sHSUB		& vd$^{ }_{BHS}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = (Vn$^{ }_{t*}$ $+$ Vm$^{ }_{t*}$) $\lsr^{s}_{ }$ 1		& \\ % 8B,16B,4H,8H,2S,4S
+SQABS		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = $\lfloor$ $\lvert$Vn$^{ }_{t*}$$\rvert$ $\rceil^{Sz}$		& M \\ % 8B,16B,4H,8H,2S,4S,2D
+sQADD		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = $\lfloor$Vn$^{ }_{t*}$ $+$ Vm$^{ }_{t*}$$\rceil^{sz}$		& M \\ % 8B,16B,4H,8H,2S,4S,2D
+SQNEG		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = $\lfloor$$-$Vn$\rceil^{Sz}$					& M \\ % 8B,16B,4H,8H,2S,4S,2D
+sQSUB		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = $\lfloor$Vn$^{s}_{t*}$ $-$ Vm$^{s}_{t*}$$\rceil^{sz}$		& M \\ % 8B,16B,4H,8H,2S,4S,2D
+sQXTN\{2\}	& vd$^{ }_{BHS}$, vn$^{ }_{HSD}$		& Vd$^{ }_{t*}$ = $\lfloor$Vn$^{ }_{t'*}$$\rceil^{szd}$				& M \\ % 8B/16B+8H, 4H/8H+4S, 2S/4S+2D
+SQXTUN\{2\}	& vd$^{ }_{BHS}$, vn$^{ }_{HSD}$		& Vd$^{ }_{t*}$ = $\lfloor$Vn$^{\pm}_{t'*}$$\rceil^{Uzd}$			& M \\ % 8B/16B+8H, 4H/8H+4S, 2S/4S+2D
+s\{R\}HADD	& vd$^{ }_{BHS}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = (Vn$^{ }_{t*}$ $+$ Vm$^{ }_{t*}$) $\lsr^{s\{R\}}_{ }$ 1	& \\ % 8B,16B,4H,8H,2S,4S
+sSUBL\{2\}	& vd$^{ }_{HSD}$,vn$^{ }_{BHS}$,vm$^{ }_{n}$	& Vd$^{ }_{t*}$ = Vn$^{s}_{t'*}$ $-$ Vm$^{s}_{t'*}$				& \\ % 8H+8B/16B, 4S+4H/8H, 2D+2S/4S
+sSUBW\{2\}	& vd$^{ }_{HSD}$,vn$^{ }_{d}$,vm$^{ }_{BHS}$	& Vd$^{ }_{t*}$ = Vn$^{ }_{t*}$ $-$ Vm$^{s}_{t'*}$				& \\ % 8H+8B/16B, 4S+4H/8H, 2D+2S/4S
+SUB		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = Vn$^{ }_{t*}$ $-$ Vm$^{ }_{t*}$				& M$^{ }_{D}$ \\ % 8B,16B,4H,8H,2S,4S,2D
+SUQADD		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = $\lfloor$Vd$^{\pm}_{t*}$ $+$ Vn$^{\emptyset}_{t*}$$\rceil^{Sz}$	& M \\ % 8B,16B,4H,8H,2S,4S,2D
+USQADD		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = $\lfloor$Vd$^{\emptyset}_{t*}$ $+$ Vn$^{\pm}_{t*}$$\rceil^{Uz}$	& M \\ % 8B,16B,4H,8H,2S,4S,2D
+\end{asmtable3}
+%
+\begin{asmtable3}{SIMD Multiplication Instructions}
+MLa		& vd$^{ }_{BHS}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ $\pm$= Vn$^{ }_{t*}$ $\umul$ Vm$^{ }_{t*}$			& I$^{ }_{HS}$ \\ % 8B,16B,4H,8H,2S,4S
+MUL		& vd$^{ }_{BHS}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = Vn$^{ }_{t*}$ $\umul$ Vm$^{ }_{t*}$				& I$^{ }_{HS}$ \\ % 8B,16B,4H,8H,2S,4S
+sMLaL\{2\}	& vd$^{ }_{SD}$, vn$^{ }_{HS}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ $\pm$= Vn$^{ }_{t'*}$ $\umul^{s}_{ }$ Vm$^{ }_{t'*}$		& I \\ % 4S+4H/8H, 2D+2S/4S
+sMULL\{2\}	& vd$^{ }_{SD}$, vn$^{ }_{HS}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = Vn$^{ }_{t'*}$ $\umul^{s}_{ }$ Vm$^{ }_{t'*}$			& I \\ % 4S+4H/8H, 2D+2S/4S
+SQDMLaL\{2\}	& vd$^{ }_{SD}$,vn$^{ }_{HS}$,vm$^{ }_{d}$	& Vd$^{ }_{t*}$ $\pm$= $\lfloor$2 $\smul$ Vn$^{ }_{t'*}$ $\smul$ Vm$^{ }_{t'*}$$\rceil^{Sz}$	& I,M \\ % 4S+4H/8H, 2D+2S/4S
+SQDMULL\{2\}	& vd$^{ }_{SD}$,vn$^{ }_{HS}$,vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = $\lfloor$2 $\smul$ Vn$^{ }_{t'*}$ $\smul$ Vm$^{ }_{t'*}$$\rceil^{Sz}$	& I,M \\ % 4S+4H/8H, 2D+2S/4S
+SQRDMaLH	& vd$^{ }_{HS}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$=$\lfloor$Vd$^{ }_{t*}$$\pm$(2$\smul$Vn$^{ }_{t*}$$\smul$Vm$^{ }_{t*}$$\lsr^{R}_{ }$z)$\rceil^{Sz}$	& 1,I,M \\ % 4H,8H,2S,4S
+SQ\{R\}DMULH	& vd$^{ }_{HS}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$=$\lfloor$2$\smul$Vn$^{ }_{t*}$$\smul$Vm$^{ }_{t*}$ $\lsr^{\{R\}}_{ }$z$\rceil^{Sz}$	& I,M \\ % 4H,8H,2S,4S
+\end{asmtable3}
+%
+\begin{table-lX}{Notes for Floating Point and SIMD Instruction Set}
+I		& Third operand may be indexed, e.g. Vm.t[i] \\
+M, M$^{ }_{t}$	& Scalar may be used instead of vector, types may be limited to t \\
+O		& Optional feature \\
+R$^{ }_{d}$, R$^{ }_{n}$	& General register may be used as operand d or n, implies M \\
+1,2,3,4,5,6	& Introduced in ARMv8.\{1..6\} \\
+\end{table-lX}
+%
+\begin{asmtables4}{SIMD Shift Instructions }
+\{R\}SHRN\{2\}	& vd$^{ }_{BHS}$,vn$^{ }_{BHS}$,\#i		& Vd$^{ }_{t*}$ = Vn$^{ }_{t'*}$ $\lsr^{\{R\}}_{ }$ i				& \\ % 8B/16B+8H, 4H/8H+4S, 2S/4S+2D
+SHL		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$, \#i		& Vd$^{ }_{t*}$ = Vn$^{ }_{t*}$ $\lsl$ i					& M$^{ }_{D}$ \\ % 8B,16B,4H,8H,2S,4S,2D
+SHLL\{2\}	& vd$^{ }_{HSD}$,vn$^{ }_{BHS}$,\#i		& Vd$^{ }_{t*}$ = Vn$^{ }_{t'*}$ $\lsl$ i					& \\ % 8H+8B/16B, 4S+4H/8H, 2D+2S/4S
+sQ\{R\}SHL	& vd$^{ }_{BHSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$=$\lfloor$Vn$^{ }_{t*}$$\lsl\lsr^{s\{R\}}_{ }$Vm$^{ }_{t* 7:0}$$\rceil^{sz}$	& M \\ % 8B,16B,4H,8H,2S,4S,2D
+sQ\{R\}SHRN\{2\}	& vd$^{ }_{BHS}$,vn$^{ }_{BHS}$,\#i	& Vd$^{ }_{t*}$ = $\lfloor$Vn$^{ }_{t'*}$ $\lsr^{s\{R\}}_{ }$ i$\rceil^{sz}$	& M \\ % 8B/16B+8H, 4H/8H+4S, 2S/4S+2D
+SQ\{R\}SHRUN\{2\}	& vd$^{ }_{BHS}$,vn$^{ }_{BHS}$,\#i	& Vd$^{ }_{t*}$ = $\lfloor$Vn$^{ }_{t'*}$ $\asr^{\{R\}}_{ }$ i$\rceil^{Uz}$	& M \\ % 8B/16B+8H, 4H/8H+4S, 2S/4S+2D
+sQSHL		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$, \#i		& Vd$^{ }_{t*}$ = $\lfloor$Vn$^{ }_{t*}$ $\lsl^{s}_{ }$ i$\rceil^{sz}$		& M \\ % 8B,16B,4H,8H,2S,4S,2D
+SQSHLU		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$, \#i		& Vd$^{ }_{t*}$ = $\lfloor$Vn$^{ }_{t*}$ $\lsl^{S}_{ }$ i$\rceil^{Uz}$		& M \\ % 8B,16B,4H,8H,2S,4S,2D
+s\{R\}SHL	& vd$^{ }_{BHSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = Vn$^{ }_{t*}$ $\lsl\asr^{\{R\}}_{ }$ Vm$^{ }_{t* 7:0}$	& M$^{ }_{D}$ \\ % 8B,16B,4H,8H,2S,4S,2D
+s\{R\}SHR	& vd$^{ }_{BHSD}$, vn$^{ }_{d}$, \#i		& Vd$^{ }_{t*}$ = Vn$^{ }_{t*}$ $\lsr^{s\{R\}}_{ }$ i				& M$^{ }_{D}$ \\ % 8B,16B,4H,8H,2S,4S,2D
+s\{R\}SRA	& vd$^{ }_{BHSD}$, vn$^{ }_{d}$, \#i		& Vd$^{ }_{t*}$ $+$= Vn$^{ }_{t*}$ $\lsr^{s\{R\}}_{ }$ i			& M$^{ }_{D}$ \\ % 8B,16B,4H,8H,2S,4S,2D
+sSHLL\{2\}	& vd$^{ }_{HSD}$,vn$^{ }_{BHS}$,\#i		& Vd$^{ }_{t*}$ = Vn$^{s}_{t'*}$ $\lsl$ i					& \\ % 8H+8B/16B, 4S+4H/8H, 2D+2S/4S
+\end{asmtables4}
+%
+\begin{asmtables3}{SIMD Bitwise Instructions }
+CLS		& vd$^{ }_{BHS}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = CountLeadingSigns(Vn$^{ }_{t*}$)				& \\ % 8B,16B,4H,8H,2S,4S
+CLZ		& vd$^{ }_{BHS}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = CountLeadingZeros(Vn$^{ }_{t*}$)				& \\ % 8B,16B,4H,8H,2S,4S
+CNT		& vd$^{ }_{B}$, vn$^{ }_{d}$			& Vd$^{ }_{B*}$ = CountOneBits(Vn$^{ }_{B*}$)					& \\ % 8B,16B
+EXT		& vd$^{ }_{B}$,vn$^{ }_{d}$,vm$^{ }_{d}$,\#i$^{ }_{4}$	& Vd$^{ }_{B*}$ = Vm$^{ }_{B*[i-1:0]}$:Vn$^{ }_{B*[z-1:z-i+1]}$		& \\ % 8B,16B
+RBIT		& vd$^{ }_{B}$, vn$^{ }_{d}$			& Vd$^{ }_{B*}$ = ReverseBits(Vn$^{ }_{B*}$)					& \\ % 8B,16B
+REV16		& vd$^{ }_{B}$, vn$^{ }_{d}$			& Vd$^{ }_{B*}$ = Vn$^{ }_{B* \oplus 1}$					& \\ % 8B,16B
+REV32		& vd$^{ }_{BH}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = Vn$^{ }_{t* \oplus (32 \udiv z - 1)}$				& \\ % 8B,16B,4H,8H
+REV64		& vd$^{ }_{BHS}$, vn$^{ }_{d}$			& Vd$^{ }_{t*}$ = Vn$^{ }_{t* \oplus (64 \udiv z - 1)}$				& \\ % 8B,16B,4H,8H,2S,4S
+SLI		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$, \#i		& Vd$^{ }_{t*[z-1:i]}$ = Vn$^{ }_{t*[z-i-1:0]}$					& M$^{ }_{D}$ \\ % 8B,16B,4H,8H,2S,4S,2D
+SRI		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$, \#i		& Vd$^{ }_{t*[z-i-1:0]}$ = Vn$^{ }_{t*[z-1:i]}$					& M$^{ }_{D}$ \\ % 8B,16B,4H,8H,2S,4S,2D
+TRN1		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = iseven(*) ? Vn$^{ }_{t*}$ : Vm$^{ }_{t*-1}$			& \\ % 8B,16B,4H,8H,2S,4S,2D
+TRN2		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = iseven(*) ? Vn$^{ }_{t*+1}$ : Vm$^{ }_{t*}$			& \\ % 8B,16B,4H,8H,2S,4S,2D
+UZP1		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = (Vm:Vn)$^{ }_{t2*}$						& \\ % 8B,16B,4H,8H,2S,4S,2D
+UZP2		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = (Vm:Vn)$^{ }_{t2*+1}$						& \\ % 8B,16B,4H,8H,2S,4S,2D
+ZIP1		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$= iseven(*) ? Vn$^{ }_{t*\udiv2}$ : Vm$^{ }_{t*\udiv2}$		& \\ % 8B,16B,4H,8H,2S,4S,2D
+ZIP2		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$=iseven(*) ?Vn$^{ }_{tz+(*\udiv2)}$ :Vm$^{ }_{tz+(*\udiv2)}$	& \\ % 8B,16B,4H,8H,2S,4S,2D
+\end{asmtables3}
+%
+\begin{table-lX}{Keys for Floating Point and SIMD Instructions}
+vd$^{ }_{t}$, vn$^{ }_{t}$, vm$^{ }_{t}$	& SIMD register as vector array of type t \\
+qd$^{ }_{t}$, qn$^{ }_{t}$, qm$^{ }_{t}$	& SIMD register as scalar of type t \\
+a			& A for addition or S for subtraction \\
+e			& Last element in vector, i.e. number of elements minus one \\
+r			& Rounding (A, M, N, P, or Z) \\
+s			& Operation signess (S or U) \\
+t			& Operand type (B, H, S, D, or Q) \\
+t'			& Secondary operand type when more than one type is used \\
+z			& Vector operation size (8, 16, 32, or 64) \\
+\{2\}			& Optional suffix to use upper half of a register. Otherwise use lower half and clear upper half if destination \\
+cs			& SIMD register comparison operator (EQ, GE, GT, HI, or HS) \\
+cz			& SIMD zero comparison operator (EQ, GE, GT, LE, or LT) \\
+cf			& SIMD float comparison operator (EQ, GE, or GT) \\
+\end{table-lX}
+%
+\begin{asmtables2}{SIMD Move Instructions}
+DUP		& vd$^{ }_{BHSD}$, Vn.t[i]			& Vd$^{ }_{t*}$ = Vn$^{ }_{ti}$							\\ % 8B,16B,4H,8H,2S,4S,2D
+DUP		& vd$^{ }_{BHSD}$, rn				& Vd$^{ }_{t*}$ = rn$^{ }_{t0}$							\\ % 8B,16B,4H,8H,2S,4S,2D
+MOV		& Vd.t$^{ }_{BHSD}$[i], Vn.t[j]			& Vd$^{ }_{ti}$ = Vn$^{ }_{tj}$							\\ % B,H,S,D
+MOV		& Vd.t$^{ }_{BHSD}$[i], rn			& Vd$^{ }_{ti}$ = rn$^{ }_{t0}$							\\ % B,H,S,D
+MOV		& qd$^{ }_{BHSD}$, Vn.t[i]			& Vd$^{ }_{t0}$ = Vn$^{ }_{ti}$							\\ % B,H,S,D
+\textit{MOV}	& rd, vn.t$^{ }_{SD}$[i]			& rd = Vn$^{ }_{ti}$								\\ % S,D
+\textit{MOV}	& vd$^{ }_{B}$, vn$^{ }_{d}$			& Vd$^{ }_{B*}$ = Vn$^{ }_{B*}$							\\ % 8B,16B
+MOVI		& Dd, \#i					& Vd$^{ }_{D0}$ = i								\\ % D
+MOVI		& Vd.2D, \#i					& Vd$^{ }_{D*}$ = i								\\ % D
+MOVI		& vd$^{ }_{BHS}$,\#i$^{ }_{8}$\{,LSL \#sh\}	& Vd$^{ }_{t*}$ = i$^{\emptyset}_{ }$ $\lsl$ sh					\\ % 8B,16B,4H,8H,2S,4S
+MOVI		& vd$^{ }_{S}$, \#i$^{ }_{8}$, MSL \#sh		& Vd$^{ }_{S*}$ = i$^{\emptyset}_{ }$:1$^{ }_{sh}$				\\ % 2S,4S
+MVNI		& vd$^{ }_{HS}$, \#i$^{ }_{8}$\{, LSL \#sh\}	& Vd$^{ }_{t*}$ = $\sim$(i$^{\emptyset}_{ }$ $\lsl$ sh)				\\ % 4H,8H,2S,4S
+MVNI		& vd$^{ }_{S}$, \#i$^{ }_{8}$, MSL \#sh		& Vd$^{ }_{S*}$ = $\sim$(i$^{\emptyset}_{ }$:1$^{ }_{sh}$)			\\ % 2S,4S
+sMOV		& Wd, Vn.t$^{ }_{BH}$[i]			& Wd = Vn$^{s}_{ti}$								\\ % B,H
+sXTL\{2\}	& vd$^{ }_{HSD}$, vn$^{ }_{BHS}$		& Vd$^{ }_{t*}$ = Vn$^{s}_{t'*}$						\\ % 8H+8B/16B, 4S+4H/8H, 2D+2S/4S
+TBL		& vd$^{ }_{B}$,\{Vn.16B, ...\},vm$^{ }_{d}$	& Vd$^{ }_{B*}$= Vm$^{ }_{B*}$$\ult$16cnt ?(...:Vn)$^{ }_{BV^{ }_{B*}}$ :0	\\ % 8B,16B
+TBX		& vd$^{ }_{B}$,\{Vn.16B, ...\},vm$^{ }_{d}$	& if(Vm$^{ }_{B*}$$\ult$16cnt) Vd$^{ }_{B*}$ = (...:Vn)$^{ }_{BV^{ }_{B*}}$	\\ % 8B,16B
+XTN\{2\}	& vd$^{ }_{BHS}$, vn$^{ }_{HSD}$		& Vd$^{ }_{t*}$ = Vn$^{ }_{t'*}$						\\ % 8B/16B+8H, 4H/8H+4S, 2S/4S+2D
+\end{asmtables2}
+%
+\begin{asmtables2}{SIMD Logical Instructions}
+AND		& vd$^{ }_{B}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{B*}$ = Vn$^{ }_{B*}$ \& Vm$^{ }_{B*}$				\\ % 8B,16B
+BIC		& vd$^{ }_{B}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{B*}$ = Vn$^{ }_{B*}$ \& $\sim$Vm$^{ }_{B*}$				\\ % 8B,16B
+BIC		& vd$^{ }_{HS}$, \#i$^{ }_{8}$\{, LSL \#sh\}	& Vd$^{ }_{t*}$ \&= $\sim$(i $\lsl$ sh)						\\ % 4H,8H,2S,4S
+BIF		& vd$^{ }_{B}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{B*}$=(Vd$^{ }_{B*}$\&$\sim$Vm$^{ }_{B*}$)|(Vn$^{ }_{B*}$\&Vm$^{ }_{B*}$)	\\ % 8B,16B
+BIT		& vd$^{ }_{B}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{B*}$=(Vd$^{ }_{B*}$\&Vm$^{ }_{B*}$)|(Vn$^{ }_{B*}$\&$\sim$Vm$^{ }_{B*}$)	\\ % 8B,16B
+BSL		& vd$^{ }_{B}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{B*}$=(Vn$^{ }_{B*}$\&Vd$^{ }_{B*}$)|(Vm$^{ }_{B*}$\&$\sim$Vd$^{ }_{B*}$)	\\ % 8B,16B
+EOR		& vd$^{ }_{B}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{B*}$ = Vn$^{ }_{B*}$ $\oplus$ Vm$^{ }_{B*}$				\\ % 8B,16B
+\textit{MVN}	& vd$^{ }_{B}$, vn$^{ }_{d}$			& Vd$^{ }_{B*}$ = $\sim$Vn$^{ }_{B*}$						\\ % 8B,16B
+ORN		& vd$^{ }_{B}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{B*}$ = Vn$^{ }_{B*}$ | $\sim$Vm$^{ }_{B*}$				\\ % 8B,16B
+ORR		& vd$^{ }_{B}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{B*}$ = Vn$^{ }_{B*}$ | Vm$^{ }_{B*}$					\\ % 8B,16B
+ORR		& vd$^{ }_{HS}$, \#i$^{ }_{8}$\{, LSL \#sh\}	& Vd$^{ }_{t*}$ |= i$^{\emptyset}_{ }$ $\lsl$ sh				\\ % 4H,8H,2S,4S
+\end{asmtables2}
+%
+\begin{asmtables3}{SIMD Comparison Instructions}
+CMcs		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = (Vn$^{ }_{t*}$ cs Vm$^{ }_{t*}$) ? 1$^{ }_{z}$ : 0$^{ }_{z}$	& M$^{ }_{D}$ \\ % 8B,16B,4H,8H,2S,4S,2D
+CMcz		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$, \#0		& Vd$^{ }_{t*}$ = (Vn$^{ }_{t*}$ cz 0) ? 1$^{ }_{z}$ : 0$^{ }_{z}$		& M$^{ }_{D}$ \\ % 8B,16B,4H,8H,2S,4S,2D
+CMTST		& vd$^{ }_{BHSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = ((Vn$^{ }_{t*}$ \& Vm$^{ }_{t*}$) $\ne$ 0) ? 1$^{ }_{z}$ : 0$^{ }_{z}$	& M$^{ }_{D}$ \\ %  8B,16B,4H,8H,2S,4S,2D
+sMAX		& vd$^{ }_{BHS}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = Vn$^{ }_{t*}$ $\max^{s}_{ }$ Vm$^{ }_{t*}$			& \\ % 8B,16B,4H,8H,2S,4S
+sMAXP		& vd$^{ }_{BHS}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = (Vm:Vn)$^{ }_{t2*}$ $\max^{s}_{ }$ (Vm:Vn)$^{ }_{t2*+1}$		& \\ % 8B,16B,4H,8H,2S,4S
+sMAXV		& qd$^{ }_{BHS}$, vn$^{ }_{d}$			& Vd$^{ }_{t0}$ = Vn$^{ }_{t0}$ $\max^{s}_{ }$ Vn$^{ }_{t1}$ $\max^{s}_{ }$ ... $\max^{s}_{ }$ Vn$^{ }_{te}$	& \\ % 8B,16B,4H,8H,4S
+sMIN		& vd$^{ }_{BHS}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = Vn$^{ }_{t*}$ $\min^{s}_{ }$ Vm$^{ }_{t*}$			& \\ % 8B,16B,4H,8H,2S,4S
+sMINP		& vd$^{ }_{BHS}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = (Vm:Vn)$^{ }_{t2*}$ $\min^{s}_{ }$ (Vm:Vn)$^{ }_{t2*+1}$		& \\ % 8B,16B,4H,8H,2S,4S
+sMINV		& qd$^{ }_{BHS}$, vn$^{ }_{d}$			& Vd$^{ }_{t0}$ = Vn$^{ }_{t0}$ $\min^{s}_{ }$ Vn$^{ }_{t1}$ $\min^{s}_{ }$ ... $\min^{s}_{ }$ Vn$^{ }_{te}$	& \\ % 8B,16B,4H,8H,4S
+\end{asmtables3}
+%
+%\begin{table-lXM}{Crypto Instructions}
+%AES\{D,E\}		& Vd.16B, Vn.16B			& \\
+%AES\{,I\}MC		& Vd.16B, Vn.16B			& \\
+%BCAX			& Vd.16B, Vn.16B, Vm.16B, Va.16B	& 2,O \\
+%EOR3			& Vd.16B, Vn.16B, Vm.16B, Va.16B	& 2,O \\
+%RAX1			& Vd.2D, Vn.2D, Vm.2D			& 2,O \\
+%SHA1\{C,M,P\}		& Qd, Sn, Vm.4S				& \\
+%SHA1H			& Sd, Sn				& \\
+%SHA1SU0			& Vd.4S, Vn.4S, Vm.4S			& \\
+%SHA1SU1			& Vd.4S, Vn.4S				& \\
+%SHA256H\{,2\}		& Qd, Qn, Vm.4S				& \\
+%SHA256SU0		& Vd.4S, Vn.4S				& \\
+%SHA256SU1		& Vd.4S, Vn.4S, Vm.4S			& \\
+%SHA512H\{,2\}		& Qd, Qn, Vm.2D				& 2,O \\
+%SHA512SU0		& Vd.2D, Vn.2D				& 2,O \\
+%SHA512SU1		& Vd.2D, Vn.2D, Vm.2D			& 2,O \\
+%SM3PARTW\{1,2\}		& Vd.4S, Vn.4S, Vm.4S			& 2,O \\
+%SM3SS1			& Vd.4S, Vn.4S, Vm.4S, Va.4S		& 2,O \\
+%SM3TT\{1,2\}\{A,B\}	& Vd.4S, Vn.4S, Vm.S[i]			& 2,O \\
+%SM4E			& Vd.4S, Vn.4S				& 2,O \\
+%SM4EKEY			& Vd.4S, Vn.4S, Vm.4S			& 2,O \\
+%XAR			& Vd.2D, Vn.2D, Vm.2D, \#i		& 2,O \\
+%\end{table-lXM}
 %
 \newpage
 \begin{center}

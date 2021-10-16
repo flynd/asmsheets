@@ -47,9 +47,9 @@ ARMv7-A/R and ARMv7-M.
 
 ARM AArch64
 ----------
-A64 instruction set of ARM up ARMv8.6. Also includes two extra pages
-with system registers for ARMv8-A. Debug features and compatibility with
-AArch32 has been omitted.
+A64 instruction set of ARM up ARMv8.6. Also includes floating point and SIMD
+instructions and two extra pages with system registers for ARMv8-A. Debug
+features, crypto operations, and compatibility with AArch32 have been omitted.
 Floating point and SIMD instructions are not included
 
 
