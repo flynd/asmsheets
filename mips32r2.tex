@@ -26,8 +26,9 @@
 \defsheet{asmtabledsp2}{4}{|m{10.2em} m{3.7em}|X|m{0.7em}|}
 \defsheet{table-lX}{2}{|l X|}
 \defsheet{table-llX}{3}{|l l X|}
+\defsheet{table-llXr}{4}{|l l X r|}
 
-\pagefooter{MIPS32r2 version 3 page \thepage}
+\pagefooter{MIPS32r2 version 4 page \thepage}
 
 \begin{document}
 \begin{multicols}{3}
@@ -476,6 +477,179 @@ WRDSP			& rx\{, i$^{ }_{10}$\}	& DSPC \& i = rx				& \\
 \begin{table-lX}{DSP Module Notes}
 Q	& Only available with DSP Module revision 2. \\
 \end{table-lX}
+%
+\newpage
+\begin{center}
+{\Large\bfseries MIPS32 Coprocessor 0 Registers}
+\end{center}
+%
+\begin{table-llXr}{General Registers}
+UserLocal	& 4, 2		& User information				& \\
+HWREna		& 7, 0		& Enable access via RDHWR			& \\
+Count		& 9, 0		& Processor cycle count				& \\
+Compare		& 11, 0		& Timer interrupt control			& \\
+Status		& 12, 0		& Processor status and control			& \\
+IntCtl		& 12, 1		& Interrupt status and control			& 2 \\
+SRSCtl		& 12, 2		& Shadow register set status and control	& 2 \\
+SRSMap		& 12, 3		& Shadow set IPL mapping			&  \\
+View\_IPL	& 12, 4		& Contiguous view of IP and IPL fields		& O \\
+SRSMap2		& 12, 5		& Shadow set IPL mapping			& O \\
+View\_RIPL	& 13, 4		& Contiguous view of IP and RIPL fields		& O \\
+PRId		& 15, 0		& Processor identification and revision		& R \\
+CDMMBase	& 15, 2		& Common device memory map base			& O \\
+CMGCRBase	& 15, 3		& Coherency manager global control base		& O \\
+Config		& 16, 0		& Configuration					& \\
+Config\{1..5\}	& 16, \{1..5\}	& Configuration					& O \\
+LLAddr		& 17, 0		& Load linked address				& O,R \\
+WatchLo		& 18, \{0..7\}	& Watchpoint address				& O \\
+WatchHi		& 19, \{0..7\}	& Watchpoint control				& O \\
+PerfCnt		& 25, \{0..7\}	& Performance counter interface			& \\
+ErrCtl		& 26, 0		& Parity/ECC error control and status		& O \\
+CacheErr	& 27, \{0..3\}	& Cache parity error control and status		& O \\
+Tag\{Lo,Hi\}	& \{28,29\},\{even\}	& Cache tag interface			& \\
+Data\{Lo,Hi\}	& \{28,29\},\{odd\}	& Cache data interface			& \\
+KScratch	& 31, \{2..7\}	& Scratch for kernel mode			& O \\
+\end{table-llXr}
+%
+\begin{table-llXr}{Status Register}
+CU\{3..0\}	& 0xF0000000 & Access to coprocessor \{3..0\}		& \\
+RP		& 0x08000000 & Reduced power mode			& O \\
+FR		& 0x04000000 & 64-bit floating point datatypes		& 2 \\
+RE		& 0x02000000 & User mode uses reverse endianess		& O \\
+MX		& 0x01000000 & Enable MDMX and DSP			& O \\
+BEV		& 0x00400000 & Bootstrap exeception vectors		& \\
+TS		& 0x00200000 & TLB has detected a match on multiple entries	& \\
+SR		& 0x00100000 & Exception was due to a soft reset	& \\
+NMI		& 0x00080000 & Exception was due to NMI			& \\
+ASE		& 0x00040000 & Reserved for MCU ASE			& O \\
+IM\{7..0\}	& 0x0000FF00 & Interrupt \{7..0\} enabled		& O \\
+IPL		& 0x0000FC00 & Interrupt priority level			& O \\
+KSU		& 0x00000018 & Base mode is \{Kernel,Supervisor,User,-\} mode	& \\
+ERL		& 0x00000004 & Error level				& \\
+EXL		& 0x00000002 & Exception level				& \\
+IE		& 0x00000001 & Interrupt master enable			& \\
+\end{table-llXr}
+%
+\begin{table-llXr}{Virtual Memory Registers}
+Index		& 0, 0		& Index into the TLB array		& \\
+Random		& 1, 0		& Randomly generated index into TLB	& \\
+EntryLo\{0,1\}	& \{2,3\}, 0	& Low-order portion of \{even,odd\} TLB entry	& \\
+Context		& 4, 0		& Pointer to entry in memory		& \\
+ContextConfig	& 4, 1		& Context configuration			& O \\
+PageMask	& 5, 0		& Page size in TLB entries		& \\
+PageGrain	& 5, 1		& Control for small page support	& O \\
+SegCtl\{0..2\}	& 5, \{2..4\}	& Segment Control \{0..2\}		& O \\
+PWBase		& 5, 5		& Page walker page table base address	& O \\
+PWField		& 5, 6		& Page walker directory index positions	& O \\
+PWSize		& 5, 7		& Page walker directory index widths	& O \\
+Wired		& 6, 0		& Number of fixed TLB entries		& \\
+PWCtl		& 6, 6		& Page walker control			& O \\
+EntryHi		& 10, 0		& High-order portion of TLB entry	& \\
+\end{table-llXr}
+%
+%\begin{table-llXr}{TLB EntryLo Register}
+%PFN		& 0x3FFFFFC0 & Physical address bits 35..12 or 33..10	& \\
+%C		& 0x00000038 & Cacheability (2=Uncached, 3=Cacheable)	& \\
+%D		& 0x00000004 & Dirty					& \\
+%V		& 0x00000002 & Valid					& \\
+%G		& 0x00000001 & Global					& \\
+%\end{table-llXr}
+%
+\begin{table-llXr}{Multi-Thread Registers}
+MVPControl	& 0, 1		& Per-processor global config data		& \\
+MVPConf\{0,1\}	& 0, \{2,3\}	& Per-processor multi-VPE dynamic config	& R \\
+VPEControl	& 1, 1		& Per-VPE volatile thread config data		& \\
+VPEConf\{0,1\}	& 1, \{2,3\}	& Per-VPE config information			& \\
+YQMask		& 1, 4		& Per-VPE which YIELD bits may be used		& \\
+VPESchedule	& 1, 5		& Per-VPE scheduling				& O \\
+VPEScheFBack	& 1, 6		& Per-VPE scheduling feedback			& O \\
+VPEOpt		& 1, 7		& Per-VPE control optional features		& O \\
+TCStatus	& 2, 1		& Per-TC status information			& \\
+TCBind		& 2, 2		& Per-TC binding information			& \\
+TCRestart	& 2, 3		& Per-TC restart instruction address		& \\
+TCHalt		& 2, 4		& Per-TC control halt state			& \\
+TCContext	& 2, 5		& Per-TC OS usage				& \\
+TCSchedule	& 2, 6		& Per-TC scheduling				& O \\
+TCScheFBack	& 2, 7		& Per-TC scheduling feedback			& O \\
+TCOpt		& 3, 7		& Per-TC control optional features		& O \\
+SRSConf\{0..4\}	& 6, \{1..5\}	& Per-VPE control shadow register set		& \\
+\end{table-llXr}
+%
+\begin{table-llXr}{VZE Module Registers}
+GuestCtl1	& 10, 4		& GuestID of virtualized guest			& \\
+GuestCtl2	& 10, 5		& Guest interrupt control			& \\
+GuestCtl3	& 10, 6		& Guest shadow register set control		& \\
+GuestCtl0Ext	& 11, 4		& Control extension				& \\
+GuestCtl0	& 12, 6		& Control of virtualized guest OS		& \\
+GTOffset	& 12, 7		& Guest timer offset				& \\
+\end{table-llXr}
+%
+\begin{table-lX}{Coprocessor 0 Notes}
+2	& Only available on MIPS32 Release 2. \\
+O	& Optional feature. \\
+R	& Register or field is read only. \\
+\end{table-lX}
+%
+\begin{table-llXr}{Exception Registers}
+BadVAddr	& 8, 0		& Address of exception			& R \\
+BadInstr\{,P\}	& 8, \{1,2\}	& \{Faulting,Prior branch\} instruction word	& O,R \\
+Cause		& 13, 0		& Cause of general exception		& \\
+NestedExc	& 13, 5		& EXL and ERL at current exception	& O,R \\
+EPC		& 14, 0		& PC at exception			& \\
+NestedEPC	& 14, 2		& Program counter at current exception	& O \\
+EBase		& 15, 1		& Exception vector base			& \\
+ErrorEPC	& 30, 0		& PC at last error			& \\
+\end{table-llXr}
+%
+\begin{table-llXr}{Cause Register}
+BD		& 0x80000000 & Exception taken in branch delay slot	& R\\
+TI		& 0x40000000 & Timer interrupt pending			& 2,R \\
+CE		& 0x30000000 & Coprocessor number 			& R\\
+DC		& 0x08000000 & Disable count register 			& 2 \\
+PCI		& 0x04000000 & Performance counter interrupt pending	& 2,R \\
+IV		& 0x00800000 & Use special interrupt vector		& \\
+WP		& 0x00400000 & Watch exception was deferred		& R \\
+FDCI		& 0x00200000 & Fast debug channel interrupt pending	& R \\
+IP\{7..2\}	& 0x0000FC00 & External interrupt \{5..0\} pending	& R \\
+IP\{1..0\}	& 0x00000300 & Request software interrupt \{1..0\}	& R \\
+ExcCode		& 0x0000007C & Exception code				& R \\
+\end{table-llXr}
+%
+\begin{table-llXr}{Exception Codes (ExcCode)}
+Int		& 0	& Interrupt					& \\
+Mod		& 1	& TLB modification exception			& \\
+TLB\{L,S\}	& 2,3	& TLB exception \{load/fetch,store\}		& \\
+AdE\{L,S\}	& 4,5	& Address error exception \{load/fetch,store\}	& \\
+\{I,D\}BE	& 6,7	& Bus error exception \{fetch,load/store\}	& \\
+Sys		& 8	& Syscall exception				& \\
+Bp		& 9	& Breakpoint exception				& \\
+R1		& 10	& Reserved instruction exception		& \\
+CpU		& 11	& Coprocessor unusable exception		& \\
+Ov		& 12	& Arithmetic overflow exception			& \\
+Tr		& 13	& Trap exception				& \\
+\{MSA,\}FPE	& 14,15	& \{MSA,\} floating point exception		& \\
+C2E		& 18	& Coprocessor 2 exceptions			& \\
+TLB\{R,X\}I	& 19,20	& TBL \{read,exception\}-inhibit exception	& \\
+MSADis		& 21	& MSA disabled exception			& \\
+MDMX		& 22	& MDMX unusable exception			& \\
+WATCH		& 23	& Reference to WatchHi/WatchLo address		& \\
+MCheck		& 24	& Machine check					& \\
+Thread		& 25	& Thread exceptions				& \\
+DSPDis		& 26	& DSP module state disabled exception		& \\
+GE		& 27	& Virtualized guest exception			& \\
+CacheErr	& 30	& Cache error					& \\
+\end{table-llXr}
+%
+%\begin{table-llXr}{EJTAG and PDtrace Registers}
+%Debug\{,2\}	& 23, \{0,6\}	& EJTAG debug				& \\
+%TraceControl\{,2\}	& 23, \{1,2\}		& PDtrace control	& \\
+%UserTraceData1	& 23, 3		& PDtrace control			& \\
+%Trace\{I,D\}BPC	& 23, \{4,5\}	& PDtrace control			& \\
+%DEPC		& 24, 0		& PC at EJTAG debug exception		& \\
+%TraceControl3	& 24, 2		& PDtrace control			& \\
+%UserTraceData2	& 24, 3		& PDtrace control			& \\
+%DESAVE		& 31, 0		& EJTAG debug exception save		& \\
+%\end{table-llXr}
 %
 \end{multicols}
 \end{document}

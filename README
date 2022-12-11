@@ -1,5 +1,5 @@
 Instruction Set Quick Reference Sheets
-Copyright (C) 2014-2021 Anders Sonmark
+Copyright (C) 2014-2022 Anders Sonmark
 
 Copying and distribution of this file, with or without modification,
 are permitted in any medium without royalty provided the copyright
@@ -73,8 +73,8 @@ Instruction set for the Motorola 68HC11.
 
 MIPS32 R2
 ---------
-Instruction sets of MIPS32 release 2, including MIPS16e and DSP module
-rev 2 instructions.
+Instruction set of MIPS32 release 2.  Includes MIPS16e, DSP module
+rev 2 instructions, and coprocessor 0 registers.
 Floating point and coprocessor 2 instructions are not included.
 
 
@@ -105,7 +105,7 @@ Sources
 [5] "ETRAX FS Designer's Reference"
 [6] Additional information about CRIS architectures (with permission)
     from internal resources within AXIS Communications.
-[7] "MIPS32 Architecture For Programmers" (MD00086 and MD00076)
+[7] "MIPS32 Architecture For Programmers" (MD00086, MD00076, and MD00090)
 [8] "MIPS32 Instruction Set Quick Reference" (MD00565)
 [9] Multiple data sheets for Microchip PICs.
 [10] "ARMv7-M Architecture Reference Manual" (DDI 0403E.b)
