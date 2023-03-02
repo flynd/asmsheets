@@ -1,5 +1,5 @@
 %
-% Copyright (C) 2017-2021 Anders Sonmark
+% Copyright (C) 2017-2023 Anders Sonmark
 %
 % Copying and distribution of this file, with or without modification,
 % are permitted in any medium without royalty provided the copyright
@@ -41,7 +41,7 @@
 \defsheet{table-llXr}{4}{|l l X r|}
 \defsheet{table2-lX}{4}{|l X|l X|}
 
-\pagefooter{ARM AArch64 version 4 page \thepage}
+\pagefooter{ARM AArch64 version 5 page \thepage}
 
 \begin{document}
 \begin{multicols}{3}
@@ -1110,11 +1110,11 @@ nG	& 0x00000000\_00000800	& Not global				& \\
 OA48	& 0x00000000\_0000F000	& Output address bits 12-15 or 48-51	& \\
 nT	& 0x00000000\_00010000	& Block translation entry (level 0-2)	& \\
 OA	& 0x0000FFFF\_FFFF0000	& Output address, bits 16-47		& \\
-GP	& 0x00020000\_00000000	& Guarded page				& \\
-DBM	& 0x00040000\_00000000	& Dirty bit modifier			& \\
-C	& 0x00080000\_00000000	& Contiguous				& \\
-XN0	& 0x00100000\_00000000	& Privileged execute never		& E1 \\
-XN1	& 0x00200000\_00000000	& \{EL0\} Execute never			& \\
+GP	& 0x00040000\_00000000	& Guarded page				& \\
+DBM	& 0x00080000\_00000000	& Dirty bit modifier			& \\
+C	& 0x00100000\_00000000	& Contiguous				& \\
+PXN	& 0x00200000\_00000000	& Privileged execute never		& E1 \\
+\{U\}XN	& 0x00400000\_00000000	& \{EL0\} Execute never			& \\
 PBHA	& 0x78000000\_00000000	& Page-based hardware attributes 	& O,2 \\
 \end{table-llXr}
 %
