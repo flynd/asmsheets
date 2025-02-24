@@ -1,5 +1,5 @@
 %
-% Copyright (C) 2017-2023 Anders Sonmark
+% Copyright (C) 2017-2025 Anders Sonmark
 %
 % Copying and distribution of this file, with or without modification,
 % are permitted in any medium without royalty provided the copyright
@@ -41,7 +41,7 @@
 \defsheet{table-llXr}{4}{|l l X r|}
 \defsheet{table2-lX}{4}{|l X|l X|}
 
-\pagefooter{ARM AArch64 version 5 page \thepage}
+\pagefooter{ARM AArch64 version 6 page \thepage}
 
 \begin{document}
 \begin{multicols}{3}
@@ -87,7 +87,7 @@ BFI		& rd, rn, \#p, \#n	& rd$^{ }_{p+n-1:p}$ = rn$^{ }_{n-1:0}$		& \\
 BFXIL		& rd, rn, \#p, \#n	& rd$^{ }_{n-1:0}$ = rn$^{ }_{p+n-1:p}$		& \\
 CLS		& rd, rn		& rd = CountLeadingSigns(rn)			& \\
 CLZ		& rd, rn		& rd = CountLeadingZeros(rn)			& \\
-EXTR		& rd, rn, rm, \#p	& rd = rn$^{ }_{p-1:0}$:rm$^{ }_{N0}$		& \\
+EXTR		& rd, rn, rm, \#p	& rd = rn$^{ }_{p-1:0}$:rm$^{ }_{N-1:p}$	& \\
 RBIT		& rd, rn		& rd = ReverseBits(rn)				& \\
 REV		& rd, rn		& rd = BSwap(rn)				& \\
 REV16		& rd, rn		& for(n=0..1|3) rd$^{ }_{Hn}$=BSwap(rn$^{ }_{Hn}$)	& \\
@@ -146,8 +146,8 @@ xxP,LDPSW	& [Xn\{, \#i$^{ }_{7+s}$\}]	& addr = Xn $+$ i$^{\pm}_{6+s:s}$:0$^{ }_{
 xxP,LDPSW	& [Xn], \#i$^{ }_{7+s}$		& addr=Xn; Xn$+$=i$^{\pm}_{6+s:s}$:0$^{ }_{s}$ \\
 xxP,LDPSW	& [Xn, \#i$^{ }_{7+s}$]!	& Xn$+$=i$^{\pm}_{6+s:s}$:0$^{ }_{s}$; addr=Xn \\
 xxR*,PRFM	& [Xn\{, \#i$^{ }_{12+s}$\}]	& addr = Xn $+$ i$^{\emptyset}_{11+s:s}$:0$^{ }_{s}$ \\
-xxR*		& [Xn], \#i$^{ }_{9+s}$		& addr = Xn; Xn $+$= i$^{\pm}_{9+s:s}$:0$^{ }_{s}$ \\
-xxR*		& [Xn, \#i$^{ }_{9+s}$]!	& Xn $+$= i$^{\pm}_{9+s:s}$:0$^{ }_{s}$; addr = Xn \\
+xxR*		& [Xn], \#i$^{ }_{9+s}$		& addr = Xn; Xn $+$= i$^{\pm}_{8+s:s}$:0$^{ }_{s}$ \\
+xxR*		& [Xn, \#i$^{ }_{9+s}$]!	& Xn $+$= i$^{\pm}_{8+s:s}$:0$^{ }_{s}$; addr = Xn \\
 xxR*,PRFM	& [Xn,Xm\{, LSL \#0|s\}]	& addr = Xn + Xm $\lsl$ s \\
 xxR*,PRFM	& [Xn,Wm,UXTW\{ \#0|s\}]	& addr = Xn + Wm$^{?}_{ }$ $\lsl$ s \\
 xxR*,PRFM	& [Xn,rm,SXTX\{ \#0|s\}]	& addr = Xn + rm$^{\pm}_{ }$ $\lsl$ s \\
@@ -161,8 +161,8 @@ Bcc		& rel$^{ }_{21}$	& if(cc) PC = PC $+$ rel$^{\pm}_{20:2}$:0${ }_{2}$	& \\
 BL		& rel$^{ }_{28}$	& X30 = PC $+$ 4; PC $+$= rel$^{\pm}_{27:2}$:0$^{ }_{2}$	& \\
 BLR		& Xn			& X30 = PC $+$ 4; PC = Xn			& \\
 BR		& Xn			& PC = Xn					& \\
-CBNZ		& rn, rel$^{ }_{21}$	& if(rn $\ne$ 0) PC $+$= rel$^{\emptyset}_{21:2}$:0$^{ }_{2}$	& \\
-CBZ		& rn, rel$^{ }_{21}$	& if(rn $=$ 0) PC $+$= rel$^{\emptyset}_{21:2}$:0$^{ }_{2}$	& \\
+CBNZ		& rn, rel$^{ }_{21}$	& if(rn $\ne$ 0) PC $+$= rel$^{\emptyset}_{20:2}$:0$^{ }_{2}$	& \\
+CBZ		& rn, rel$^{ }_{21}$	& if(rn $=$ 0) PC $+$= rel$^{\emptyset}_{20:2}$:0$^{ }_{2}$	& \\
 RET		& \{Xn\}		& PC = Xn					& \\
 TBNZ		& rn, \#i, rel$^{ }_{16}$	& if(rn$^{ }_{i}$ $\ne$ 0) PC $+$= rel$^{\pm}_{15:2}$:0$^{ }_{2}$	& \\
 TBZ		& rn, \#i, rel$^{ }_{16}$	& if(rn$^{ }_{i}$ $=$ 0) PC $+$= rel$^{\pm}_{15:2}$:0$^{ }_{2}$	& \\
@@ -559,7 +559,7 @@ xxP		& [Xn, \#i$^{ }_{7+s}$]!	& Xn =$+$ i$^{\pm}_{6+s:s}$:0$^{ }_{s}$; addr = Xn
 xxP		& [Xn], \#i$^{ }_{7+s}$		& addr = Xn; Xn =$+$ i$^{\pm}_{6+s:s}$:0$^{ }_{s}$ \\
 xxR		& [Xn], \#i$^{ }_{9}$		& addr = Xn; Xn =$+$ i$^{\pm}_{ }$ \\
 xxR		& [Xn, \#i$^{ }_{9}$]!		& Xn =$+$ i$^{\pm}_{ }$; addr = Xn \\
-xxR		& [Xn\{, \#i$^{ }_{12+s}$\}]	& addr = Xn $+$ i$^{\emptyset}_{12+s:s}$:0$^{ }_{s}$ \\
+xxR		& [Xn\{, \#i$^{ }_{12+s}$\}]	& addr = Xn $+$ i$^{\emptyset}_{11+s:s}$:0$^{ }_{s}$ \\
 xxR		& [Xn, Xm\{, LSL \#\{0,s\}\}]	& addr = Xn $+$ Xm $\lsl$ \{0,s\} \\
 xxR		& [Xn, Wm\{, sXTW\{ \#0,s\}\}]	& addr = Xn $+$ rm$^{s}_{ }$ $\lsl$ \{0,s\} \\
 xxR		& [Xn, Xm\{, SXTX\{ \#0,s\}\}]	& addr = Xn $+$ rm$^{\pm}_{ }$ $\lsl$ \{0,s\} \\
