@@ -1,5 +1,5 @@
 %
-% Copyright (C) 2014-2018 Anders Olofsson
+% Copyright (C) 2014-2018 Anders Sonmark
 %
 % Copying and distribution of this file, with or without modification,
 % are permitted in any medium without royalty provided the copyright
