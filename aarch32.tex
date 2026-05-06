@@ -1,5 +1,5 @@
 %
-% Copyright (C) 2014-2021 Anders Sonmark
+% Copyright (C) 2014-2026 Anders Sonmark
 %
 % Copying and distribution of this file, with or without modification,
 % are permitted in any medium without royalty provided the copyright
@@ -37,7 +37,7 @@
 \defsheet{table-llX}{3}{|l l X|}
 \defsheet{table-llXr}{4}{|l l X r|}
 
-\pagefooter{ARM AArch32 version 11 page \thepage}
+\pagefooter{ARM AArch32 version 12 page \thepage}
 
 \begin{document}
 \begin{multicols}{3}
@@ -1025,7 +1025,7 @@ PAR		& c7,0,c4,0	& Physical Address (RW)					& 7,A,B \\
 ICIALLU		& c7,0,c5,0	& Inv all instruction caches to PoU			& \\
 ICIMVAU		& c7,0,c5,1	& Inv instr caches by MVA to PoU			& \\
 %		& c7,0,c5,2	& Invalidate instruction cache line by set/way		& \sout{7} \\
-CP15ISB		& c7,0,c5,4	& Instruction Sync Barrier oper				& 7 \\
+CP15ISB		& c7,0,c5,4	& Instruction Sync Barrier oper				& \\
 BPIALL		& c7,0,c5,6	& Inv all branch predictors				& \\
 BPIMVA		& c7,0,c5,7	& Inv MVA from branch predictors			& \\
 %		& c7,0,c6,0	& Invalidate data cache					& \sout{7} \\
@@ -1043,8 +1043,8 @@ ATS1CP\{R,W\}P	& c7,0,c9,\{0,1\}	& PL1 \{R,W\} trans PAN (Cur st)		& 8{\tiny 2},
 DCCMVAC		& c7,0,c10,1	& Clean data c-line by MVA to PoC			& \\
 DCCSW		& c7,0,c10,2	& Clean data c-line by set/way				& \\
 %		& c7,0,c10,3	& Test and clean data cache				& \sout{7} \\
-CP15DSB		& c7,0,c10,4	& Data Sync Barrier operation				& 7 \\
-CP15DMB		& c7,0,c10,5	& Data Memory Barrier operation				& 7 \\
+CP15DSB		& c7,0,c10,4	& Data Sync Barrier operation				& \\
+CP15DMB		& c7,0,c10,5	& Data Memory Barrier operation				& \\
 %		& c7,0,c10,6	& Cache Dirty Status 					& 6,\sout{7} \\
 %		& c7,0,c11,0	& Clean entire unified cache				& \sout{7} \\
 DCCMVAU		& c7,0,c11,1	& Clean data c-line by MVA to PoU			& \\
