@@ -1,5 +1,5 @@
 %
-% Copyright (C) 2017-2025 Anders Sonmark
+% Copyright (C) 2017-2026 Anders Sonmark
 %
 % Copying and distribution of this file, with or without modification,
 % are permitted in any medium without royalty provided the copyright
@@ -41,7 +41,7 @@
 \defsheet{table-llXr}{4}{|l l X r|}
 \defsheet{table2-lX}{4}{|l X|l X|}
 
-\pagefooter{ARM AArch64 version 6 page \thepage}
+\pagefooter{ARM AArch64 version 7 page \thepage}
 
 \begin{document}
 \begin{multicols}{3}
@@ -601,9 +601,9 @@ FSUB		& vd$^{ }_{HSD}$, vn$^{ }_{d}$, vm$^{ }_{d}$	& Vd$^{ }_{t*}$ = Vn$^{ }_{t*
 FCSEL		& qd$^{ }_{HSD}$, qn$^{ }_{d}$, qm$^{ }_{d}$, cc	& Vd$^{ }_{t0}$ = cc ? Vn$^{ }_{t0}$ : Vm$^{ }_{t0}$			& \\ % H,S,D
 FMOV		& qd$^{ }_{HSD}$, qn$^{ }_{d}$			& Vd$^{ }_{t0}$ = Vn$^{ }_{t0}$							& \\ % H,S,D
 FMOV		& rd, qn$^{ }_{HSD}$				& rd = Vn$^{\emptyset}_{t0}$							& \\ % H,S,D
-FMOV		& Xd, Dn[1]					& Xd = Vn$^{ }_{D1}$								& \\
+FMOV		& Xd, Vn.D[1]					& Xd = Vn$^{ }_{D1}$								& \\
 FMOV		& qd$^{ }_{HSD}$, rn$^{ }_{d}$			& Vd$^{ }_{t0}$ = rn$^{ }_{t0}$							& \\ % H,S,D
-FMOV		& Dd[1], Xn					& Vd$^{ }_{D1}$ = Xn								& \\
+FMOV		& Vd.D[1], Xn					& Vd$^{ }_{D1}$ = Xn								& \\
 FMOV		& vd$^{ }_{HS}$, \#i				& Vd$^{ }_{t*}$ = i								& M$^{ }_{HSD}$ \\ % 4H,8H,2S,4S
 \end{asmtables5}
 %
